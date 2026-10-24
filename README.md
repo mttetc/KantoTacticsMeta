@@ -40,3 +40,8 @@ The API stops at C; **D** is this page's split, mirroring S: average place at or
 Unofficial fan page, not affiliated with Nintendo, Creatures or GAME FREAK. Game, data, sprites and icons
 belong to [Kanto Tactics](https://einoow.com/kanto-tactics) by Einoow. Data is read-only and public, see the
 API page for its terms (poll at most once an hour, cache on your side).
+
+## Deploy
+
+Static files only: import the repo in Vercel with no build command and `.` as output, or enable GitHub Pages on `main`.
+`vercel.json` sets long cache for sprites and one hour for `data.json`.
