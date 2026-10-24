@@ -32,8 +32,17 @@ then open <http://localhost:8080/>.
 
 ## Tiers
 
-S, A, B and C come from the API (average place against the week's reference place).
-The API stops at C; **D** is this page's split, mirroring S: average place at or above reference + 0.5.
+Pokémon, items and types: S, A, B and C come from the API (average place against the week's reference
+place). The API stops at C; **D** is this page's split, mirroring S: average place at or above reference + 0.5.
+
+Comps are graded stricter, on the pessimistic average (avg + 95 % CI) against the reference:
+S ≤ ref − 0.8, A ≤ ref − 0.15, B ≤ ref + 0.6, C ≤ ref + 1.2, D above. Comps under 30 effective games
+only have their 4 core units in the API (no stars, shares or board) and are hidden by default.
+
+## What the API does not give
+
+No pick rates for Seals (the augments): the Seals tab is the catalogue only. No board for comps under
+50 boards: the page then shows where each unit usually stands in the comps that do have one.
 
 ## Credits
 

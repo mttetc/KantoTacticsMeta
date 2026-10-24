@@ -99,6 +99,10 @@ def main():
         if c.get("guide"):
             cc["guide"] = {"stages": [{"stage": s["stage"], "n": s["n"], "units": s["units"]} for s in c["guide"]["stages"]]}
         comps.append(cc)
+    seals = {sid: {"code": v.get("code"), "rarity": v["rarity"], "cat": v.get("cat"), "rounds": v.get("rounds", []), "hero": v.get("hero"),
+                   "name": v["name"]["en"],
+                   "text": [{"round": t.get("round"), "line": (t.get("line") or {}).get("en"), "detail": (t.get("detail") or {}).get("en")} for t in v.get("text", [])]}
+             for sid, v in d.get("seals", {}).items()}
     pv = d["pvp"]
     out = {
         "meta": {k: m[k] for k in ("generated", "rules", "from", "to", "mode", "days", "versions", "seats", "ref", "thresholds")},
@@ -106,6 +110,7 @@ def main():
         "lines": lines, "itemData": items, "traitData": traits, "recipes": d["recipes"],
         "pvp": {"odds": pv["odds"], "pool": pv["pool"], "xpToNext": pv["xpToNext"], "rerollCost": pv["rerollCost"],
                 "interest": pv["interest"], "xpPerRound": pv.get("xpPerRound")},
+        "seals": seals, "sealRules": pv.get("seals"),
         "dataRules": d["rules"],
     }
     s = json.dumps(out, separators=(",", ":"), ensure_ascii=False)

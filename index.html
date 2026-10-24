@@ -182,15 +182,19 @@ a{color:#a5d8ff;text-underline-offset:3px}
 .tier-body .mtc-unit .mtc-mon{width:70px;height:70px;border-radius:16px}
 .tier-body>*{animation:card-in .55s var(--d,.2s) cubic-bezier(.2,1.4,.4,1) both}
 .mtc-stars{display:block;height:13px;line-height:13px;font-size:11px;letter-spacing:-1px;color:var(--gold);text-align:center}
-.mtc-mon{display:grid;place-items:center;width:44px;height:44px;object-fit:contain;border:2px solid var(--cc,var(--ink));background:#00000040;border-radius:10px;overflow:hidden;position:relative}
-.mtc-mon img{width:100%;height:100%;object-fit:contain}
+.mtc-mon{display:grid;place-items:center;width:44px;height:44px;object-fit:contain;border:2px solid var(--cc,var(--ink));background:#00000040;border-radius:10px;position:relative}
+.mtc-mon>img{width:100%;height:100%;object-fit:contain;border-radius:inherit}
 .mtc-mon.unknown{color:var(--dim);border-style:dashed;border-color:var(--line);font-weight:700;font-size:.8em}
 .mtc-mon.c1{--cc:var(--c1)}.mtc-mon.c2{--cc:var(--c2)}.mtc-mon.c3{--cc:var(--c3)}.mtc-mon.c4{--cc:var(--c4)}.mtc-mon.c5{--cc:var(--c5)}
 .mtc-mon.c4{box-shadow:0 0 8px #cc5de873}.mtc-mon.c5{box-shadow:0 0 12px #fcc41999}
 .mtc-mon.sm{width:42px;height:42px;border-radius:11px;border-width:2px}
 .mtc-mon.sm.c4,.mtc-mon.sm.c5{box-shadow:none}
-.mtc-items{display:flex;gap:1px;height:20px;margin-top:-6px;justify-content:center}
-.it-ico{display:block;width:18px;height:18px;background:var(--surface);border:1px solid var(--ink);border-radius:4px;flex:0 0 auto}
+.mtc-items{position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);display:flex;gap:1px;z-index:3;filter:drop-shadow(0 1px 0 #0a0e1a)}
+.it-ico{display:block;width:20px;height:20px;background:var(--surface);border:1px solid var(--ink);border-radius:5px;flex:0 0 auto}
+.mtc-items .it-ico{width:20px;height:20px}
+/* reserve the overhang so rows stay aligned whether or not a unit carries items */
+.mtc-row-units{align-items:flex-start;padding-bottom:6px}
+.mtc-units .mtc-unit>small:first-of-type{margin-top:10px}
 .mtc-mini{display:flex;flex-direction:column;align-items:center;position:relative}
 .mtc-mini.fresh .mtc-mon{box-shadow:0 0 0 2px #8ce99a}
 /* carry highlight */
@@ -198,13 +202,31 @@ a{color:#a5d8ff;text-underline-offset:3px}
 .mtc-mini.carry .mtc-mon,.mtc-unit.carry .mtc-mon{box-shadow:0 0 0 3px var(--gold),0 0 16px #ffd43bb3;border-color:var(--gold-hi)}
 .carry-tag{position:absolute;top:-7px;left:50%;transform:translateX(-50%) rotate(-4deg);z-index:2;background:linear-gradient(#ffe066,#fcc419);color:#1a1f2e;border:1.5px solid var(--ink);border-radius:99px;padding:0 6px;font-size:9px;font-weight:700;letter-spacing:.06em;line-height:14px;white-space:nowrap;box-shadow:0 2px 0 #0a0e1a}
 .mtc-units .carry-tag{font-size:10px;line-height:16px;top:-9px}
+.carry-tag.sub{background:linear-gradient(#e3e9f0,#aeb9c7);color:#1a1f2e}
+.mtc-mini.sub .mtc-mon,.mtc-unit.sub .mtc-mon{box-shadow:0 0 0 3px #c9d3e0,0 0 12px #c9d3e080;border-color:#e3e9f0}
+.mtc-carries li.sub>b{color:#e3e9f0}
+/* seals catalogue */
+.seal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.seal{--rc:#adb5bd;display:flex;flex-direction:column;gap:4px;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:10px 12px;box-shadow:var(--panel-shadow),inset 0 0 0 2px color-mix(in srgb,var(--rc) 55%,transparent);min-width:0;animation:card-in .5s var(--d,.2s) cubic-bezier(.2,1.4,.4,1) both}
+.seal.r2{--rc:#4dabf7}.seal.r3{--rc:#ffd43b;box-shadow:var(--panel-shadow),inset 0 0 0 2px #ffd43b8c,0 0 14px #ffd43b40}
+.seal-head{display:flex;align-items:center;gap:8px;min-width:0}
+.seal-head b{font-size:1em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.seal-code{font-size:.7em;color:var(--dim);border:1px solid var(--line);border-radius:6px;padding:0 5px;font-variant-numeric:tabular-nums}
+.seal-rar{font-size:.68em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1a1f2e;background:var(--rc);border-radius:99px;padding:1px 7px}
+.seal .line{font-size:.92em;line-height:1.35}
+.seal .det{font-size:.8em;color:var(--dim);line-height:1.4}
+.seal .cat{display:inline-flex;align-items:center;gap:4px;font-size:.72em;color:var(--dim);margin-top:auto;padding-top:4px}
+.seal .cat .mtc-mon{width:26px;height:26px;border-radius:7px}
+.seal-h{display:flex;align-items:center;gap:10px;margin:14px 0 8px;font-size:1.05em}
+.seal-h small{color:var(--dim);font-weight:500}
+.seal-h:first-child{margin-top:0}
 .mtc-row-units .mtc-mini.carry{margin:0 4px}
 .mtc-row-units .mtc-mini.carry .mtc-mon{width:54px;height:54px}
-.mtc-row-units .mtc-items{height:16px;margin-top:-5px}
-.mtc-row-units .it-ico{width:16px;height:16px}
+.mtc-row-units .mtc-items .it-ico{width:18px;height:18px}
+.mtc-row-units .mtc-mini.carry .mtc-items .it-ico{width:22px;height:22px}
 .key-items{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .key-item{display:inline-flex;align-items:center;gap:6px;background:#0a0e1a99;border:2px solid var(--gold);border-radius:99px;padding:2px 10px 2px 3px;font-size:.84em;font-weight:600;box-shadow:0 0 12px #ffd43b59}
-.key-item .it-ico{width:26px;height:26px;border-radius:8px}
+.key-item .it-ico{width:30px;height:30px;border-radius:9px}
 .key-item i{font-style:normal;color:var(--dim);font-weight:500}
 .key-item .mtc-mon{width:22px;height:22px;border-radius:6px;border-width:1.5px}
 
@@ -215,7 +237,6 @@ a{color:#a5d8ff;text-underline-offset:3px}
 .detail h3{margin:0 0 4px;font-size:1.15em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .detail p{margin:4px 0;color:var(--dim);font-size:.92em;line-height:1.45}
 .detail p b{color:var(--txt)}
-.detail .close{position:absolute;right:10px;top:10px}
 .mtc-stats{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:6px}
 .mtc-stat{display:flex;flex-direction:column;min-width:66px}
 .mtc-stat b{font-size:1.3em;line-height:1.1;font-variant-numeric:tabular-nums}
@@ -256,15 +277,16 @@ a{color:#a5d8ff;text-underline-offset:3px}
 .mtc-units .mtc-mon{width:66px;height:66px;border-radius:15px}
 .mtc-units .mtc-unit.carry{width:92px}
 .mtc-units .mtc-unit.carry .mtc-mon{width:80px;height:80px;border-radius:18px}
-.mtc-units .mtc-items{height:22px;margin-top:-8px}
-.mtc-units .it-ico{width:20px;height:20px}
-.mtc-units .mtc-unit.carry .it-ico{width:24px;height:24px}
-.mtc-carries{list-style:none;margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;font-size:.88em}
-.mtc-carries li{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.mtc-carries li>b{min-width:150px;display:inline-flex;align-items:center;gap:6px}
+.mtc-units .mtc-items .it-ico{width:24px;height:24px;border-radius:6px}
+.mtc-units .mtc-unit.carry .mtc-items .it-ico{width:28px;height:28px;border-radius:7px}
+.mtc-carries{list-style:none;margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px;font-size:.88em}
+.mtc-carries li{display:grid;grid-template-columns:190px minmax(0,1fr);align-items:center;gap:6px 10px;padding:3px 0;border-bottom:1px solid #96acff1f}
+.mtc-carries li:last-child{border-bottom:0}
+.mtc-carries li>b{display:inline-flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mtc-carries li.carry>b{color:var(--gold-hi)}
-.mtc-carry-its{display:flex;flex-wrap:wrap;gap:4px 10px;color:var(--dim)}
-.mtc-carry-its span{display:inline-flex;align-items:center;gap:4px}
+.mtc-carry-its{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 10px;color:var(--dim)}
+.mtc-carry-its span{display:inline-flex;align-items:center;gap:5px;min-width:0;white-space:nowrap}
+.mtc-carry-its span i{margin-left:auto;padding-left:6px}
 .mtc-carry-its span.key{color:var(--txt);font-weight:600}
 .mtc-carry-its span.key .it-ico{box-shadow:0 0 0 2px var(--gold)}
 .mtc-carry-its .it-ico{width:22px;height:22px}
@@ -294,7 +316,7 @@ a{color:#a5d8ff;text-underline-offset:3px}
 
 /* item + type cards in tier rows */
 .it-card{display:flex;flex-direction:column;align-items:center;width:92px;background:none;border:0;padding:0;border-radius:10px}
-.it-card .it-ico{width:62px;height:62px;border-radius:14px;border:2px solid var(--ink);box-shadow:inset 0 0 0 1px var(--rim-soft);padding:5px}
+.it-card .it-ico{width:68px;height:68px;border-radius:16px;border:2px solid var(--ink);box-shadow:inset 0 0 0 1px var(--rim-soft);padding:5px}
 .it-card:hover .it-ico,.it-card.sel .it-ico{box-shadow:0 0 0 2px var(--gold)}
 .it-card small{width:100%;text-align:center;color:var(--dim);font-size:.74em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
 .it-card .avg{font-size:.86em;font-weight:700;line-height:1;margin-top:3px}
@@ -318,6 +340,34 @@ a{color:#a5d8ff;text-underline-offset:3px}
 .lobby-foot a{color:#1b1f4ac7;font-weight:600;text-decoration:underline}
 .loading{color:var(--dim);padding:30px;text-align:center}
 .err{background:#ffd43b1f;border:1px solid #ffd43b80;border-radius:10px;padding:10px 12px;font-size:.9em}
+.mtc-fewtag.core{border-style:solid;color:#ffe066;border-color:#ffe06666}
+.mtc-row-units .mtc-mini.dim .it-ico{opacity:.55}
+
+/* ---- modal: the game's meta veil + panel ---- */
+dialog.meta-veil{border:0;padding:max(10px,env(safe-area-inset-top,0px)) max(10px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));background:transparent;max-width:none;max-height:none;width:100%;height:100%;margin:0;inset:0;color:var(--txt);font:17px/1.35 var(--font-ui);overflow:auto;place-items:center}
+dialog.meta-veil[open]{display:grid}
+dialog.meta-veil::backdrop{background:#05070eb8;backdrop-filter:blur(3px);animation:meta-fade .2s ease-out}
+@keyframes meta-fade{0%{opacity:0}}
+.modal-panel{width:min(780px,100%);max-height:100%;overflow:auto;border:4px solid var(--paper);border-radius:20px;overscroll-behavior:contain;
+  box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 0 6px #0b0e18,0 0 0 3px #0b0e18,0 18px 60px #0009;background:linear-gradient(#1b2030fa,#10131efc);animation:meta-pop .32s cubic-bezier(.2,.9,.3,1.25)}
+.modal-head{display:flex;align-items:center;gap:10px;padding:12px 12px 10px 16px;border-bottom:2px solid #ffffff1a;position:sticky;top:0;background:#1b2030f5;z-index:1}
+.modal-head h2{flex:1;min-width:0;margin:0;color:var(--gold);text-shadow:0 3px #b8860b;-webkit-text-stroke:1.2px #0b0e18;paint-order:stroke;font-size:24px;line-height:1.1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.modal-head h2 .mtc-tier{-webkit-text-stroke:0;text-shadow:none}
+.meta-x{width:44px;height:44px;flex:0 0 auto;border:2px solid #ffffff4d;border-radius:12px;background:#ffffff14;color:#fff;font-size:22px;font-weight:700;box-shadow:0 3px #00000080;display:grid;place-items:center}
+.meta-x:hover{background:#ffffff29}
+.modal-body{padding:12px 14px 16px;display:flex;flex-direction:column;gap:12px}
+.modal-body .detail{margin:0;box-shadow:var(--panel-shadow)}
+.rel{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rel li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:8px;background:#0f1430;border:2px solid var(--ink);border-radius:10px;padding:6px 8px;box-shadow:inset 0 2px 0 #00000073,inset 0 0 0 1px #96acff38;cursor:pointer;width:100%;text-align:left;color:inherit;font:inherit}
+.rel li:hover{background:#151b40}
+.rel .who{display:flex;flex-direction:column;min-width:0;gap:3px}
+.rel .who b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rel .mons{display:flex;gap:2px;flex-wrap:wrap}
+.rel .mons img{width:24px;height:24px;object-fit:contain}
+.held{display:flex;flex-wrap:wrap;gap:6px}
+.held span{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#00000040;border-radius:99px;padding:3px 10px 3px 4px;font-size:.88em;font-weight:600}
+.held .it-ico{width:24px;height:24px;border-radius:7px}
+.held i{font-style:normal;color:var(--dim);font-weight:500}
 
 @media (max-width:1100px){
   .lobby{grid-template-columns:minmax(0,1fr)}
@@ -334,7 +384,7 @@ a{color:#a5d8ff;text-underline-offset:3px}
   .ln-nav{order:3;flex:1 1 100%;justify-content:flex-start}
   .ln-search{order:2;flex:1 1 120px}.mtc-search{width:100%}
   .mtc-row{grid-template-columns:28px minmax(0,1fr) auto 12px;gap:8px;padding:8px}
-  .mtc-carries li>b{min-width:0}
+  .mtc-carries li{grid-template-columns:minmax(0,1fr)}
   .sitebar .btn.x span{display:none}
   .sitebar .back span{display:none}
 }
@@ -362,6 +412,7 @@ a{color:#a5d8ff;text-underline-offset:3px}
     <button class="ln-tab" role="tab" data-tab="comps">Comps<span class="n" id="n-comps"></span></button>
     <button class="ln-tab" role="tab" data-tab="items">Items<span class="n" id="n-items"></span></button>
     <button class="ln-tab" role="tab" data-tab="types">Types<span class="n" id="n-types"></span></button>
+    <button class="ln-tab" role="tab" data-tab="seals">Seals<span class="n" id="n-seals"></span></button>
   </nav>
   <div class="ln-search"><input class="mtc-search" id="search" type="search" placeholder="Search a Pokémon, an item or a type…" aria-label="Search"></div>
 </div>
@@ -388,6 +439,13 @@ a{color:#a5d8ff;text-underline-offset:3px}
   <footer class="lobby-foot" id="foot"></footer>
 </div>
 
+<dialog class="meta-veil" id="modal" aria-labelledby="modalTitle">
+  <div class="modal-panel">
+    <header class="modal-head"><h2 id="modalTitle"></h2><button class="meta-x" id="modalClose" aria-label="Close">×</button></header>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</dialog>
+
 <script>
 (() => {
 const $ = (s, el=document) => el.querySelector(s);
@@ -399,9 +457,15 @@ const TIERS = ['S','A','B','C','D'];
 const TIER_HELP = {S:'well below the reference place', A:'below the reference', B:'around the reference', C:'above the reference', D:'well above the reference'};
 const D_GAP = 0.5; // the API stops at C; D mirrors S on the other side: avg ≥ ref + 0.5
 const tierOf = x => (x.tier === 'C' && x.avg >= KT.meta.ref + D_GAP) ? 'D' : x.tier;
+// comps: stricter than the game. Score = avg + CI (pessimistic), so small or noisy samples drop.
+const COMP_T = {S: -0.8, A: -0.15, B: 0.6, C: 1.2};
+const compTier = c => { const sc = c.avg + (c.ic || 0) - KT.meta.ref; return sc <= COMP_T.S ? 'S' : sc <= COMP_T.A ? 'A' : sc <= COMP_T.B ? 'B' : sc <= COMP_T.C ? 'C' : 'D'; };
 
 let KT = null;
-const state = { tab: 'pokemon', q: '', sort: 'avg', cost: 0, type: '', tierFilter: '', compSort: 'avg', shown: 40, sel: null, open: null };
+const state = { tab: 'pokemon', q: '', sort: 'avg', cost: 0, type: '', tierFilter: '', compSort: 'avg', shown: 40, sel: null, open: null, reliable: true, modal: null, sealRar: 0, sealCat: '' };
+const MIN_NE = 30; // below this many effective games the API gives only the 4-unit core: no stars, no shares, global items
+const isCore = c => c.units.some(u => u.share == null);
+const reliable = c => c.ne >= MIN_NE && !isCore(c);
 const saved = (() => { try { return JSON.parse(localStorage.getItem('kt-meta-ui') || '{}'); } catch (e) { return {}; } })();
 const save = () => { try { localStorage.setItem('kt-meta-ui', JSON.stringify({tab: state.tab})); } catch (e) {} };
 
@@ -415,7 +479,7 @@ const itemName = id => (KT.itemData[id] || {}).name || id;
 const typeName = t => (KT.traitData[t] || {}).name || t;
 const stars = n => '★'.repeat(Math.max(1, Math.min(3, n || 1)));
 
-function monHtml(id, {star=null, size='', anim=true, cls=''}={}) {
+function monHtml(id, {star=null, size='', anim=true, cls='', items=null}={}) {
   const l = line(id);
   const dex = star ? unitDex(id, star) : lineDex(id);
   const cost = l.c ? 'c' + l.c : '';
@@ -423,7 +487,8 @@ function monHtml(id, {star=null, size='', anim=true, cls=''}={}) {
   let inner;
   if (dex) inner = `<img src="${anim ? 'sd/'+dex+'.gif' : 'thumb/'+dex+'.webp'}" alt="${esc(name)}" loading="lazy" width="44" height="44">`;
   else inner = esc(name.slice(0,3).toUpperCase());
-  return `<span class="mtc-mon ${size} ${cost} ${dex ? '' : 'unknown'} ${cls}" title="${esc(name)}">${inner}</span>`;
+  const its = items && items.length ? `<span class="mtc-items">${items.map(i => itemIco(i)).join('')}</span>` : '';
+  return `<span class="mtc-mon ${size} ${cost} ${dex ? '' : 'unknown'} ${cls}" title="${esc(name)}">${inner}${its}</span>`;
 }
 const itemIco = (id, cls='it-ico') => `<img class="${cls}" src="items/${esc(id)}.png" alt="${esc(itemName(id))}" title="${esc(itemName(id))}" loading="lazy" width="18" height="18">`;
 const typeGlyph = t => `<img src="types/${esc(t)}-g.png" alt="" width="14" height="14">`;
@@ -433,13 +498,15 @@ const compUnitsNames = c => c.units.map(u => unitName(u.line, u.star)).join(' ')
 
 // carry = the unit that holds the most items (sum of item shares); other item holders are secondary
 function carryInfo(c) {
+  if (isCore(c)) return {main: null, sub: null, holders: new Set(), keyItems: []};
   const scored = c.units.map(u => ({u, s: (u.items||[]).reduce((a, i) => a + i.share, 0)})).filter(x => x.s > 0).sort((a, b) => b.s - a.s || b.u.share - a.u.share);
   const main = scored[0] ? scored[0].u.line : null;
-  const holders = new Set(scored.map(x => x.u.line));
+  const sub = scored[1] && scored[1].s >= 30 ? scored[1].u.line : null; // second most geared unit, if it is geared often enough
+  const holders = new Set(scored.filter(x => x.u.line === main || x.u.line === sub || Math.max(...x.u.items.map(i => i.share)) >= 20).map(x => x.u.line));
   const keyItems = [];
   for (const x of scored) for (const i of x.u.items) keyItems.push({id: i.id, line: x.u.line, star: x.u.star, share: i.share, w: i.share * (x.u.share/100)});
   keyItems.sort((a, b) => b.w - a.w);
-  return {main, holders, keyItems: keyItems.slice(0, 3)};
+  return {main, sub, holders, keyItems: keyItems.slice(0, 3)};
 }
 
 // ---- side panels & chips ----
@@ -454,6 +521,7 @@ function renderShell() {
   $('#n-comps').textContent = KT.comps.length;
   $('#n-items').textContent = KT.items.length;
   $('#n-types').textContent = KT.traits.length;
+  $('#n-seals').textContent = Object.keys(KT.seals || {}).length;
   const gen = new Date(m.generated);
   const p = KT.pvp;
   const levels = Object.keys(p.odds).map(Number).sort((a,b)=>a-b).filter(l => l >= 3);
@@ -473,7 +541,7 @@ function renderShell() {
       <div>${tierBadge('B')} <span>≤ <b>${fmt1(m.ref + m.thresholds.tiers.B)}</b> · ${TIER_HELP.B}</span></div>
       <div>${tierBadge('C')} <span>&lt; <b>${fmt1(m.ref + D_GAP)}</b> · ${TIER_HELP.C}</span></div>
       <div>${tierBadge('D')} <span>≥ <b>${fmt1(m.ref + D_GAP)}</b> · ${TIER_HELP.D}</span></div>
-      <p class="mtc-note" style="margin:4px 0 0">The API stops at C; D is this page's split, mirroring S. A tier needs ${m.thresholds.minTier}+ effective games. With a small sample, trust the ± interval.</p>
+      <p class="mtc-note" style="margin:4px 0 0">Pokémon, items, types: the game's tiers (the API stops at C; D is this page's split, mirroring S). <b style="color:var(--txt)">Comps</b> are graded stricter, on the pessimistic average (avg + CI) against the reference: S ≤ ${fmt1(m.ref + COMP_T.S)}, A ≤ ${fmt1(m.ref + COMP_T.A)}, B ≤ ${fmt1(m.ref + COMP_T.B)}, C ≤ ${fmt1(m.ref + COMP_T.C)}, D above. A noisy sample cannot be S.</p>
     </div>
     <h4>Shop odds<small>% per slot, by level</small></h4>
     <div class="blk">
@@ -485,8 +553,9 @@ function renderShell() {
   renderRight();
 }
 function renderRight() {
-  const top = [...KT.comps].sort((a, b) => a.avg - b.avg).slice(0, 8);
-  const played = [...KT.comps].sort((a, b) => b.use - a.use).slice(0, 5);
+  const pool = KT.comps.filter(reliable);
+  const top = [...pool].sort((a, b) => a.avg - b.avg).slice(0, 8);
+  const played = [...pool].sort((a, b) => b.use - a.use).slice(0, 5);
   const mons = [...KT.units].sort((a, b) => a.avg - b.avg).slice(0, 5);
   const row = (c, i, val, lbl) => `<li role="button" tabindex="0" data-goto-comp="${esc(c.id)}">
       <span class="num ${i===0?'g':''}">${i+1}</span>
@@ -526,7 +595,6 @@ function viewPokemon() {
   if (state.cost) units = units.filter(u => line(u.line).c === state.cost);
   if (state.type) units = units.filter(u => line(u.line).t.includes(state.type));
   units = sortBy(units, state.sort);
-  const sel = state.sel && KT.units.find(u => u.line === state.sel);
   let html = `<div class="mtc-sort">
     <span class="lbl">Sort</span>
     ${[['avg','Best place'],['top4','Top 4'],['win','Wins'],['use','Most played']].map(([k,l]) => `<button class="chip ${state.sort===k?'on':''}" data-sort="${k}">${l}</button>`).join('')}
@@ -535,7 +603,6 @@ function viewPokemon() {
     <span class="sep"></span>
     <select class="chip" id="typeSel" aria-label="Type filter"><option value="">Any type</option>${types.map(t => `<option value="${t}" ${state.type===t?'selected':''}>${esc(typeName(t))}</option>`).join('')}</select>
   </div>`;
-  if (sel) html += pokemonDetail(sel, maxUse);
   let k = 0; const dly = () => `--d:${(0.15 + Math.min(k++, 30)*0.025).toFixed(3)}s`;
   html += `<div class="tiers">` + TIERS.map((t, i) => `
     <section class="tier-row" aria-label="Tier ${t}" style="--d:${(0.1 + i*0.07).toFixed(2)}s">
@@ -550,13 +617,27 @@ function viewPokemon() {
     <p class="tier-note">Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by ${ {avg:'best place', top4:'top 4 rate', win:'win rate', use:'usage'}[state.sort] } inside each tier.</p>`;
   return html;
 }
+// related comps / items for the modals
+const relComps = (pred, n=5) => KT.comps.filter(c => reliable(c) && pred(c)).sort((a, b) => a.avg - b.avg).slice(0, n);
+function relCompsHtml(title, list) {
+  if (!list.length) return '';
+  return `<div class="mtc-sec"><h4 class="mtc-h4">${title}<small>reliable samples, best first</small></h4><ul class="rel">${list.map(c => `<li role="button" tabindex="0" data-goto-comp="${esc(c.id)}">${tierBadge(c.tier)}<span class="who"><b>${compTitle(c)}</b><span class="mons">${c.units.slice(0,9).map(u => `<img src="thumb/${unitDex(u.line,u.star)||0}.webp" alt="" title="${esc(unitName(u.line,u.star))}" loading="lazy">`).join('')}</span></span><span class="rkc-pill">${fmt1(c.avg)}</span></li>`).join('')}</ul></div>`;
+}
+function itemsOnLine(lineId) {
+  const acc = {};
+  for (const c of KT.comps) { if (!reliable(c)) continue; for (const u of c.units) if (u.line === lineId) for (const i of u.items) acc[i.id] = (acc[i.id] || 0) + i.share * c.n; }
+  const tot = Object.values(acc).reduce((a, b) => a + b, 0) || 1;
+  return Object.entries(acc).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id, w]) => ({id, p: w / tot * 100}));
+}
 function pokemonDetail(u, maxUse) {
   const l = line(u.line);
   const forms = l.stars.map((s, i) => `<span class="mtc-mini" title="${esc(s.name)}"><span class="mtc-stars">${stars(i+1)}</span>${monHtml(u.line, {star:i+1, size:'sm', anim:false})}</span>`).join('');
+  const held = itemsOnLine(u.line);
+  const comps = relComps(c => c.units.some(x => x.line === u.line && x.share >= 50));
   return `<div class="detail">
     <div class="mtc-mon big ${l.c?'c'+l.c:''}">${lineDex(u.line) ? `<img src="sd/${lineDex(u.line)}.gif" alt="">` : ''}</div>
     <div>
-      <h3>${esc(lineName(u.line))} ${tierBadge(u.tier)} ${l.c ? `<span class="mtc-trait">cost ${l.c}</span>` : ''} ${l.t.map(t => `<span class="mtc-trait">${typeGlyph(t)}${esc(typeName(t))}</span>`).join('')} ${l.range ? `<span class="mtc-trait">range ${l.range}</span>` : ''}</h3>
+      <h3>${l.c ? `<span class="mtc-trait">cost ${l.c}</span>` : ''} ${l.t.map(t => `<span class="mtc-trait">${typeGlyph(t)}${esc(typeName(t))}</span>`).join('')} ${l.range ? `<span class="mtc-trait">range ${l.range}</span>` : ''}</h3>
       ${l.n.length > 1 ? `<div class="mtc-strip" style="margin:4px 0 6px">${forms}</div>` : ''}
       ${l.move ? `<p><b>${esc(l.move.name)}</b> (${esc(typeName(l.move.type))}) · ${esc(l.move.text)}</p>` : ''}
       ${l.passive ? `<p><b>${l.new35 ? 'Rules v35' : 'Passive'}</b> · ${esc(l.passive)}</p>` : ''}
@@ -564,8 +645,9 @@ function pokemonDetail(u, maxUse) {
       ${statsHtml(u, maxUse)}
       ${u.onlyRules ? `<p class="mtc-note">Only rules v${u.onlyRules} counted for this one.</p>` : ''}
     </div>
-    <button class="mtc-btn x close" data-close aria-label="Close">×</button>
-  </div>`;
+  </div>
+  ${held.length ? `<div class="mtc-sec"><h4 class="mtc-h4">Items players put on it<small>share of its item slots in reliable comps</small></h4><div class="held">${held.map(h => `<span data-goto-item="${esc(h.id)}" role="button" tabindex="0">${itemIco(h.id)}${esc(itemName(h.id))}<i>${Math.round(h.p)} %</i></span>`).join('')}</div></div>` : ''}
+  ${relCompsHtml('Best comps with it', comps)}`;
 }
 
 // --- Comps ---
@@ -573,6 +655,8 @@ function viewComps() {
   const q = state.q.toLowerCase();
   let comps = KT.comps.filter(c => matches(q, compTitle(c), compUnitsNames(c), c.units.flatMap(u => u.items.map(i => itemName(i.id))).join(' '), c.traits.map(t => typeName(t.type)).join(' ')));
   if (state.tierFilter) comps = comps.filter(c => c.tier === state.tierFilter);
+  const small = comps.filter(c => !reliable(c)).length;
+  if (state.reliable) comps = comps.filter(reliable);
   comps = sortBy(comps, state.compSort);
   const maxUse = Math.max(...KT.comps.map(c => c.use));
   const shown = comps.slice(0, state.shown);
@@ -580,7 +664,8 @@ function viewComps() {
     ${[['avg','Best'],['use','Most played'],['win','Most wins']].map(([k,l]) => `<button class="chip ${state.compSort===k?'on':''}" data-csort="${k}">${l}</button>`).join('')}
     <span class="sep"></span><span class="lbl">Tier</span>
     ${TIERS.map(t => `<button class="chip ${state.tierFilter===t?'on':''}" data-tier="${t}">${t}</button>`).join('')}
-    <span class="lbl" style="margin-left:auto">${int(comps.length)} comps · gold ring = carry</span>
+    <span class="sep"></span><button class="chip ${state.reliable?'':'on'}" data-reliable title="Comps under ${MIN_NE} effective games: the API only gives their 4 core units, no board detail">${state.reliable ? `Show small samples (${int(small)})` : 'Hide small samples'}</button>
+    <span class="lbl" style="margin-left:auto">${int(comps.length)} comps</span>
   </div>
   <div class="mtc-list">` + shown.map((c, i) => compRow(c, maxUse, i)).join('') + `</div>`;
   if (comps.length > shown.length) html += `<div class="more-wrap"><button class="mtc-btn" data-more>Show ${Math.min(40, comps.length - shown.length)} more</button></div>`;
@@ -588,14 +673,15 @@ function viewComps() {
 }
 function compRow(c, maxUse, i=0) {
   const open = state.open === c.id;
-  const few = c.ne < KT.meta.thresholds.minTier;
+  const core = isCore(c);
+  const few = !core && c.ne < MIN_NE;
   const ci = carryInfo(c);
   return `<article class="mtc-card ${open?'exp':''}" id="comp-${esc(c.id)}" style="--d:${(0.05 + Math.min(i, 12)*0.05).toFixed(2)}s">
     <button class="mtc-row" data-comp="${esc(c.id)}" aria-expanded="${open}">
       ${tierBadge(c.tier)}
       <span class="mtc-row-main">
-        <span class="mtc-row-title"><h3>${compTitle(c)}</h3>${c.use >= 2 ? `<span class="mtc-pop">🔥 ${pct(c.use)}</span>` : ''}${few ? `<span class="mtc-fewtag">few games</span>` : ''}</span>
-        <span class="mtc-row-units">${c.units.map(u => { const isC = u.line === ci.main, isH = ci.holders.has(u.line); return `<span class="mtc-mini ${isC?'carry':isH?'holder':''}">${isC ? '<span class="carry-tag">CARRY</span>' : ''}<span class="mtc-stars">${stars(u.star)}</span>${monHtml(u.line, {star:u.star, size:'sm'})}${isH ? `<span class="mtc-items">${u.items.slice(0, isC ? 3 : 2).map(i => itemIco(i.id)).join('')}</span>` : ''}</span>`; }).join('')}</span>
+        <span class="mtc-row-title"><h3>${compTitle(c)}</h3>${c.use >= 2 ? `<span class="mtc-pop">🔥 ${pct(c.use)}</span>` : ''}${few ? `<span class="mtc-fewtag">${int(c.ne)} games</span>` : ''}${core ? `<span class="mtc-fewtag core" title="Fewer than ${MIN_NE} games: the API only gives the 4 core units, with each unit's usual items, no stars or board">core only · ${int(c.n)} games</span>` : ''}</span>
+        <span class="mtc-row-units">${c.units.map(u => { const isC = u.line === ci.main, isS = u.line === ci.sub, isH = ci.holders.has(u.line); const show = isH || (core && u.items.length); return `<span class="mtc-mini ${isC?'carry':isS?'sub':isH?'holder':''} ${core?'dim':''}">${isC ? '<span class="carry-tag">CARRY</span>' : isS ? '<span class="carry-tag sub">SUB</span>' : ''}<span class="mtc-stars">${core ? '' : stars(u.star)}</span>${monHtml(u.line, {star:u.star, size:'sm', items: show ? u.items.slice(0, isC ? 3 : 2).map(i => i.id) : null})}</span>`; }).join('')}</span>
       </span>
       <span class="mtc-row-avg"><b>${fmt1(c.avg)}</b><small>avg place</small></span>
       <span class="mtc-row-chev">${open ? '▲' : '▼'}</span>
@@ -604,32 +690,55 @@ function compRow(c, maxUse, i=0) {
   </article>`;
 }
 function compDetail(c, maxUse, ci) {
-  const carries = c.units.filter(u => u.items && u.items.length).sort((a, b) => (a.line === ci.main ? -1 : b.line === ci.main ? 1 : 0));
+  const rank = u => u.line === ci.main ? 0 : u.line === ci.sub ? 1 : 2;
+  const carries = c.units.filter(u => u.items && u.items.length).sort((a, b) => rank(a) - rank(b) || b.items.reduce((s, i) => s + i.share, 0) - a.items.reduce((s, i) => s + i.share, 0));
   const ordered = [...carries, ...c.units.filter(u => !u.items || !u.items.length)];
+  if (isCore(c)) return `<div class="mtc-detail">
+    <div class="mtc-strip">${c.traits.map(t => `<span class="mtc-trait">${typeGlyph(t.type)}${esc(typeName(t.type))} ${t.level}</span>`).join('')}</div>
+    ${statsHtml(c, maxUse)}
+    <div class="mtc-sec"><h4 class="mtc-h4">Core units<small>${int(c.n)} games only: the API publishes the 4 core units and each unit's usual items across all comps, not this comp's board</small></h4>
+      <div class="mtc-units">${c.units.map(u => `<span class="mtc-unit" title="${esc(lineName(u.line))}">${monHtml(u.line, {items: u.items.slice(0,3).map(i => i.id)})}<small>${esc(lineName(u.line))}</small></span>`).join('')}</div>
+      <p class="mtc-note">Average place ${fmt1(c.avg)} ± ${fmt1(c.ic)}: with so few games, trust the interval, not the average.</p></div>
+  </div>`;
   return `<div class="mtc-detail">
     <div class="mtc-strip">${c.traits.map(t => `<span class="mtc-trait">${typeGlyph(t.type)}${esc(typeName(t.type))} ${t.level}<i style="opacity:.6;font-style:normal">· ${pct(t.share)}</i></span>`).join('')}</div>
     ${statsHtml(c, maxUse)}
+    ${c.apiTier !== c.tier ? `<p class="mtc-note" style="margin:0">Game tier ${c.apiTier}; here ${c.tier} because the tier uses avg + CI (${fmt1(c.avg + c.ic)}) against the reference ${fmt1(KT.meta.ref)}.</p>` : ''}
     ${ci.keyItems.length ? `<div class="key-items"><span class="lbl" style="color:var(--dim);font-size:.84em;margin-right:4px">Key items</span>${ci.keyItems.map(k => `<span class="key-item">${itemIco(k.id)}${esc(itemName(k.id))}<i>on</i>${monHtml(k.line,{star:k.star,anim:false})}<i>${Math.round(k.share)} %</i></span>`).join('')}</div>` : ''}
     <div class="mtc-sec">
       <h4 class="mtc-h4">Final team<small>share of games with that unit · carry first</small></h4>
-      <div class="mtc-units">${ordered.map(u => { const isC = u.line === ci.main, isH = u.items.length > 0; return `
-        <span class="mtc-unit ${isC?'carry':isH?'holder':''}" title="${esc(unitName(u.line,u.star))} · in ${pct(u.share)} of games">
-          ${isC ? '<span class="carry-tag">CARRY</span>' : ''}
+      <div class="mtc-units">${ordered.map(u => { const isC = u.line === ci.main, isS = u.line === ci.sub, isH = ci.holders.has(u.line); return `
+        <span class="mtc-unit ${isC?'carry':isS?'sub':isH?'holder':''}" title="${esc(unitName(u.line,u.star))} · in ${pct(u.share)} of games">
+          ${isC ? '<span class="carry-tag">CARRY</span>' : isS ? '<span class="carry-tag sub">SUB</span>' : ''}
           <span class="mtc-stars">${stars(u.star)}</span>
-          ${monHtml(u.line, {star:u.star})}
-          ${isH ? `<span class="mtc-items">${u.items.slice(0,3).map(i => itemIco(i.id)).join('')}</span>` : ''}
-          <small style="${isC?'color:var(--gold-hi);font-weight:700':''}">${esc(unitName(u.line,u.star))}</small>
+          ${monHtml(u.line, {star:u.star, items: u.items.slice(0,3).map(i => i.id)})}
+          <small style="${isC?'color:var(--gold-hi);font-weight:700':isS?'color:#e3e9f0;font-weight:700':''}">${esc(unitName(u.line,u.star))}</small>
           <small style="color:var(--txt)">${Math.round(u.share)} %</small>
         </span>`; }).join('')}</div>
-      ${carries.length ? `<ul class="mtc-carries">${carries.map(u => { const its = [...u.items].sort((a,b) => b.share - a.share); return `<li class="${u.line===ci.main?'carry':''}"><b>${monHtml(u.line,{star:u.star,size:'sm',anim:false})}${esc(unitName(u.line,u.star))}${u.line===ci.main?' · carry':''}</b><span class="mtc-carry-its">${its.map((i, k) => `<span class="${k===0?'key':''}">${itemIco(i.id)}${esc(itemName(i.id))}<i>${Math.round(i.share)} %</i></span>`).join('')}</span></li>`; }).join('')}</ul>` : ''}
+      ${carries.length ? `<ul class="mtc-carries">${carries.map(u => { const its = [...u.items].sort((a,b) => b.share - a.share); return `<li class="${u.line===ci.main?'carry':u.line===ci.sub?'sub':''}"><b>${monHtml(u.line,{star:u.star,size:'sm',anim:false})}${esc(unitName(u.line,u.star))}${u.line===ci.main?' · carry':u.line===ci.sub?' · sub':''}</b><span class="mtc-carry-its">${its.map((i, k) => `<span class="${k===0?'key':''}">${itemIco(i.id)}${esc(itemName(i.id))}<i>${Math.round(i.share)} %</i></span>`).join('')}</span></li>`; }).join('')}</ul>` : ''}
     </div>
     <div class="mtc-cols">
-      ${c.placement ? `<div class="mtc-sec"><h4 class="mtc-h4">Placement<small>${int(c.placement.n)} real boards</small></h4>${boardSvg(c.placement, ci)}<p class="mtc-note">Where players put their units on their last board. Share = % of this comp's games with that unit on that hex. Gold hex = the carry.</p></div>` : ''}
+      ${(() => { const pl = c.placement || typicalPlacement(c); if (!pl) return ''; return pl.typical
+        ? `<div class="mtc-sec"><h4 class="mtc-h4">Placement<small>typical, from other comps</small></h4>${boardSvg(pl, ci)}<p class="mtc-note">The API only publishes a board for comps with 50+ boards. This one shows where each of these units usually stands in the comps that do have one (most common hex, no collisions). Gold hex = the carry.</p></div>`
+        : `<div class="mtc-sec"><h4 class="mtc-h4">Placement<small>${int(pl.n)} real boards</small></h4>${boardSvg(pl, ci)}<p class="mtc-note">Where players put their units on their last board. Share = % of this comp's games with that unit on that hex. Gold hex = the carry.</p></div>`; })()}
       ${c.guide ? `<div class="mtc-sec"><h4 class="mtc-h4">Stage by stage<small>real games</small></h4><div class="mtc-levels">${guideHtml(c.guide)}</div><div class="mtc-legend-new"><i></i> New at this stage</div></div>` : ''}
     </div>
     ${c.variants && c.variants.length ? `<div class="mtc-sec"><h4 class="mtc-h4">Variants<small>the 4 core units that players pair with this comp</small></h4>${c.variants.slice(0,8).map(v => `<div class="mtc-variant"><span class="mtc-strip">${v.cores.map(l => monHtml(l,{size:'sm',anim:false})).join('')}</span><span>${pct(v.share)} of games</span><span>avg <b>${fmt1(v.avg)}</b></span><span>top 4 <b>${pct(v.top4)}</b></span></div>`).join('')}</div>` : ''}
     ${c.onlyRules ? `<p class="mtc-note">Only rules v${c.onlyRules} counted for this comp.</p>` : ''}
   </div>`;
+}
+// where each unit usually stands, aggregated over every comp that has a board (fallback for comps without one)
+let TYP = {};
+function buildTypicalCells() {
+  const acc = {};
+  for (const c of KT.comps) { if (!c.placement) continue; for (const x of c.placement.cells) { (acc[x.line] ||= {})[x.cell] = (acc[x.line][x.cell] || 0) + x.share * c.placement.n; } }
+  TYP = Object.fromEntries(Object.entries(acc).map(([l, m]) => [l, Object.entries(m).sort((a, b) => b[1] - a[1]).map(([cell]) => +cell)]));
+}
+function typicalPlacement(c) {
+  const taken = new Set(), cells = [];
+  const units = [...c.units].sort((a, b) => (b.share || 0) - (a.share || 0));
+  for (const u of units) { const opts = TYP[u.line]; if (!opts) continue; const cell = opts.find(x => !taken.has(x)); if (cell == null) continue; taken.add(cell); cells.push({cell, line: u.line, star: u.star, share: null}); }
+  return cells.length ? {n: 0, cells, typical: true} : null;
 }
 function boardSvg(p, ci) {
   // 7 columns × 4 rows, cell = row*7 + col, row 0 = front line. Odd rows shift half a hex right. Same geometry as the game.
@@ -643,7 +752,7 @@ function boardSvg(p, ci) {
     if (c) {
       const dex = unitDex(c.line, c.star);
       const op = (0.35 + Math.min(1, c.share/70)*0.65).toFixed(2);
-      g += `<g><polygon points="${pts}" class="${c.line === (ci||{}).main ? 'carry' : 'on'}"></polygon>${dex ? `<image href="thumb/${dex}.webp" x="${cx-18}" y="${(cy-24).toFixed(1)}" width="36" height="36" opacity="${op}"><title>${esc(unitName(c.line,c.star))} · ${pct(c.share)}</title></image>` : ''}<text x="${cx}" y="${(cy+22).toFixed(1)}" text-anchor="middle">${Math.round(c.share)} %</text></g>`;
+      g += `<g><polygon points="${pts}" class="${c.line === (ci||{}).main ? 'carry' : 'on'}"></polygon>${dex ? `<image href="thumb/${dex}.webp" x="${cx-18}" y="${(cy-24).toFixed(1)}" width="36" height="36" opacity="${c.share == null ? 0.9 : op}"><title>${esc(unitName(c.line,c.star))}${c.share == null ? '' : ' · ' + pct(c.share)}</title></image>` : ''}${c.share == null ? '' : `<text x="${cx}" y="${(cy+22).toFixed(1)}" text-anchor="middle">${Math.round(c.share)} %</text>`}</g>`;
     } else g += `<g><polygon points="${pts}"></polygon></g>`;
   }
   return `<div class="mtc-board"><div class="mtc-board-rival">▲ Enemy · <span>front line</span></div><svg viewBox="0 0 424 203" role="img" aria-label="Placement on your side of the board">${g}</svg></div>`;
@@ -662,8 +771,7 @@ function viewItems() {
   const q = state.q.toLowerCase();
   const maxUse = Math.max(...KT.items.map(i => i.use));
   const items = sortBy(KT.items.filter(i => matches(q, itemName(i.id), (KT.itemData[i.id]||{}).text || '')), 'avg');
-  const sel = state.sel && KT.items.find(i => i.id === state.sel);
-  let html = sel ? itemDetail(sel, maxUse) : '';
+  let html = '';
   let k = 0; const dly = () => `--d:${(0.15 + Math.min(k++, 30)*0.025).toFixed(3)}s`;
   html += `<div class="tiers">` + TIERS.map((t, k) => `
     <section class="tier-row" aria-label="Tier ${t}" style="--d:${(0.1 + k*0.07).toFixed(2)}s">
@@ -681,18 +789,19 @@ function itemDetail(it, maxUse) {
   const holders = {};
   for (const c of KT.comps.slice(0, 200)) for (const u of c.units) for (const x of u.items) if (x.id === it.id) holders[u.line] = (holders[u.line]||0) + x.share;
   const top = Object.entries(holders).sort((a,b) => b[1]-a[1]).slice(0,6);
+  const comps = relComps(c => c.units.some(u => u.items.some(x => x.id === it.id && x.share >= 15)));
   return `<div class="detail">
     <span class="it-ico big" style="width:84px;height:84px;border-radius:16px;display:grid;place-items:center;background:var(--surface);padding:10px">${itemIco(it.id)}</span>
     <div>
-      <h3>${esc(itemName(it.id))} ${tierBadge(it.tier)} <span class="mtc-trait">${esc(d.k === 'full' ? 'combined' : d.k === 'part' ? 'component' : d.k || 'item')}</span></h3>
+      <h3><span class="mtc-trait">${esc(d.k === 'full' ? 'combined' : d.k === 'part' ? 'component' : d.k || 'item')}</span>${d.stat ? ` <span class="mtc-trait">${esc(d.stat)}</span>` : ''}</h3>
       ${d.text ? `<p>${esc(d.text)}</p>` : ''}
       ${d.recipe ? `<p><b>Recipe</b> <span class="recipe">${itemIco(d.recipe[0])}<span class="plus">+</span>${itemIco(d.recipe[1])}<span class="plus">=</span>${itemIco(it.id)}</span> <small style="color:var(--dim)">${esc(itemName(d.recipe[0]))} + ${esc(itemName(d.recipe[1]))}</small></p>` : ''}
       ${d.k === 'part' ? `<p><b>Makes</b> ${KT.recipes.filter(r => r[0]===it.id || r[1]===it.id).map(r => `<span class="recipe" title="${esc(itemName(r[2]))}">${itemIco(r[2])}</span>`).join(' ')}</p>` : ''}
       ${top.length ? `<p><b>Usually on</b> <span class="mtc-strip" style="display:inline-flex;vertical-align:middle">${top.map(([l]) => `<button class="mtc-unit" data-goto-unit="${esc(l)}" style="width:auto" title="${esc(lineName(l))}">${monHtml(l,{size:'sm',anim:false})}</button>`).join('')}</span></p>` : ''}
       ${statsHtml(it, maxUse)}
     </div>
-    <button class="mtc-btn x close" data-close aria-label="Close">×</button>
-  </div>`;
+  </div>
+  ${relCompsHtml('Best comps with it', comps)}`;
 }
 
 // --- Types ---
@@ -701,8 +810,7 @@ function viewTypes() {
   const maxUse = Math.max(...KT.traits.map(t => t.use));
   const traits = sortBy(KT.traits.filter(t => matches(q, typeName(t.type))), 'avg');
   const selKey = state.sel;
-  const sel = selKey && KT.traits.find(t => t.type + ':' + t.level === selKey);
-  let html = sel ? typeDetail(sel, maxUse) : '';
+  let html = '';
   let k = 0; const dly = () => `--d:${(0.15 + Math.min(k++, 30)*0.025).toFixed(3)}s`;
   html += `<div class="tiers">` + TIERS.map((t, k) => `
     <section class="tier-row" aria-label="Tier ${t}" style="--d:${(0.1 + k*0.07).toFixed(2)}s">
@@ -720,17 +828,86 @@ function typeDetail(x, maxUse) {
   const d = KT.traitData[x.type] || {th:[], values:[], desc:''};
   const levels = d.th.map((th, i) => `<span class="mtc-trait" style="${i+1===x.level?'border-color:var(--gold);color:var(--gold)':''}">${th} units · ${esc(String(d.desc||'').replace('{v}', d.values[i]))}</span>`).join(' ');
   const users = KT.units.filter(u => line(u.line).t.includes(x.type)).sort((a,b) => a.avg-b.avg);
+  const comps = relComps(c => c.traits.some(t => t.type === x.type && t.level >= x.level && t.share >= 50));
   return `<div class="detail">
     <span class="ty-ico" style="width:84px;height:84px;border-radius:16px;display:grid;place-items:center;background:var(--surface);border:2px solid var(--ink)"><img src="types/${esc(x.type)}.png" alt="" width="72" height="72" style="border-radius:10px"></span>
     <div>
-      <h3>${esc(typeName(x.type))} ${x.level} ${tierBadge(x.tier)}</h3>
+      <h3><span class="mtc-trait">${d.th[x.level-1] ?? '?'} ${esc(typeName(x.type))} units</span></h3>
       <div class="mtc-strip" style="margin:4px 0 6px">${levels}</div>
       ${users.length ? `<p><b>${esc(typeName(x.type))} Pokémon</b> <span class="mtc-strip" style="display:inline-flex;vertical-align:middle">${users.map(u => `<button class="mtc-unit" data-goto-unit="${esc(u.line)}" style="width:auto" title="${esc(lineName(u.line))} · avg ${fmt1(u.avg)}">${monHtml(u.line,{size:'sm',anim:false})}</button>`).join('')}</span></p>` : ''}
       ${statsHtml(x, maxUse)}
       ${x.onlyRules ? `<p class="mtc-note">Only rules v${x.onlyRules} counted.</p>` : ''}
     </div>
-    <button class="mtc-btn x close" data-close aria-label="Close">×</button>
-  </div>`;
+  </div>
+  ${relCompsHtml(`Best comps with ${esc(typeName(x.type))} ${x.level}+`, comps)}`;
+}
+
+// ---- modal + hash routing ----
+const dlg = $('#modal');
+function modalSpec(kind, id) {
+  if (kind === 'pokemon') { const u = KT.units.find(u => u.line === id); return u && {title: `${esc(lineName(id))} ${tierBadge(u.tier)}`, html: pokemonDetail(u, Math.max(...KT.units.map(x => x.use)))}; }
+  if (kind === 'item') { const it = KT.items.find(i => i.id === id); return it && {title: `${esc(itemName(id))} ${tierBadge(it.tier)}`, html: itemDetail(it, Math.max(...KT.items.map(x => x.use)))}; }
+  if (kind === 'type') { const [t, lv] = id.split('-'); const x = KT.traits.find(y => y.type === t && y.level === +lv); return x && {title: `${esc(typeName(t))} ${lv} ${tierBadge(x.tier)}`, html: typeDetail(x, Math.max(...KT.traits.map(y => y.use)))}; }
+  return null;
+}
+function openModal(kind, id) {
+  const spec = modalSpec(kind, id); if (!spec) return false;
+  state.modal = {kind, id}; state.sel = kind === 'type' ? id.replace('-', ':') : id;
+  $('#modalTitle').innerHTML = spec.title; $('#modalBody').innerHTML = spec.html;
+  $('.modal-panel').scrollTop = 0;
+  if (!dlg.open) dlg.showModal();
+  markSel(); setHash(); return true;
+}
+function closeModal() { if (dlg.open) dlg.close(); }
+dlg.addEventListener('close', () => { state.modal = null; state.sel = null; markSel(); setHash(); });
+$('#modalClose').addEventListener('click', closeModal);
+dlg.addEventListener('click', e => { if (e.target === dlg) closeModal(); });
+function markSel() { document.querySelectorAll('#view .sel').forEach(el => el.classList.remove('sel')); if (!state.sel) return;
+  const q = state.modal?.kind === 'type' ? `[data-type="${CSS.escape(state.sel)}"]` : state.modal?.kind === 'item' ? `[data-item="${CSS.escape(state.sel)}"]` : `[data-unit="${CSS.escape(state.sel)}"]`;
+  document.querySelectorAll('#view ' + q).forEach(el => el.classList.add('sel')); }
+function setHash() {
+  let h = '#' + state.tab;
+  if (state.modal) h += `/${state.modal.kind}/${state.modal.id}`;
+  else if (state.tab === 'comps' && state.open) h += `/comp/${state.open}`;
+  if (location.hash !== h) history.replaceState(null, '', h);
+}
+function applyHash(first=false) {
+  const [tab, kind, ...rest] = location.hash.replace('#', '').split('/'); const id = rest.join('/');
+  const tabs = ['pokemon','comps','items','types','seals'];
+  const t = tabs.includes(tab) ? tab : (first && tabs.includes(saved.tab) ? saved.tab : 'pokemon');
+  if (first || t !== state.tab) { state.tab = t; state.sel = null; save(); render(true); }
+  if (kind === 'comp' && id) { if (state.open !== id) gotoComp(id); }
+  else if (kind && id) { if (!openModal(kind, id)) setHash(); }
+  else if (dlg.open) closeModal();
+  else setHash();
+}
+window.addEventListener('hashchange', () => applyHash());
+
+// --- Seals (catalogue: the API publishes no pick stats for seals yet) ---
+const RAR = {1:'Common', 2:'Rare', 3:'Mythic'};
+const CATS = {eco:'Economy', shop:'Shop', xp:'XP', item:'Items', combat:'Combat', board:'Board', role:'Roles', trait:'Types', hero:'Heroes', risk:'Risk', later:'Later', rule:'Rules'};
+function viewSeals() {
+  const q = state.q.toLowerCase();
+  const all = Object.entries(KT.seals || {}).map(([id, v]) => ({id, ...v}));
+  const rounds = (KT.sealRules && KT.sealRules.rounds) || ['2-1','3-2','4-2'];
+  let list = all.filter(x => matches(q, x.name, ...x.text.map(t => (t.line||'') + ' ' + (t.detail||'')), CATS[x.cat] || x.cat || '', x.hero ? lineName(x.hero) : ''));
+  if (state.sealRar) list = list.filter(x => x.rarity === state.sealRar);
+  if (state.sealCat) list = list.filter(x => x.cat === state.sealCat);
+  const cats = [...new Set(all.map(x => x.cat).filter(Boolean))];
+  let k = 0; const dly = () => `--d:${(0.1 + Math.min(k++, 30)*0.02).toFixed(3)}s`;
+  const card = x => `<article class="seal r${x.rarity}" style="${dly()}">
+      <div class="seal-head"><span class="seal-code">${esc(x.code || '')}</span><b>${esc(x.name)}</b><span class="seal-rar">${RAR[x.rarity] || x.rarity}</span></div>
+      ${x.text.map(t => `<div class="line">${esc(t.line || '')}</div>${t.detail ? `<div class="det">${esc(t.detail)}</div>` : ''}`).join('')}
+      <span class="cat">${x.hero ? monHtml(x.hero, {size:'sm', anim:false}) + ' ' + esc(lineName(x.hero)) + ' · ' : ''}${esc(CATS[x.cat] || x.cat || '')}</span>
+    </article>`;
+  return `<div class="mtc-sort">
+    <span class="lbl">Rarity</span>${[1,2,3].map(r => `<button class="chip ${state.sealRar===r?'on':''}" data-rar="${r}">${RAR[r]}</button>`).join('')}
+    <span class="sep"></span>
+    <select class="chip" id="catSel" aria-label="Category"><option value="">Any category</option>${cats.map(c => `<option value="${c}" ${state.sealCat===c?'selected':''}>${esc(CATS[c] || c)}</option>`).join('')}</select>
+    <span class="lbl" style="margin-left:auto">${int(list.length)} seals · ${KT.sealRules ? `${KT.sealRules.cards} offered, ${KT.sealRules.rerolls} reroll` : ''}</span>
+  </div>
+  <p class="tier-note" style="margin:0 0 10px">Seals are the picks offered at rounds ${rounds.join(', ')} (the game's augments, since rules v34). The Meta API does not publish pick rates or results for them yet, so this is the catalogue for rules v${KT.dataRules}, no tiers.</p>
+  ${rounds.map(r => { const L = list.filter(x => (x.rounds||[]).includes(r)); return L.length ? `<h3 class="seal-h">Round ${esc(r)} <small>${L.length} seals</small></h3><div class="seal-grid">${L.map(card).join('')}</div>` : ''; }).join('')}`;
 }
 
 // ---- render + events ----
@@ -738,13 +915,15 @@ function typeDetail(x, maxUse) {
 function render(animate=false) {
   const view = $('#view');
   view.className = animate ? '' : 'no-anim';
-  const fn = {pokemon: viewPokemon, comps: viewComps, items: viewItems, types: viewTypes}[state.tab] || viewPokemon;
+  const fn = {pokemon: viewPokemon, comps: viewComps, items: viewItems, types: viewTypes, seals: viewSeals}[state.tab] || viewPokemon;
   if (animate) { view.style.animation = 'none'; void view.offsetWidth; view.style.animation = ''; }
   view.innerHTML = fn();
+  markSel();
   document.querySelectorAll('#tabs [role=tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === state.tab));
   const ts = $('#typeSel'); if (ts) ts.onchange = () => { state.type = ts.value; render(); };
+  const cs = $('#catSel'); if (cs) cs.onchange = () => { state.sealCat = cs.value; render(); };
 }
-function setTab(t, keep=false) { state.tab = t; if (!keep) { state.sel = null; state.q = ''; $('#search').value = ''; } state.shown = 40; save(); if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t); render(true); }
+function setTab(t, keep=false) { state.tab = t; if (!keep) { state.sel = null; state.q = ''; $('#search').value = ''; } state.shown = 40; save(); render(true); setHash(); }
 // open/close one comp in place, without redrawing the list
 function toggleComp(id) {
   const maxUse = Math.max(...KT.comps.map(c => c.use));
@@ -757,32 +936,35 @@ function toggleComp(id) {
     const fresh = tmp.firstElementChild; fresh.style.animation = 'none'; el.replaceWith(fresh);
   }
   if (state.open) document.getElementById('comp-' + id)?.scrollIntoView({block:'nearest', behavior:'smooth'});
+  setHash();
 }
 const scrollToPanel = () => $('.meta-panel').scrollIntoView({behavior:'smooth', block:'start'});
 
 $('#tabs').addEventListener('click', e => { const b = e.target.closest('[role=tab]'); if (b) { setTab(b.dataset.tab); } });
 let qt; $('#search').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value.trim(); state.shown = 40; render(); }, 120); });
-function gotoUnit(l) { const sw = state.tab !== 'pokemon'; state.tab = 'pokemon'; state.sel = l; state.q = ''; state.cost = 0; state.type = ''; $('#search').value = ''; history.replaceState(null, '', '#pokemon'); render(sw); scrollToPanel(); }
-function gotoComp(id) { const sw = state.tab !== 'comps'; state.tab = 'comps'; state.open = id; state.q = ''; state.tierFilter = ''; state.compSort = 'avg'; $('#search').value = ''; history.replaceState(null, '', '#comps');
-  const idx = sortBy(KT.comps, 'avg').findIndex(c => c.id === id); state.shown = Math.max(40, idx + 1); render(sw);
+function gotoComp(id) { const c = KT.comps.find(x => x.id === id); if (!c) return; closeModal();
+  const sw = state.tab !== 'comps'; state.tab = 'comps'; state.open = id; state.q = ''; state.tierFilter = ''; state.compSort = 'avg'; if (!reliable(c)) state.reliable = false; $('#search').value = '';
+  const idx = sortBy(KT.comps.filter(x => !state.reliable || reliable(x)), 'avg').findIndex(x => x.id === id); state.shown = Math.max(40, idx + 1); save(); render(sw); setHash();
   const el = document.getElementById('comp-' + id); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); else scrollToPanel(); }
 document.addEventListener('click', e => {
   const t = e.target;
-  const gu = t.closest('[data-goto-unit]'); if (gu) return gotoUnit(gu.dataset.gotoUnit);
+  const gu = t.closest('[data-goto-unit]'); if (gu) return openModal('pokemon', gu.dataset.gotoUnit);
+  const gi = t.closest('[data-goto-item]'); if (gi) return openModal('item', gi.dataset.gotoItem);
   const gc = t.closest('[data-goto-comp]'); if (gc) return gotoComp(gc.dataset.gotoComp);
   if (!t.closest('#view')) return;
   const sortB = t.closest('[data-sort]'); if (sortB) { state.sort = sortB.dataset.sort; return render(); }
   const costB = t.closest('[data-cost]'); if (costB) { const c = +costB.dataset.cost; state.cost = state.cost === c ? 0 : c; return render(); }
-  const unitB = t.closest('[data-unit]'); if (unitB) { state.sel = state.sel === unitB.dataset.unit ? null : unitB.dataset.unit; render(); if (state.sel) $('.detail')?.scrollIntoView({block:'nearest'}); return; }
-  const itemB = t.closest('[data-item]'); if (itemB) { state.sel = state.sel === itemB.dataset.item ? null : itemB.dataset.item; render(); if (state.sel) $('.detail')?.scrollIntoView({block:'nearest'}); return; }
-  const typeB = t.closest('[data-type]'); if (typeB) { state.sel = state.sel === typeB.dataset.type ? null : typeB.dataset.type; render(); if (state.sel) $('.detail')?.scrollIntoView({block:'nearest'}); return; }
-  if (t.closest('[data-close]')) { state.sel = null; return render(); }
+  const unitB = t.closest('[data-unit]'); if (unitB) return openModal('pokemon', unitB.dataset.unit);
+  const itemB = t.closest('[data-item]'); if (itemB) return openModal('item', itemB.dataset.item);
+  const typeB = t.closest('[data-type]'); if (typeB) return openModal('type', typeB.dataset.type.replace(':', '-'));
+  if (t.closest('[data-reliable]')) { state.reliable = !state.reliable; state.shown = 40; return render(); }
+  const rb = t.closest('[data-rar]'); if (rb) { const r = +rb.dataset.rar; state.sealRar = state.sealRar === r ? 0 : r; return render(); }
   const cs = t.closest('[data-csort]'); if (cs) { state.compSort = cs.dataset.csort; state.shown = 40; return render(); }
   const tf = t.closest('[data-tier]'); if (tf) { state.tierFilter = state.tierFilter === tf.dataset.tier ? '' : tf.dataset.tier; state.shown = 40; return render(); }
   const comp = t.closest('[data-comp]'); if (comp) return toggleComp(comp.dataset.comp);
   if (t.closest('[data-more]')) { state.shown += 40; return render(); }
 });
-document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.rank li')) { e.preventDefault(); e.target.click(); } });
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.rank li, .rel li, .held span')) { e.preventDefault(); e.target.click(); } });
 
 // stars on the title sky, like the game (deterministic positions)
 (() => { let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647; let h = '';
@@ -798,11 +980,11 @@ async function boot() {
     $('#view').innerHTML = `<div class="err">Could not load the Meta data (${esc(err.message)}). Reload the page to try again.</div>`;
     return;
   }
-  for (const list of [KT.units, KT.items, KT.traits, KT.comps]) for (const x of list) x.tier = tierOf(x);
-  const h = location.hash.replace('#', '');
-  state.tab = ['pokemon','comps','items','types'].includes(h) ? h : (['pokemon','comps','items','types'].includes(saved.tab) ? saved.tab : 'pokemon');
+  for (const list of [KT.units, KT.items, KT.traits]) for (const x of list) x.tier = tierOf(x);
+  for (const c of KT.comps) { c.apiTier = c.tier; c.tier = compTier(c); }
+  buildTypicalCells();
   renderShell();
-  render(true);
+  applyHash(true);
 }
 boot();
 })();
