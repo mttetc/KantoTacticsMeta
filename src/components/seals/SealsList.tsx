@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { Sprite } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
@@ -27,8 +26,6 @@ interface F {
 }
 
 export function SealsList({ seals, rounds, rules, offer, initial }: { seals: SealRow[]; rounds: string[]; rules: number; offer: string; initial: F }) {
-  const router = useRouter();
-  const path = usePathname();
   const [f, setF] = useState<F>(initial);
   const dq = useDeferredValue(f.q.trim().toLowerCase());
   const cats = useMemo(() => [...new Set(seals.map((x) => x.cat).filter(Boolean))], [seals]);
@@ -39,7 +36,8 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
     if (next.rarity) p.set("rarity", String(next.rarity));
     if (next.cat) p.set("cat", next.cat);
     if (next.q.trim()) p.set("q", next.q.trim());
-    router.replace(`${path}${p.size ? `?${p}` : ""}`, { scroll: false });
+    // native history: Next keeps useSearchParams in sync and makes no server request
+    window.history.replaceState(null, "", `${window.location.pathname}${p.size ? `?${p}` : ""}`);
   };
   const list = useMemo(() => {
     const words = dq.split(/\s+/).filter(Boolean);

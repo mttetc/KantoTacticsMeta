@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 /* The game's palette and faces as Tailwind tokens (read from einoow.com/playables/kanto-tactics). Single dark look. */
-@theme {
+/* static: cost and type colours are also used from inline styles, so every variable must exist */
+@theme static {
   --color-ink: #0a0e1a; --color-surface: #1a2140; --color-surface-hi: #232c55; --color-surface-2: #2a3466; --color-surface-3: #36428a; --color-sunk: #0f1430;
   --color-txt: #f4f6fb; --color-dim: #b7c0dc; --color-gold: #ffd43b; --color-gold-hi: #ffe066; --color-gold-deep: #8a5a00; --color-paper: #f4f1e8;
   --color-cobalt: #5f86ef; --color-line: #96acff3d; --color-rim: #96acff80; --color-rim-soft: #96acff38; --color-brand-cobalt: #465bff;

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { Sprite } from "@/components/ui/Sprite";
 import { costColor, ui } from "@/components/ui/styles";
@@ -44,8 +43,6 @@ export interface Filters {
  * client owns the state: 70 rows sort and filter instantly, and every change is mirrored to the URL.
  */
 export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; types: { id: string; name: string }[]; initial: Filters }) {
-  const router = useRouter();
-  const path = usePathname();
   const [f, setF] = useState<Filters>(initial);
   const sort = (SORTS.find((s) => s.k === f.sort)?.k ?? "avg") as SortKey;
   const dq = useDeferredValue(f.q.trim().toLowerCase());
@@ -58,7 +55,8 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
     if (next.cost) p.set("cost", String(next.cost));
     if (next.type) p.set("type", next.type);
     if (next.q.trim()) p.set("q", next.q.trim());
-    router.replace(`${path}${p.size ? `?${p}` : ""}`, { scroll: false });
+    // native history: Next keeps useSearchParams in sync and makes no server request
+    window.history.replaceState(null, "", `${window.location.pathname}${p.size ? `?${p}` : ""}`);
   };
 
   const rows = useMemo(() => {
