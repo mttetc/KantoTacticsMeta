@@ -14,7 +14,7 @@ export function TopNav({ items }: { items: NavItem[] }) {
   const path = usePathname();
   const active = (href: string) => (href === "/" ? path === "/" || path.startsWith("/pokemon") : path.startsWith(href));
   return (
-    <nav aria-label="Meta sections" className="order-3 flex max-w-full flex-1 basis-full animate-card-in gap-1 overflow-x-auto rounded-[18px] border-2 border-white/35 bg-ink/60 p-[5px] [scrollbar-width:none] sm:order-none sm:flex-none sm:basis-auto">
+    <nav aria-label="Meta sections" className="flex max-w-full animate-card-in gap-1 overflow-x-auto rounded-[18px] border-2 border-white/35 bg-ink/60 p-[5px] [scrollbar-width:none]">
       {items.map((it) => {
         const on = active(it.href);
         return (

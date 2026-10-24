@@ -107,7 +107,7 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
           rows
             .filter((u) => u.tier === t)
             .map((u, k) => (
-              <Link key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={{ "--d": `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+              <Link key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
                 <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} className="max-sm:h-[56px]! max-sm:w-[56px]!" />
                 <span className="mt-[3px] text-[.86em] leading-none font-bold">{fmt2(u.avg)}</span>
                 <small>{u.name}</small>

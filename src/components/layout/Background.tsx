@@ -11,7 +11,7 @@ export function Background() {
           <i
             key={p.i}
             className="absolute h-1.5 w-1.5 scale-200 animate-twinkle bg-[#fff7c2] shadow-[0_0_8px_#fff2a8] [clip-path:polygon(50%_0,62%_38%,100%_50%,62%_62%,50%_100%,38%_62%,0_50%,38%_38%)]"
-            style={{ "--i": p.i, left: `${p.left}%`, top: `${p.top}%` } as React.CSSProperties}
+            style={{ animationDelay: `${(-p.i * 0.37).toFixed(2)}s`, left: `${p.left}%`, top: `${p.top}%` }}
           />
         ))}
       </div>

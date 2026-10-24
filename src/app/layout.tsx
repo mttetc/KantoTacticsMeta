@@ -58,7 +58,10 @@ export default async function RootLayout({ children, modal }: LayoutProps<"/">) 
         )}
 
         <div className={`${gutter} flex min-h-[74px] flex-wrap items-center gap-4 bg-linear-to-b from-[#0e1228d1] to-[#0e12288c] py-2`}>
-          <div className="flex flex-[1_1_220px] animate-in-l-fast flex-wrap items-center gap-2">
+          <Suspense fallback={<nav aria-hidden className="h-[62px] flex-none" />}>
+            <TopNav items={nav} />
+          </Suspense>
+          <div className="flex animate-in-l-fast flex-wrap items-center gap-2">
             <span className={`${live} border-[#ffe066a6]`} title="Game rules version in this window">
               🏆 <b className="text-[17px] text-gold-hi">Rules v{meta.rules}</b> Ranked
             </span>
@@ -67,14 +70,9 @@ export default async function RootLayout({ children, modal }: LayoutProps<"/">) 
               <b className="text-[17px] text-[#8ce99a]">{int(meta.games)}</b> games · 7 days
             </span>
           </div>
-          <Suspense fallback={<nav aria-hidden className="h-[62px] flex-none" />}>
-            <TopNav items={nav} />
-          </Suspense>
-          <div className="order-2 flex flex-[1_1_120px] animate-in-r-fast items-center justify-end gap-2 sm:order-none sm:flex-[1_1_220px]">
-            <span className={`${ui.note} m-0`}>
-              {meta.from} → {meta.to}
-            </span>
-          </div>
+          <span className={`${ui.note} m-0 ml-auto animate-in-r-fast`}>
+            {meta.from} → {meta.to}
+          </span>
         </div>
 
         <div className={gutter}>
@@ -84,7 +82,7 @@ export default async function RootLayout({ children, modal }: LayoutProps<"/">) 
                 {["K", "A", "N", "T", "O"].map((ch, i) => (
                   <span
                     key={ch}
-                    style={{ "--i": i } as React.CSSProperties}
+                    style={{ animationDelay: `${(i * 0.11).toFixed(2)}s, ${(1 + i * 0.09).toFixed(2)}s` }}
                     className="inline-block animate-letter text-gold [-webkit-text-stroke:3px_#2a4fa8] [paint-order:stroke] [text-shadow:0_2px_#2a4fa8,0_4px_#2a4fa8,0_6px_#1d3a80,0_8px_#1d3a80,0_10px_#142a5e,0_14px_18px_#00000073]"
                   >
                     {ch}

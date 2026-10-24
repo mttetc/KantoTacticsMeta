@@ -46,7 +46,7 @@ export function Sprite({ dex, name, cost, size = 44, anim = true, items, itemSiz
       title={name}
     >
       {tag && role && role !== "holder" && (
-        <span className={`absolute -top-7 left-1/2 z-[4] -translate-x-1/2 -rotate-[4deg] rounded-full border-[1.5px] border-ink px-1.5 text-[9px] leading-[14px] font-bold tracking-[.06em] whitespace-nowrap text-[#1a1f2e] shadow-[0_2px_0_#0a0e1a] ${TAG_BG[role]}`}>
+        <span className={`absolute -top-9 left-1/2 z-[4] -translate-x-1/2 -rotate-[4deg] rounded-full border-[1.5px] border-ink px-1.5 text-[9px] leading-[14px] font-bold tracking-[.06em] whitespace-nowrap text-[#1a1f2e] shadow-[0_2px_0_#0a0e1a] ${TAG_BG[role]}`}>
           {ROLE_LABEL[role]}
         </span>
       )}

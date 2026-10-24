@@ -11,7 +11,7 @@ export function TierRows({ render }: { render: (tier: Tier) => ReactNode[] }) {
       {TIERS.map((t, i) => {
         const cards = render(t);
         return (
-          <section key={t} aria-label={`Tier ${t}`} className={`${ui.card} grid animate-card-in grid-cols-[46px_minmax(0,1fr)] overflow-hidden rounded-[14px] border-2 border-ink shadow-panel sm:grid-cols-[60px_minmax(0,1fr)]`} style={{ "--d": `${(0.1 + i * 0.07).toFixed(2)}s` } as React.CSSProperties}>
+          <section key={t} aria-label={`Tier ${t}`} className={`${ui.card} grid animate-card-in grid-cols-[46px_minmax(0,1fr)] overflow-hidden rounded-[14px] border-2 border-ink shadow-panel sm:grid-cols-[60px_minmax(0,1fr)]`} style={{ animationDelay: `${(0.1 + i * 0.07).toFixed(2)}s` } as React.CSSProperties}>
             <div className="grid place-items-center border-r border-line bg-black/13 px-1.5 py-2.5">
               <TierBadge tier={t} variant="big" />
             </div>

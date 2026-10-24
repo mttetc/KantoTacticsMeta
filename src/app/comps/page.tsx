@@ -7,6 +7,8 @@ import { ui } from "@/components/ui/styles";
 import { int } from "@/lib/format";
 import { MIN_NE, TIERS } from "@/lib/tiers";
 import type { Comp, Tier } from "@/lib/types";
+import { cacheLife, cacheTag } from "next/cache";
+import { META_TAG } from "@/server/api";
 import { getMeta, itemName, typeName, unitName } from "@/server/meta";
 
 export const metadata: Metadata = {
@@ -37,13 +39,23 @@ export default function CompsPage({ searchParams }: { searchParams: Search }) {
   );
 }
 
+/** Reads the URL (runtime), then hands plain values to the cached list below. */
 async function CompList({ searchParams }: { searchParams: Search }) {
-  const [meta, sp] = await Promise.all([getMeta(), searchParams]);
+  const sp = await searchParams;
   const sort: Sort = sp.sort && sp.sort in SORTS ? (sp.sort as Sort) : "best";
   const tier = sp.tier === "all" ? "all" : TIERS.includes(sp.tier as Tier) ? (sp.tier as Tier) : "S";
-  const small = sp.small === "1";
-  const q = (sp.q ?? "").trim().toLowerCase();
-  const page = Math.max(1, Number(sp.page) || 1);
+  return <CachedCompList sort={sort} tier={tier} small={sp.small === "1"} q={(sp.q ?? "").trim().toLowerCase()} page={Math.max(1, Number(sp.page) || 1)} />;
+}
+
+/**
+ * The list for one combination of filters, cached and shared by every visitor: a click on a filter chip is a
+ * cache hit after the first visitor, and the cached result can ride along in the link's prefetch.
+ */
+async function CachedCompList({ sort, tier, small, q, page }: { sort: Sort; tier: Tier | "all"; small: boolean; q: string; page: number }) {
+  "use cache";
+  cacheTag(META_TAG);
+  cacheLife("hours");
+  const meta = await getMeta();
 
   const hay = (c: Comp) =>
     `${c.title} ${c.units.map((u) => unitName(meta, u.line, u.star)).join(" ")} ${c.units.flatMap((u) => u.items.map((i) => itemName(meta, i.id))).join(" ")} ${c.traits.map((t) => typeName(meta, t.type)).join(" ")}`.toLowerCase();

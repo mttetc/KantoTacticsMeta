@@ -73,7 +73,7 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
           Final team<small>share of games with that unit · carry first</small>
         </h2>
         {/* top padding leaves room for the role tags above the stars */}
-        <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-3.5">
+        <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-5.5">
           {ordered.map((u) => {
             const lead = u.role === "carry";
             return (
