@@ -116,13 +116,17 @@ function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Record<st
 /** The whole normalised model, built once per revalidation window and shared by every page. */
 export async function getMeta(): Promise<Meta> {
   "use cache";
-  cacheLife({ stale: 3600, revalidate: 3600, expire: 60 * 60 * 24 * 3 });
   cacheTag(META_TAG);
-  const [meta, data] = await Promise.all([fetchMetaRaw(), fetchDataRaw()]);
+  const [m, d] = await Promise.all([fetchMetaRaw(), fetchDataRaw()]);
+  const meta = m.value, data = d.value;
+  const fromSnapshot = m.source === "snapshot" || d.source === "snapshot";
+  cacheLife(fromSnapshot ? { stale: 60, revalidate: 300, expire: 3600 } : { stale: 3600, revalidate: 3600, expire: 60 * 60 * 24 * 3 });
   const lines = buildLines(data, meta);
   const itemData = buildItems(data);
   const traitData = buildTraits(data);
   return {
+    source: m.source === "snapshot" || d.source === "snapshot" ? "snapshot" : "api",
+    snapshotAt: m.snapshotAt ?? d.snapshotAt,
     generated: meta.generated,
     rules: meta.rules,
     dataRules: data.rules,

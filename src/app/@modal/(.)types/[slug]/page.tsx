@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { TraitDetail } from "@/components/types/TraitDetail";
@@ -29,7 +28,7 @@ async function Content({ params }: { params: Promise<{ slug: string }> }) {
     >
       <TraitDetail meta={r.meta} stat={r.stat} trait={r.trait} />
       <p className="note" style={{ margin: 0 }}>
-        <Link href={`/types/${slug}`}>Open as a page</Link> to share this type.
+        <a href={`/types/${slug}`}>Open as a page</a> to share this type.
       </p>
     </Modal>
   );

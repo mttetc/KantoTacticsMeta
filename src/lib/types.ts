@@ -217,6 +217,9 @@ export interface Seal {
 }
 
 export interface Meta {
+  /** "api" when the live API answered, "snapshot" when the committed copy was served instead. */
+  source: "api" | "snapshot";
+  snapshotAt: string | null;
   generated: string;
   rules: number;
   dataRules: number;

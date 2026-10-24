@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "sprites": "node scripts/sync-sprites.mjs"
+    "sprites": "node scripts/sync-sprites.mjs",
+    "snapshot": "node scripts/snapshot.mjs"
   },
   "dependencies": {
     "next": "16.4.3",

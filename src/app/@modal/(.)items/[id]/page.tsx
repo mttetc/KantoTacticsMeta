@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ItemDetail } from "@/components/items/ItemDetail";
@@ -29,7 +28,7 @@ async function Content({ params }: { params: Promise<{ id: string }> }) {
     >
       <ItemDetail meta={r.meta} stat={r.stat} item={r.item} />
       <p className="note" style={{ margin: 0 }}>
-        <Link href={`/items/${id}`}>Open as a page</Link> to share this item.
+        <a href={`/items/${id}`}>Open as a page</a> to share this item.
       </p>
     </Modal>
   );

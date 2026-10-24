@@ -133,7 +133,9 @@ select.chip { appearance: auto; }
 .rank .num.g { background: linear-gradient(#ffe066, #fcc419 60%, #f59f00); color: #1a1f2e; text-shadow: 0 1px 0 #ffffff80; }
 .rank .num.s { background: linear-gradient(#f1f3f5, #ced4da 60%, #868e96); color: #1a1f2e; text-shadow: 0 1px 0 #ffffff80; }
 .rank .num.b { background: linear-gradient(#f3c9a0, #d9843a 60%, #a0522d); color: #2b1d00; text-shadow: 0 1px 0 #ffffff66; }
-.coin { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; image-rendering: pixelated; }
+.coin { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; position: relative; overflow: hidden; }
+.coin img { position: absolute; left: 0; top: 0; width: 256px; height: 16px; max-width: none; image-rendering: pixelated; animation: coin-spin 1.2s steps(16) infinite; }
+@keyframes coin-spin { to { left: -256px; } }
 .rank .who { display: flex; flex-direction: column; min-width: 0; gap: 3px; }
 .rank .who b { font-size: 14px; display: flex; align-items: center; gap: 6px; min-width: 0; }
 .rank .who b .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

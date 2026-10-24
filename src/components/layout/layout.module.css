@@ -19,6 +19,8 @@
 .sbtn.pill { height: 36px; border: 1px solid #ffffff33; border-radius: 9999px; color: #ffffffe6; }
 .sbtn:hover { opacity: .9; }
 
+.banner { background: #ffd43b; color: #1a1f2e; font-weight: 600; font-size: 14px; padding-block: 8px; text-align: center; border-bottom: 2px solid #0b0e18; }
+
 /* ---- lobby top: chips left, segmented nav centre, search right ---- */
 .top { display: flex; align-items: center; gap: 16px; min-height: 74px; padding-block: 8px; background: linear-gradient(#0e1228d1, #0e12288c); flex-wrap: wrap; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; flex: 1 1 220px; animation: ln-in-l .45s cubic-bezier(.2, 1.4, .4, 1) .1s both; }

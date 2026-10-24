@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { PokemonDetail } from "@/components/pokemon/PokemonDetail";
@@ -32,7 +31,7 @@ async function Content({ params }: { params: Promise<{ line: string }> }) {
     >
       <PokemonDetail meta={r.meta} unit={r.unit} line={r.line} />
       <p className="note" style={{ margin: 0 }}>
-        <Link href={`/pokemon/${line}`}>Open as a page</Link> to share this Pokémon.
+        <a href={`/pokemon/${line}`}>Open as a page</a> to share this Pokémon.
       </p>
     </Modal>
   );

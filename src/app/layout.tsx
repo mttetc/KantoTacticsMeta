@@ -71,6 +71,11 @@ export default async function RootLayout({ children, modal }: LayoutProps<"/">) 
           </nav>
         </header>
 
+        {meta.source === "snapshot" && (
+          <div className={`${s.banner} gutter`} role="status">
+            The game&apos;s API is not answering right now. Showing the last snapshot{meta.snapshotAt ? ` from ${meta.snapshotAt.slice(0, 10)}` : ""}; the live data comes back on its own.
+          </div>
+        )}
         <div className={`${s.top} gutter`}>
           <div className={s.chips}>
             <span className={`${s.live} ${s.gold}`} title="Game rules version in this window">

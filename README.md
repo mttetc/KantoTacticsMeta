@@ -57,6 +57,13 @@ pnpm sprites      # download missing sprites into public/ after a game update
 Copy `.env.example` to `.env.local`. `CRON_SECRET` protects `/api/revalidate`; `NEXT_PUBLIC_SITE_URL` sets the
 canonical origin outside Vercel.
 
+## If the API goes down
+
+`data/snapshot/meta.json` and `data.json` are a committed copy of the two API files. When a live read fails
+(network error, non-200, timeout), the server serves the snapshot instead, shows a yellow banner with its date,
+and retries the API every few minutes. A GitHub Action (`.github/workflows/snapshot.yml`) refreshes the snapshot
+daily after the API's 03:40 UTC regeneration; run `pnpm snapshot` to do it by hand.
+
 ## How the numbers are read
 
 - **Pokémon, items, types** use the game's tiers: average place against the week's reference place. The API stops at C; **D** is this site's split, mirroring S (reference + 0.5). A Pokémon's tier is the average of every board it ends on, in any comp, so a unit can be B on its own and still sit in most tier S comps; its page says in how many.
