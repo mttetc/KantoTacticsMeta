@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ItemDetail } from "@/components/items/ItemDetail";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
-import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
 import { getItem, getMeta } from "@/server/meta";
@@ -38,12 +36,9 @@ export default async function ItemPage({ params }: { params: Params }) {
             {r.item.name} <TierBadge tier={r.stat.tier} />
           </span>
         }
+        back={{ href: "/items", label: "Items" }}
         subtitle={`Item · Ranked, rules v${r.meta.rules}, ${r.meta.from} to ${r.meta.to}`}
-      >
-        <Link className={ui.back} href="/items">
-          ‹ Items
-        </Link>
-      </PanelHead>
+      />
       <PanelBody>
         <div className="flex flex-col gap-3">
           <ItemDetail meta={r.meta} stat={r.stat} item={r.item} />

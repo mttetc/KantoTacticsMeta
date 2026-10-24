@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CompDetail } from "@/components/comps/CompDetail";
 import { CompTitle } from "@/components/comps/CompTitle";
 import { FavoriteSlot, FavoriteSlotFallback } from "@/components/comps/FavoriteSlot";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
-import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
 import { getComp, getMeta, lineName } from "@/server/meta";
@@ -46,15 +44,13 @@ export default async function CompPage({ params }: { params: Params }) {
             <TierBadge tier={comp.tier} /> <CompTitle meta={meta} comp={comp} />
           </span>
         }
+        back={{ href: "/comps", label: "Comps" }}
         subtitle={`Comp · Ranked, rules v${meta.rules}, ${meta.from} to ${meta.to}`}
       >
         {/* the only request-time piece of the page: the visitor's cookie, streamed under Suspense */}
         <Suspense fallback={<FavoriteSlotFallback />}>
           <FavoriteSlot compId={comp.id} />
         </Suspense>
-        <Link className={ui.back} href="/comps">
-          ‹ Comps
-        </Link>
       </PanelHead>
       <PanelBody>
         <div className="flex flex-col gap-3.5">

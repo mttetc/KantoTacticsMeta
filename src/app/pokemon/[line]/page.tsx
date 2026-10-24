@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { PokemonDetail } from "@/components/pokemon/PokemonDetail";
@@ -44,12 +43,9 @@ export default async function PokemonPage({ params }: { params: Params }) {
             {lineName(meta, line)} <TierBadge tier={unit.tier} />
           </span>
         }
+        back={{ href: "/", label: "Tier list" }}
         subtitle={`Pokémon · Ranked, rules v${meta.rules}, ${meta.from} to ${meta.to}`}
-      >
-        <Link className={ui.back} href="/">
-          ‹ Tier list
-        </Link>
-      </PanelHead>
+      />
       <PanelBody>
         <div className="flex flex-col gap-3">
           {l.cost && (

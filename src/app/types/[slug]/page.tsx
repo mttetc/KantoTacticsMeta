@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { TraitDetail } from "@/components/types/TraitDetail";
-import { typeColor, ui } from "@/components/ui/styles";
+import { typeColor } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
 import { getMeta, getTrait } from "@/server/meta";
@@ -39,12 +38,9 @@ export default async function TraitPage({ params }: { params: Params }) {
             <span style={{ color: typeColor(r.stat.type) }}>{r.trait.name}</span> {r.stat.level} <TierBadge tier={r.stat.tier} />
           </span>
         }
+        back={{ href: "/types", label: "Types" }}
         subtitle={`Type · Ranked, rules v${r.meta.rules}, ${r.meta.from} to ${r.meta.to}`}
-      >
-        <Link className={ui.back} href="/types">
-          ‹ Types
-        </Link>
-      </PanelHead>
+      />
       <PanelBody>
         <div className="flex flex-col gap-3">
           <TraitDetail meta={r.meta} stat={r.stat} trait={r.trait} />
