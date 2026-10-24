@@ -1,4 +1,4 @@
-import { typeVar } from "@/components/ui/TypeChip";
+import { TypeName } from "@/components/ui/TypeChip";
 import type { Comp, Meta } from "@/lib/types";
 import { lineName, typeName } from "@/server/meta";
 
@@ -6,9 +6,7 @@ import { lineName, typeName } from "@/server/meta";
 export function CompTitle({ meta, comp }: { meta: Meta; comp: Comp }) {
   return (
     <>
-      <span className="ty-name" style={typeVar(comp.nameTrait)}>
-        {typeName(meta, comp.nameTrait)}
-      </span>
+      <TypeName type={comp.nameTrait}>{typeName(meta, comp.nameTrait)}</TypeName>
       {" · "}
       {comp.nameUnits.map((l) => lineName(meta, l)).join(" & ")}
     </>

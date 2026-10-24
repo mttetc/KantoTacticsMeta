@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { PokemonTierList, type UnitRow } from "@/components/pokemon/PokemonTierList";
+import { ui } from "@/components/ui/styles";
 import { getMeta, lineDex, lineName, typeName } from "@/server/meta";
 
 export const metadata: Metadata = {
@@ -55,9 +56,9 @@ async function TierList({ searchParams }: { searchParams: Search }) {
 
 function TierListSkeleton() {
   return (
-    <div className="tiers" aria-busy>
+    <div className="flex flex-col gap-2" aria-busy>
       {["S", "A", "B", "C", "D"].map((t) => (
-        <div key={t} className="skeleton" style={{ minHeight: 120 }} />
+        <div key={t} className={`${ui.skeleton} min-h-[120px]`} />
       ))}
     </div>
   );

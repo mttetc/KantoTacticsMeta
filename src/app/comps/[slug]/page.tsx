@@ -6,6 +6,7 @@ import { CompDetail } from "@/components/comps/CompDetail";
 import { CompTitle } from "@/components/comps/CompTitle";
 import { FavoriteSlot, FavoriteSlotFallback } from "@/components/comps/FavoriteSlot";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
+import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
 import { getComp, getMeta, lineName } from "@/server/meta";
@@ -41,9 +42,9 @@ export default async function CompPage({ params }: { params: Params }) {
     <>
       <PanelHead
         title={
-          <>
+          <span className="inline-flex flex-wrap items-center gap-2">
             <TierBadge tier={comp.tier} /> <CompTitle meta={meta} comp={comp} />
-          </>
+          </span>
         }
         subtitle={`Comp · Ranked, rules v${meta.rules}, ${meta.from} to ${meta.to}`}
       >
@@ -51,12 +52,12 @@ export default async function CompPage({ params }: { params: Params }) {
         <Suspense fallback={<FavoriteSlotFallback />}>
           <FavoriteSlot compId={comp.id} />
         </Suspense>
-        <Link className="back" href="/comps">
+        <Link className={ui.back} href="/comps">
           ‹ Comps
         </Link>
       </PanelHead>
       <PanelBody>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="flex flex-col gap-3.5">
           <CompDetail meta={meta} comp={comp} />
         </div>
       </PanelBody>

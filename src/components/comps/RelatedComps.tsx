@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { RankItem, RankList, RankThumbs, RankTitle } from "@/components/ui/RankList";
+import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2 } from "@/lib/format";
 import type { Comp, Meta } from "@/lib/types";
@@ -9,29 +10,26 @@ import { CompTitle } from "./CompTitle";
 export function RelatedComps({ meta, title, comps }: { meta: Meta; title: string; comps: Comp[] }) {
   if (!comps.length) return null;
   return (
-    <div className="sec">
-      <h2>
+    <div className={ui.sec}>
+      <h2 className={ui.secTitle}>
         {title}
         <small>reliable samples, best first</small>
       </h2>
-      <ul className="rank">
+      <RankList>
         {comps.map((c) => (
-          <li key={c.id} className="noNum">
-            <Link className="who" href={`/comps/${c.slug}`}>
-              <b>
-                <TierBadge tier={c.tier} />
-                <span className="t">
-                  <CompTitle meta={meta} comp={c} />
-                </span>
-              </b>
-              <span className="mons">
-                <CompThumbs meta={meta} comp={c} />
+          <RankItem key={c.id} href={`/comps/${c.slug}`} value={fmt2(c.avg)} valueTitle="average place">
+            <RankTitle>
+              <TierBadge tier={c.tier} />
+              <span className="t">
+                <CompTitle meta={meta} comp={c} />
               </span>
-            </Link>
-            <span className="pill">{fmt2(c.avg)}</span>
-          </li>
+            </RankTitle>
+            <RankThumbs>
+              <CompThumbs meta={meta} comp={c} />
+            </RankThumbs>
+          </RankItem>
         ))}
-      </ul>
+      </RankList>
     </div>
   );
 }

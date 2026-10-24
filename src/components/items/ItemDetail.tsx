@@ -2,6 +2,7 @@ import Link from "next/link";
 import { RelatedComps } from "@/components/comps/RelatedComps";
 import { ItemIcon, Sprite } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
+import { ui } from "@/components/ui/styles";
 import type { Item, ItemStat, Meta } from "@/lib/types";
 import { bestComps, itemName, lineDex, lineName } from "@/server/meta";
 
@@ -21,51 +22,49 @@ export function ItemDetail({ meta, stat, item }: { meta: Meta; stat: ItemStat; i
   const maxUse = Math.max(...meta.items.map((i) => i.use));
   return (
     <>
-      <div className="detail">
-        <span className="mon" style={{ "--s": "84px", display: "grid", placeItems: "center", background: "var(--surface)" } as React.CSSProperties}>
-          <ItemIcon id={item.id} name={item.name} size={56} />
+      <div className={ui.detail}>
+        <span className="grid h-[84px] w-[84px] place-items-center rounded-2xl border-2 border-ink bg-surface">
+          <ItemIcon id={item.id} name={item.name} size={56} className="rounded-xl" />
         </span>
         <div>
-          <div className="strip">
-            <span className="trait">{KIND[item.kind] ?? item.kind}</span>
-            {item.stat && <span className="trait">{item.stat}</span>}
+          <div className={ui.strip}>
+            <span className={ui.trait}>{KIND[item.kind] ?? item.kind}</span>
+            {item.stat && <span className={ui.trait}>{item.stat}</span>}
           </div>
           <p>{item.text}</p>
           {item.recipe && (
             <p>
               <b>Recipe</b>{" "}
-              <span className="recipe">
+              <span className="inline-flex items-center gap-1 align-middle [&>span]:font-bold [&>span]:text-dim">
                 <Link href={`/items/${item.recipe[0]}`}><ItemIcon id={item.recipe[0]} name={itemName(meta, item.recipe[0])} size={24} /></Link>
-                <span className="plus">+</span>
+                <span>+</span>
                 <Link href={`/items/${item.recipe[1]}`}><ItemIcon id={item.recipe[1]} name={itemName(meta, item.recipe[1])} size={24} /></Link>
-                <span className="plus">=</span>
+                <span>=</span>
                 <ItemIcon id={item.id} name={item.name} size={24} />
               </span>{" "}
-              <small style={{ color: "var(--dim)" }}>
+              <small className="text-dim">
                 {itemName(meta, item.recipe[0])} + {itemName(meta, item.recipe[1])}
               </small>
             </p>
           )}
           {makes.length > 0 && (
-            <p>
+            <p className="flex flex-wrap items-center gap-1">
               <b>Makes</b>{" "}
               {makes.map((id) => (
-                <Link key={id} className="recipe" href={`/items/${id}`} title={itemName(meta, id)} style={{ marginRight: 4 }}>
+                <Link key={id} href={`/items/${id}`} title={itemName(meta, id)}>
                   <ItemIcon id={id} name={itemName(meta, id)} size={24} />
                 </Link>
               ))}
             </p>
           )}
           {top.length > 0 && (
-            <p>
+            <p className="flex flex-wrap items-center gap-1">
               <b>Usually on</b>{" "}
-              <span className="strip" style={{ display: "inline-flex", verticalAlign: "middle" }}>
-                {top.map(([l]) => (
-                  <Link key={l} href={`/pokemon/${l}`} title={lineName(meta, l)}>
-                    <Sprite dex={lineDex(meta, l)} name={lineName(meta, l)} cost={meta.lines[l]?.cost} size={38} anim={false} />
-                  </Link>
-                ))}
-              </span>
+              {top.map(([l]) => (
+                <Link key={l} href={`/pokemon/${l}`} title={lineName(meta, l)} className="group">
+                  <Sprite dex={lineDex(meta, l)} name={lineName(meta, l)} cost={meta.lines[l]?.cost} size={38} anim={false} />
+                </Link>
+              ))}
             </p>
           )}
           <StatsRow s={stat} maxUse={maxUse} />

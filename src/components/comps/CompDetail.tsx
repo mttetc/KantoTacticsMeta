@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { ItemIcon, Sprite } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
+import { ui } from "@/components/ui/styles";
 import { TypeChip } from "@/components/ui/TypeChip";
 import { fmt2, int, pct, stars } from "@/lib/format";
 import { MIN_NE } from "@/lib/tiers";
-import type { Comp, Meta } from "@/lib/types";
+import type { Comp, Meta, Role } from "@/lib/types";
 import { itemName, lineDex, lineName, typeName, unitDex, unitName } from "@/server/meta";
 import { Board } from "./Board";
-import s from "./comps.module.css";
 
 const ROLE_ORDER = { carry: 0, sub: 1, tank: 2, holder: 3 } as const;
-const rank = (r: Comp["units"][number]["role"]) => (r ? ROLE_ORDER[r] : 4);
+const rank = (r: Role) => (r ? ROLE_ORDER[r] : 4);
+const ROLE_TEXT: Record<string, string> = { carry: "text-gold-hi font-bold", sub: "text-[#e3e9f0] font-bold", tank: "text-[#96f2d7] font-bold" };
 
 /** Everything the API knows about one comp. Server component, static per Meta refresh. */
 export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
@@ -18,21 +19,21 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
   if (c.coreOnly) {
     return (
       <>
-        <div className="strip">{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} />)}</div>
+        <div className={ui.strip}>{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} />)}</div>
         <StatsRow s={c} maxUse={maxUse} />
-        <div className="sec">
-          <h2>
+        <div className={ui.sec}>
+          <h2 className={ui.secTitle}>
             Core units<small>{int(c.n)} games only: the API publishes the 4 core units and each unit&apos;s usual items across all comps, not this comp&apos;s board</small>
           </h2>
-          <div className={s.team}>
+          <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-3.5">
             {c.units.map((u) => (
-              <Link key={u.line} className={`unit ${s.u}`} href={`/pokemon/${u.line}`} title={lineName(meta, u.line)}>
+              <Link key={u.line} className={`${ui.unit} w-[78px]! [&>small]:mt-2.5`} href={`/pokemon/${u.line}`} title={lineName(meta, u.line)}>
                 <Sprite dex={lineDex(meta, u.line)} name={lineName(meta, u.line)} cost={meta.lines[u.line]?.cost} size={66} items={u.items.slice(0, 3).map((i) => ({ id: i.id, name: itemName(meta, i.id) }))} itemSize={24} />
                 <small>{lineName(meta, u.line)}</small>
               </Link>
             ))}
           </div>
-          <p className="note">
+          <p className={ui.note}>
             Average place {fmt2(c.avg)} ± {fmt2(c.ic)}: with so few games, trust the interval, not the average.
           </p>
         </div>
@@ -44,20 +45,20 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
   const holders = ordered.filter((u) => u.items.length > 0);
   return (
     <>
-      <div className="strip">{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} share={t.share} />)}</div>
+      <div className={ui.strip}>{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} share={t.share} />)}</div>
       <StatsRow s={c} maxUse={maxUse} />
       {c.apiTier !== c.tier && (
-        <p className="note" style={{ margin: 0 }}>
+        <p className={`${ui.note} m-0`}>
           Game tier {c.apiTier}; here {c.tier} because the tier uses avg + CI ({fmt2(c.score)}) against the reference {fmt2(meta.ref)}.
         </p>
       )}
-      {c.ne < MIN_NE && <p className="note" style={{ margin: 0 }}>Only {int(c.ne)} effective games: a small sample, read the interval.</p>}
+      {c.ne < MIN_NE && <p className={`${ui.note} m-0`}>Only {int(c.ne)} effective games: a small sample, read the interval.</p>}
       {c.keyItems.length > 0 && (
-        <div className="key-items">
-          <span style={{ color: "var(--dim)", fontSize: ".84em", marginRight: 4 }}>Key items</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-[.84em] text-dim">Key items</span>
           {c.keyItems.map((k) => (
-            <Link key={`${k.id}-${k.line}`} className="key-item" href={`/items/${k.id}`}>
-              <ItemIcon id={k.id} name={itemName(meta, k.id)} size={30} />
+            <Link key={`${k.id}-${k.line}`} href={`/items/${k.id}`} className="inline-flex items-center gap-1.5 rounded-full border-2 border-gold bg-ink/60 py-0.5 pr-2.5 pl-[3px] text-[.84em] font-semibold text-txt no-underline shadow-[0_0_12px_#ffd43b59] [&>i]:font-medium [&>i]:not-italic [&>i]:text-dim">
+              <ItemIcon id={k.id} name={itemName(meta, k.id)} size={30} className="rounded-[9px]" />
               {itemName(meta, k.id)}
               <i>on</i>
               <Sprite dex={unitDex(meta, k.line, k.star)} name={unitName(meta, k.line, k.star)} cost={meta.lines[k.line]?.cost} size={22} anim={false} />
@@ -67,17 +68,17 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
         </div>
       )}
 
-      <div className="sec">
-        <h2>
+      <div className={ui.sec}>
+        <h2 className={ui.secTitle}>
           Final team<small>share of games with that unit · carry first</small>
         </h2>
-        <div className={s.team}>
+        {/* top padding leaves room for the role tags above the stars */}
+        <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-3.5">
           {ordered.map((u) => {
             const lead = u.role === "carry";
-            const color = u.role === "carry" ? "var(--gold-hi)" : u.role === "sub" ? "#e3e9f0" : u.role === "tank" ? "#96f2d7" : undefined;
             return (
-              <Link key={u.line} className={`unit ${s.u} ${lead ? s.lead : ""}`} href={`/pokemon/${u.line}`} title={`${unitName(meta, u.line, u.star)} · in ${pct(u.share)} of games`}>
-                <span className="stars">{stars(u.star)}</span>
+              <Link key={u.line} className={`${ui.unit} ${lead ? "w-[94px]!" : "w-[78px]!"} [&>small:first-of-type]:mt-2.5`} href={`/pokemon/${u.line}`} title={`${unitName(meta, u.line, u.star)} · in ${pct(u.share)} of games`}>
+                <span className={ui.stars}>{stars(u.star)}</span>
                 <Sprite
                   dex={unitDex(meta, u.line, u.star)}
                   name={unitName(meta, u.line, u.star)}
@@ -88,29 +89,29 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
                   items={u.items.slice(0, 3).map((i) => ({ id: i.id, name: itemName(meta, i.id) }))}
                   itemSize={lead ? 28 : 24}
                 />
-                <small style={color ? { color, fontWeight: 700 } : undefined}>{unitName(meta, u.line, u.star)}</small>
-                <small style={{ color: "var(--txt)" }}>{Math.round(u.share ?? 0)} %</small>
+                <small className={u.role ? ROLE_TEXT[u.role] : ""}>{unitName(meta, u.line, u.star)}</small>
+                <small className="text-txt!">{Math.round(u.share ?? 0)} %</small>
               </Link>
             );
           })}
         </div>
         {holders.length > 0 && (
-          <ul className={s.carries}>
+          <ul className="m-0 mt-2.5 flex list-none flex-col gap-1 border-t border-line p-0 pt-2 text-[.88em]">
             {holders.map((u) => {
               const its = [...u.items].sort((a, b) => b.share - a.share);
               return (
-                <li key={u.line} className={u.role && u.role !== "holder" ? s[u.role] : ""}>
-                  <b>
+                <li key={u.line} className="grid grid-cols-1 items-center gap-x-2.5 gap-y-1.5 border-b border-[#96acff1f] py-[3px] last:border-b-0 sm:grid-cols-[200px_minmax(0,1fr)]">
+                  <b className={`inline-flex min-w-0 items-center gap-2 truncate ${u.role && u.role !== "holder" ? ROLE_TEXT[u.role] : ""}`}>
                     <Sprite dex={unitDex(meta, u.line, u.star)} name={unitName(meta, u.line, u.star)} cost={meta.lines[u.line]?.cost} size={38} anim={false} />
                     {unitName(meta, u.line, u.star)}
                     {u.role && u.role !== "holder" ? ` · ${u.role}` : ""}
                   </b>
-                  <span className={s.its}>
+                  <span className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-x-2.5 gap-y-1 text-dim">
                     {its.map((i, k) => (
-                      <Link key={i.id} className={k === 0 ? s.key : ""} href={`/items/${i.id}`}>
+                      <Link key={i.id} href={`/items/${i.id}`} className={`inline-flex min-w-0 items-center gap-1.5 whitespace-nowrap no-underline hover:text-txt ${k === 0 ? "font-semibold text-txt [&>img]:shadow-[0_0_0_2px_var(--color-gold)]" : "text-inherit"}`}>
                         <ItemIcon id={i.id} name={itemName(meta, i.id)} size={22} />
                         {itemName(meta, i.id)}
-                        <i>{Math.round(i.share)} %</i>
+                        <i className="ml-auto pl-1.5 text-[.85em] not-italic opacity-70">{Math.round(i.share)} %</i>
                       </Link>
                     ))}
                   </span>
@@ -121,46 +122,46 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
         )}
       </div>
 
-      <div className="cols">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3">
         <Board meta={meta} comp={c} />
         {c.guide && (
-          <div className="sec">
-            <h2>
+          <div className={ui.sec}>
+            <h2 className={ui.secTitle}>
               Stage by stage<small>real games</small>
             </h2>
-            <div className={s.levels}>
+            <div className="flex flex-col">
               {c.guide.stages.map((st) => (
-                <div className={s.level} key={st.stage}>
-                  <div>
-                    End of stage <b>{st.stage}</b>
+                <div className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-2 border-b border-line py-1.5 last:border-b-0" key={st.stage}>
+                  <div className="text-[.8em] text-dim">
+                    End of stage <b className="block text-[1.1em] text-txt">{st.stage}</b>
                     <small>{int(st.n)} games</small>
                   </div>
-                  <div className="strip">
+                  <div className={ui.strip}>
                     {st.units.map((u) => (
-                      <span key={u.line} className={`mini ${u.fresh ? "fresh" : ""}`} title={`${unitName(meta, u.line, u.star)} · ${pct(u.share)}`}>
-                        <span className="stars">{u.star ? stars(u.star) : "·"}</span>
-                        <Sprite dex={unitDex(meta, u.line, u.star ?? 1)} name={unitName(meta, u.line, u.star ?? 1)} cost={meta.lines[u.line]?.cost} size={42} anim={false} />
+                      <span key={u.line} className="group relative flex flex-col items-center" title={`${unitName(meta, u.line, u.star)} · ${pct(u.share)}`}>
+                        <span className={ui.stars}>{u.star ? stars(u.star) : "·"}</span>
+                        <Sprite dex={unitDex(meta, u.line, u.star ?? 1)} name={unitName(meta, u.line, u.star ?? 1)} cost={meta.lines[u.line]?.cost} size={42} anim={false} className={u.fresh ? "shadow-[0_0_0_2px_#8ce99a]!" : ""} />
                       </span>
                     ))}
                   </div>
                 </div>
               ))}
             </div>
-            <div className={s.legendNew}>
-              <i /> New at this stage
+            <div className="mt-2 flex items-center gap-1.5 text-[.8em] text-dim">
+              <i className="block h-3 w-3 rounded shadow-[0_0_0_2px_#8ce99a]" /> New at this stage
             </div>
           </div>
         )}
       </div>
 
       {c.variants.length > 0 && (
-        <div className="sec">
-          <h2>
+        <div className={ui.sec}>
+          <h2 className={ui.secTitle}>
             Variants<small>the 4 core units players pair with this comp</small>
           </h2>
           {c.variants.slice(0, 8).map((v) => (
-            <div className={s.variant} key={v.cores.join()}>
-              <span className="strip">
+            <div className="flex flex-wrap items-center gap-2.5 border-b border-line py-1.5 text-[.88em] text-dim last:border-b-0 [&_b]:text-txt" key={v.cores.join()}>
+              <span className={ui.strip}>
                 {v.cores.map((l) => (
                   <Sprite key={l} dex={lineDex(meta, l)} name={lineName(meta, l)} cost={meta.lines[l]?.cost} size={42} anim={false} />
                 ))}
@@ -176,7 +177,7 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
           ))}
         </div>
       )}
-      {c.onlyRules && <p className="note">Only rules v{c.onlyRules} counted for this comp.</p>}
+      {c.onlyRules && <p className={ui.note}>Only rules v{c.onlyRules} counted for this comp.</p>}
     </>
   );
 }

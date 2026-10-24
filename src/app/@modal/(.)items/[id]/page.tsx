@@ -2,10 +2,10 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ItemDetail } from "@/components/items/ItemDetail";
 import { Modal } from "@/components/ui/Modal";
+import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { getItem } from "@/server/meta";
 
-/** Intercepted routes have no static params: the await happens under Suspense so the shell still prerenders. */
 export default function ItemModal({ params }: { params: Promise<{ id: string }> }) {
   return (
     <Suspense fallback={null}>
@@ -27,7 +27,7 @@ async function Content({ params }: { params: Promise<{ id: string }> }) {
       }
     >
       <ItemDetail meta={r.meta} stat={r.stat} item={r.item} />
-      <p className="note" style={{ margin: 0 }}>
+      <p className={`${ui.note} m-0`}>
         <a href={`/items/${id}`}>Open as a page</a> to share this item.
       </p>
     </Modal>

@@ -1,15 +1,14 @@
 import type { ReactNode } from "react";
 import { MetaIcon } from "./MetaIcon";
-import s from "./layout.module.css";
 
 /** The gold "Meta" header of the centre panel; each page gives its own subtitle. */
 export function PanelHead({ title = "Meta", subtitle, children }: { title?: ReactNode; subtitle?: ReactNode; children?: ReactNode }) {
   return (
-    <header className={s.panelHead}>
-      <MetaIcon className={s.ico} />
-      <div style={{ flex: "1 1 220px", minWidth: 0 }}>
-        <div className={s.h1}>{title}</div>
-        {subtitle && <small>{subtitle}</small>}
+    <header className="flex flex-wrap items-center gap-3 border-b-2 border-white/10 px-4 pt-3 pb-2.5 pl-[18px]">
+      <MetaIcon className="h-7 w-7 shrink-0 text-gold-hi drop-shadow-[0_2px_0_#000]" />
+      <div className="min-w-0 flex-[1_1_220px]">
+        <div className="m-0 text-[26px] leading-[1.1] font-bold text-gold [-webkit-text-stroke:1.2px_#0b0e18] [paint-order:stroke] [text-shadow:0_3px_0_#b8860b]">{title}</div>
+        {subtitle && <small className="mt-0.5 block text-[13px] leading-[1.3] font-semibold text-[#adb5bd]">{subtitle}</small>}
       </div>
       {children}
     </header>
@@ -17,5 +16,5 @@ export function PanelHead({ title = "Meta", subtitle, children }: { title?: Reac
 }
 
 export function PanelBody({ children }: { children: ReactNode }) {
-  return <div className={s.panelBody}>{children}</div>;
+  return <div className="flex-1 px-3.5 pt-3 pb-4">{children}</div>;
 }

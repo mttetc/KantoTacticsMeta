@@ -1,3 +1,4 @@
+import { ui } from "@/components/ui/styles";
 import { readFavorites } from "@/server/favorites";
 import { FavoriteButton } from "./FavoriteButton";
 
@@ -12,7 +13,7 @@ export async function FavoriteSlot({ compId }: { compId: string }) {
 
 export function FavoriteSlotFallback() {
   return (
-    <button type="button" className="btn" disabled aria-hidden>
+    <button type="button" className={ui.btn} disabled aria-hidden>
       ☆ Save comp
     </button>
   );

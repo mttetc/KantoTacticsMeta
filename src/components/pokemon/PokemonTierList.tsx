@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { Sprite } from "@/components/ui/Sprite";
-import { TierBadge } from "@/components/ui/TierBadge";
+import { costColor, ui } from "@/components/ui/styles";
+import { TierRows } from "@/components/ui/TierRows";
 import { fmt2 } from "@/lib/format";
-import { TIERS } from "@/lib/tiers";
 import type { Tier } from "@/lib/types";
 
 /** What the server hands the client: one flat, serialisable row per Pokémon line. */
@@ -76,22 +76,23 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
 
   return (
     <>
-      <div className="sort" role="group" aria-label="Sort and filter">
-        <span className="lbl">Sort</span>
+      <div className={ui.sort} role="group" aria-label="Sort and filter">
+        <span className="mr-0.5">Sort</span>
         {SORTS.map((s) => (
-          <button key={s.k} type="button" className={`chip ${sort === s.k ? "on" : ""}`} onClick={() => update({ sort: s.k })} aria-pressed={sort === s.k}>
+          <button key={s.k} type="button" className={`${ui.chip} ${sort === s.k ? ui.chipOn : ""}`} onClick={() => update({ sort: s.k })} aria-pressed={sort === s.k}>
             {s.label}
           </button>
         ))}
-        <span className="sep" />
-        <span className="lbl">Cost</span>
+        <span className={ui.sep} />
+        <span className="mr-0.5">Cost</span>
         {[1, 2, 3, 4, 5].map((c) => (
-          <button key={c} type="button" className={`chip cost ${f.cost === c ? "on" : ""}`} style={{ "--cc": `var(--c${c})` } as React.CSSProperties} onClick={() => update({ cost: f.cost === c ? 0 : c })} aria-pressed={f.cost === c}>
+          <button key={c} type="button" className={`${ui.chip} ${f.cost === c ? ui.chipOn : ""}`} onClick={() => update({ cost: f.cost === c ? 0 : c })} aria-pressed={f.cost === c}>
+            <i className="h-2.5 w-2.5 rounded-full shadow-[0_0_0_1px_#0008]" style={{ background: costColor(c) }} />
             {c}
           </button>
         ))}
-        <span className="sep" />
-        <select className="chip" value={f.type} onChange={(e) => update({ type: e.target.value })} aria-label="Type">
+        <span className={ui.sep} />
+        <select className={ui.chip} value={f.type} onChange={(e) => update({ type: e.target.value })} aria-label="Type">
           <option value="">Any type</option>
           {types.map((t) => (
             <option key={t.id} value={t.id}>
@@ -99,29 +100,22 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
             </option>
           ))}
         </select>
-        <input className="chip end" type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a Pokémon or a type…" aria-label="Search" style={{ minWidth: 220 }} />
+        <input className={`${ui.chip} ml-auto min-w-[220px]`} type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a Pokémon or a type…" aria-label="Search" />
       </div>
-      <div className="tiers">
-        {TIERS.map((t, i) => (
-          <section key={t} className="tier-row" aria-label={`Tier ${t}`} style={{ "--d": `${(0.1 + i * 0.07).toFixed(2)}s` } as React.CSSProperties}>
-            <div className="cell">
-              <TierBadge tier={t} variant="big" />
-            </div>
-            <div className="body">
-              {rows
-                .filter((u) => u.tier === t)
-                .map((u, k) => (
-                  <Link key={u.line} className="unit" href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={{ "--d": `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
-                    <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} />
-                    <span className="avg">{fmt2(u.avg)}</span>
-                    <small>{u.name}</small>
-                  </Link>
-                ))}
-            </div>
-          </section>
-        ))}
-      </div>
-      <p className="tier-note">
+      <TierRows
+        render={(t) =>
+          rows
+            .filter((u) => u.tier === t)
+            .map((u, k) => (
+              <Link key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={{ "--d": `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+                <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} className="max-sm:h-[56px]! max-sm:w-[56px]!" />
+                <span className="mt-[3px] text-[.86em] leading-none font-bold">{fmt2(u.avg)}</span>
+                <small>{u.name}</small>
+              </Link>
+            ))
+        }
+      />
+      <p className={ui.tierNote}>
         Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by {SORTS.find((s) => s.k === sort)?.label.toLowerCase()} inside each tier. Click a Pokémon for its items and best comps.
       </p>
     </>

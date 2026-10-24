@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { PokemonDetail } from "@/components/pokemon/PokemonDetail";
 import { CostChip } from "@/components/ui/CostChip";
+import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
 import { getMeta, getUnit, lineName, typeName } from "@/server/meta";
@@ -35,25 +36,24 @@ export default async function PokemonPage({ params }: { params: Params }) {
   const r = await getUnit(line);
   if (!r) notFound();
   const { meta, unit, line: l } = r;
-  const name = lineName(meta, line);
   return (
     <>
       <PanelHead
         title={
-          <>
-            {name} <TierBadge tier={unit.tier} />
-          </>
+          <span className="inline-flex flex-wrap items-center gap-2">
+            {lineName(meta, line)} <TierBadge tier={unit.tier} />
+          </span>
         }
         subtitle={`Pokémon · Ranked, rules v${meta.rules}, ${meta.from} to ${meta.to}`}
       >
-        <Link className="back" href="/">
+        <Link className={ui.back} href="/">
           ‹ Tier list
         </Link>
       </PanelHead>
       <PanelBody>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="flex flex-col gap-3">
           {l.cost && (
-            <div className="strip">
+            <div className={ui.strip}>
               <CostChip cost={l.cost} />
             </div>
           )}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ItemDetail } from "@/components/items/ItemDetail";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
+import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
 import { getItem, getMeta } from "@/server/meta";
@@ -33,18 +34,18 @@ export default async function ItemPage({ params }: { params: Params }) {
     <>
       <PanelHead
         title={
-          <>
+          <span className="inline-flex flex-wrap items-center gap-2">
             {r.item.name} <TierBadge tier={r.stat.tier} />
-          </>
+          </span>
         }
         subtitle={`Item · Ranked, rules v${r.meta.rules}, ${r.meta.from} to ${r.meta.to}`}
       >
-        <Link className="back" href="/items">
+        <Link className={ui.back} href="/items">
           ‹ Items
         </Link>
       </PanelHead>
       <PanelBody>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="flex flex-col gap-3">
           <ItemDetail meta={r.meta} stat={r.stat} item={r.item} />
         </div>
       </PanelBody>

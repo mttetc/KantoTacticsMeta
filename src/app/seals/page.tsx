@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { SealsList, type SealRow } from "@/components/seals/SealsList";
+import { ui } from "@/components/ui/styles";
 import { getMeta, lineDex, lineName } from "@/server/meta";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function SealsPage({ searchParams }: { searchParams: Search }) {
     <>
       <PanelHead subtitle="Seals · the game's augments, catalogue for the current rules" />
       <PanelBody>
-        <Suspense fallback={<div className="skeleton" style={{ minHeight: 320 }} />}>
+        <Suspense fallback={<div className={`${ui.skeleton} min-h-[320px]`} />}>
           <List searchParams={searchParams} />
         </Suspense>
       </PanelBody>

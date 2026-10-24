@@ -24,7 +24,9 @@ Tier lists and comp guides for [Kanto Tactics](https://einoow.com/kanto-tactics)
 
 ## Stack
 
-Next.js 16 (App Router, Cache Components, Partial Prefetching), React 19, TypeScript, CSS Modules, Vitest, pnpm.
+Next.js 16 (App Router, Cache Components, Partial Prefetching), React 19, TypeScript, Tailwind CSS v4, Vitest, pnpm.
+Styling is Tailwind utilities only: the game's palette, faces, shadows and keyframes live in `@theme` in `globals.css`,
+recurring class strings in `src/components/ui/styles.ts`; there are no CSS modules.
 No database: the API is the source of truth, read on the server and cached for an hour.
 
 | Route | Rendering | Why |

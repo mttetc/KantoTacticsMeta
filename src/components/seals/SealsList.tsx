@@ -3,8 +3,8 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useDeferredValue, useMemo, useState } from "react";
 import { Sprite } from "@/components/ui/Sprite";
+import { ui } from "@/components/ui/styles";
 import type { Seal } from "@/lib/types";
-import s from "./seals.module.css";
 
 export interface SealRow extends Seal {
   heroName: string | null;
@@ -13,6 +13,11 @@ export interface SealRow extends Seal {
 }
 
 const RAR = { 1: "Common", 2: "Rare", 3: "Mythic" } as const;
+const RAR_STYLE: Record<1 | 2 | 3, { ring: string; badge: string }> = {
+  1: { ring: "shadow-[var(--shadow-panel),inset_0_0_0_2px_#adb5bd8c]", badge: "bg-[#adb5bd]" },
+  2: { ring: "shadow-[var(--shadow-panel),inset_0_0_0_2px_#4dabf78c]", badge: "bg-[#4dabf7]" },
+  3: { ring: "shadow-[var(--shadow-panel),inset_0_0_0_2px_#ffd43b8c,0_0_14px_#ffd43b40]", badge: "bg-gold" },
+};
 const CATS: Record<string, string> = { eco: "Economy", shop: "Shop", xp: "XP", item: "Items", combat: "Combat", board: "Board", role: "Roles", trait: "Types", hero: "Heroes", risk: "Risk", later: "Later", rule: "Rules" };
 
 interface F {
@@ -49,15 +54,15 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
   let k = 0;
   return (
     <>
-      <div className="sort" role="group" aria-label="Filter seals">
-        <span className="lbl">Rarity</span>
+      <div className={ui.sort} role="group" aria-label="Filter seals">
+        <span className="mr-0.5">Rarity</span>
         {([1, 2, 3] as const).map((r) => (
-          <button key={r} type="button" className={`chip ${f.rarity === r ? "on" : ""}`} onClick={() => update({ rarity: f.rarity === r ? 0 : r })} aria-pressed={f.rarity === r}>
+          <button key={r} type="button" className={`${ui.chip} ${f.rarity === r ? ui.chipOn : ""}`} onClick={() => update({ rarity: f.rarity === r ? 0 : r })} aria-pressed={f.rarity === r}>
             {RAR[r]}
           </button>
         ))}
-        <span className="sep" />
-        <select className="chip" value={f.cat} onChange={(e) => update({ cat: e.target.value })} aria-label="Category">
+        <span className={ui.sep} />
+        <select className={ui.chip} value={f.cat} onChange={(e) => update({ cat: e.target.value })} aria-label="Category">
           <option value="">Any category</option>
           {cats.map((c) => (
             <option key={c} value={c}>
@@ -65,12 +70,12 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
             </option>
           ))}
         </select>
-        <input className="chip" type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a seal…" aria-label="Search" style={{ minWidth: 200 }} />
-        <span className="lbl end">
+        <input className={`${ui.chip} min-w-[200px]`} type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a seal…" aria-label="Search" />
+        <span className="ml-auto">
           {list.length} seals{offer ? ` · ${offer}` : ""}
         </span>
       </div>
-      <p className="tier-note" style={{ margin: "0 0 10px" }}>
+      <p className={`${ui.tierNote} mb-2.5`}>
         Seals are the picks offered at rounds {rounds.join(", ")} (the game&apos;s augments, since rules v34). The Meta API publishes no pick rate or placement for them, so this is the catalogue for rules v{rules}: no tiers, no win rate.
       </p>
       {rounds.map((r) => {
@@ -78,24 +83,24 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
         if (!L.length) return null;
         return (
           <section key={r}>
-            <h2 className={s.h}>
-              Round {r} <small>{L.length} seals</small>
+            <h2 className="mt-3.5 mb-2 flex items-center gap-2.5 text-[1.05em] font-bold first:mt-0">
+              Round {r} <small className="font-medium text-dim">{L.length} seals</small>
             </h2>
-            <div className={s.grid}>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2">
               {L.map((x) => (
-                <article key={x.id} className={`${s.seal} ${s[`r${x.rarity}`]}`} style={{ "--d": `${(0.1 + Math.min(k++, 30) * 0.02).toFixed(3)}s` } as React.CSSProperties}>
-                  <div className={s.head}>
-                    <span className={s.code}>{x.code}</span>
-                    <b>{x.name}</b>
-                    <span className={s.rar}>{RAR[x.rarity]}</span>
+                <article key={x.id} className={`${ui.card} flex min-w-0 animate-card-in flex-col gap-1 rounded-xl border-2 border-ink px-3 py-2.5 ${RAR_STYLE[x.rarity].ring}`} style={{ "--d": `${(0.1 + Math.min(k++, 30) * 0.02).toFixed(3)}s` } as React.CSSProperties}>
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span className="rounded-md border border-line px-[5px] text-[.7em] text-dim tabular-nums">{x.code}</span>
+                    <b className="min-w-0 flex-1 truncate text-[1em]">{x.name}</b>
+                    <span className={`rounded-full px-[7px] text-[.68em] font-bold tracking-[.06em] text-[#1a1f2e] uppercase ${RAR_STYLE[x.rarity].badge}`}>{RAR[x.rarity]}</span>
                   </div>
                   {x.text.map((t, i) => (
                     <div key={i}>
-                      <div className={s.line}>{t.line}</div>
-                      {t.detail && <div className={s.det}>{t.detail}</div>}
+                      <div className="text-[.92em] leading-[1.35]">{t.line}</div>
+                      {t.detail && <div className="text-[.8em] leading-[1.4] text-dim">{t.detail}</div>}
                     </div>
                   ))}
-                  <span className={s.cat}>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[.72em] text-dim">
                     {x.hero && (
                       <>
                         <Sprite dex={x.heroDex} name={x.heroName ?? x.hero} cost={x.heroCost} size={26} anim={false} /> {x.heroName} ·{" "}

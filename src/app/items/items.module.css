@@ -1,8 +1,0 @@
-.card { display: flex; flex-direction: column; align-items: center; width: 92px; color: inherit; text-decoration: none; border-radius: 10px; }
-.ico { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 16px; border: 2px solid var(--ink); background: var(--surface); box-shadow: inset 0 0 0 1px var(--rim-soft); }
-.card:hover .ico { box-shadow: 0 0 0 2px var(--gold); }
-.card small { width: 100%; text-align: center; color: var(--dim); font-size: .74em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 4px; }
-.avg { font-size: .86em; font-weight: 700; line-height: 1; margin-top: 4px; }
-.ty { width: 98px; }
-.ty .ico { background: var(--surface); }
-.lvl { font-size: .86em; font-weight: 700; line-height: 1; margin-top: 4px; }
