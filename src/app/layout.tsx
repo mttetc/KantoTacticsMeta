@@ -24,7 +24,6 @@ export const metadata: Metadata = {
   openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US" },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
-  icons: { icon: "/types/psychic.png" },
 };
 
 export const viewport: Viewport = { themeColor: "#111216", colorScheme: "dark", width: "device-width", initialScale: 1, viewportFit: "cover" };
@@ -47,29 +46,6 @@ export default async function RootLayout({ children, modal }: LayoutProps<"/">) 
     <html lang="en" className={`${fredoka.variable} ${inter.variable}`}>
       <body>
         <Background />
-        <header className={`${s.sitebar} gutter`}>
-          <a className={s.back} href="https://einoow.com/" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            <span>Einoow</span>
-          </a>
-          <span className={s.mid}>Kanto Tactics · Meta</span>
-          <nav className={s.acts} aria-label="Game links">
-            <a className={`${s.sbtn} ${s.discord}`} href={DISCORD_URL} target="_blank" rel="noopener">
-              Discord
-            </a>
-            <a className={`${s.sbtn} ${s.x}`} href="https://x.com/einoow" target="_blank" rel="noopener">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                <path d="M18.9 2H22l-7.5 8.6L23.3 22h-6.9l-5.4-7-6.2 7H1.7l8-9.2L1.3 2h7l4.9 6.4L18.9 2zm-1.2 18h1.9L7.4 3.9H5.4L17.7 20z" />
-              </svg>
-              <span>@einoow</span>
-            </a>
-            <a className={`${s.sbtn} ${s.pill}`} href={GAME_URL} target="_blank" rel="noopener">
-              Play the game
-            </a>
-          </nav>
-        </header>
 
         {meta.source === "snapshot" && (
           <div className={`${s.banner} gutter`} role="status">
