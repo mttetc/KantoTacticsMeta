@@ -4,7 +4,7 @@ import { cache } from "react";
 import { assignRoles } from "@/lib/carry";
 import { FALLBACK_LINES } from "@/lib/fallback-lines";
 import { compSlug, traitSlug } from "@/lib/format";
-import { buildTypicalCells, typicalPlacement } from "@/lib/placement";
+import { bestSetup, buildTypicalCells } from "@/lib/placement";
 import { compScore, compTier, entityTier, MIN_NE } from "@/lib/tiers";
 import type { ApiData, ApiMeta, Comp, Item, Line, Meta, Seal, Trait } from "@/lib/types";
 import { fetchDataRaw, fetchMetaRaw, META_TAG } from "./api";
@@ -63,6 +63,7 @@ function buildSeals(data: ApiData): Seal[] {
 
 function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Record<string, Item>, traits: Record<string, Trait>): Comp[] {
   const typical = buildTypicalCells(meta.comps);
+  const ranges = Object.fromEntries(Object.values(lines).map((l) => [l.id, l.range]));
   const name = (line: string) => lines[line]?.names.at(-1) ?? line;
   return meta.comps.map((c) => {
     const coreOnly = c.units.some((u) => u.share == null);
@@ -80,7 +81,8 @@ function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Record<st
           stages: c.guide.stages.map((s) => {
             const units = s.units.map((u) => ({ ...u, fresh: prev.size > 0 && !prev.has(u.line) }));
             prev = new Set(s.units.map((u) => u.line));
-            return { stage: s.stage, n: s.n, units };
+            const level = (s.levels ?? []).reduce<{ level: number; share: number } | null>((best, l) => (!best || l.share > best.share ? l : best), null)?.level ?? null;
+            return { stage: s.stage, n: s.n, level, units };
           }),
         }
       : null;
@@ -106,7 +108,7 @@ function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Record<st
       units: c.units.map((u) => ({ ...u, role: coreOnly ? null : (roles[u.line] ?? null) })),
       traits: c.traits,
       keyItems,
-      placement: c.placement ? { n: c.placement.n, typical: false, cells: c.placement.cells } : typicalPlacement(c.units, typical),
+      placement: coreOnly ? null : bestSetup(c.units, c.placement, typical, Object.entries(roles).find(([, r]) => r === "carry")?.[0] ?? null, ranges),
       guide,
       variants: c.variants ?? [],
     };
@@ -203,6 +205,44 @@ export const bestComps = (m: Meta, pred: (c: Comp) => boolean, n = 5) =>
     .filter((c) => c.reliable && pred(c))
     .sort((a, b) => a.score - b.score)
     .slice(0, n);
+
+/** A unit's weight at the end of a stage across reliable comps with a guide: presence, quality of the comps it leads to, and whether it stays. */
+export interface StagePick {
+  line: string;
+  /** average share of boards that field it at the end of the stage, weighted by games */
+  presence: number;
+  /** games-weighted average of the final comps' avg + CI */
+  score: number;
+  /** of the comps where it is on the stage board, the share where it is still on the final board */
+  keep: number;
+  comps: number;
+}
+export function stageRanking(m: Meta, stage: 3 | 4): StagePick[] {
+  const acc: Record<string, { w: number; pres: number; score: number; keep: number; comps: number }> = {};
+  const guided = m.comps.filter((c) => c.reliable && c.guide);
+  let totalW = 0;
+  for (const c of guided) {
+    const st = c.guide!.stages.find((s) => s.stage === stage);
+    if (!st) continue;
+    const w = c.n;
+    totalW += w;
+    for (const u of st.units) {
+      if (u.share < 20) continue;
+      const a = (acc[u.line] ??= { w: 0, pres: 0, score: 0, keep: 0, comps: 0 });
+      a.w += w;
+      a.pres += (u.share / 100) * w;
+      a.score += c.score * w;
+      a.keep += (c.units.some((f) => f.line === u.line && (f.share ?? 0) >= 50) ? 1 : 0) * w;
+      a.comps += 1;
+    }
+  }
+  return Object.entries(acc)
+    .map(([line, a]) => ({ line, presence: (a.pres / (totalW || 1)) * 100, score: a.score / a.w, keep: (a.keep / a.w) * 100, comps: a.comps }))
+    .sort((x, y) => y.presence - x.presence);
+}
+/** Final comps whose end-of-stage board usually fields this line. */
+export const compsStartingWith = (m: Meta, line: string, stage: 3 | 4 = 3) =>
+  m.comps.filter((c) => c.reliable && c.guide?.stages.some((s) => s.stage === stage && s.units.some((u) => u.line === line && u.share >= 40)));
 
 /** Share of a unit's item slots per item, across reliable comps (weighted by games). */
 export function itemsOnLine(m: Meta, line: string) {

@@ -8,6 +8,7 @@ import { MIN_NE } from "@/lib/tiers";
 import type { Comp, Meta, Role } from "@/lib/types";
 import { itemName, lineDex, lineName, typeName, unitDex, unitName } from "@/server/meta";
 import { Board } from "./Board";
+import { CompPath } from "./CompPath";
 
 const ROLE_ORDER = { carry: 0, sub: 1, tank: 2, holder: 3 } as const;
 const rank = (r: Role) => (r ? ROLE_ORDER[r] : 4);
@@ -122,37 +123,8 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
         )}
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3">
-        <Board meta={meta} comp={c} />
-        {c.guide && (
-          <div className={ui.sec}>
-            <h2 className={ui.secTitle}>
-              Stage by stage<small>real games</small>
-            </h2>
-            <div className="flex flex-col">
-              {c.guide.stages.map((st) => (
-                <div className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-2 border-b border-line py-1.5 last:border-b-0" key={st.stage}>
-                  <div className="text-[.8em] text-dim">
-                    End of stage <b className="block text-[1.1em] text-txt">{st.stage}</b>
-                    <small>{int(st.n)} games</small>
-                  </div>
-                  <div className={ui.strip}>
-                    {st.units.map((u) => (
-                      <span key={u.line} className="group relative flex flex-col items-center" title={`${unitName(meta, u.line, u.star)} · ${pct(u.share)}`}>
-                        <span className={ui.stars}>{u.star ? stars(u.star) : "·"}</span>
-                        <Sprite dex={unitDex(meta, u.line, u.star ?? 1)} name={unitName(meta, u.line, u.star ?? 1)} cost={meta.lines[u.line]?.cost} size={42} anim={false} className={u.fresh ? "shadow-[0_0_0_2px_#8ce99a]!" : ""} />
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-2 flex items-center gap-1.5 text-[.8em] text-dim">
-              <i className="block h-3 w-3 rounded shadow-[0_0_0_2px_#8ce99a]" /> New at this stage
-            </div>
-          </div>
-        )}
-      </div>
+      <CompPath meta={meta} comp={c} />
+      <Board meta={meta} comp={c} />
 
       {c.variants.length > 0 && (
         <div className={ui.sec}>

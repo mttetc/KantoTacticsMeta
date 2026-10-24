@@ -18,6 +18,8 @@ Tier lists and comp guides for [Kanto Tactics](https://einoow.com/kanto-tactics)
 
 - **Pokémon, items, types**: S to D tier lists from the week's average place, sortable and filterable, each with its own page (and a modal when you click from a list): items players put on it, best comps with it, synergy thresholds.
 - **Comps**: every comp of the last 7 days with **carry, sub and tank** marked, key items, final team with item shares, placement on the hex board from real games, stage-by-stage guide and variants. Filters are URL links; tier S is the default view.
+- **Game plan** on every comp page (Early → Mid → Final, like TFT sites): what players who ended on the comp had at the end of stages 3 and 4, what they kept, what they sold, the level to reach. And one **best setup** per comp: every final unit once on its most frequent hex.
+- **Early game** page: the units the good comps field at the end of stages 3 and 4, how well those comps finish, and whether the unit stays or gets sold; each links to the final comps that start with it.
 - **Seals**: catalogue of the game's augments by round, rarity and category (the API publishes no stats for them).
 - **Saved comps**: a cookie, no account.
 - Side panels like the lobby: snapshot of the window, tier legend, shop odds, best and most played comps of the week.

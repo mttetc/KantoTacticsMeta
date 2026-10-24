@@ -39,7 +39,7 @@ export interface ApiComp extends ApiStats {
   traits: { type: string; level: number; share: number | null }[];
   itemsScope?: "comp" | "global";
   placement?: { n: number; cells: { cell: number; line: string; star: number | null; share: number }[] };
-  guide?: { stages: { stage: number; n: number; units: { line: string; star: number | null; share: number }[] }[] };
+  guide?: { stages: { stage: number; n: number; units: { line: string; star: number | null; share: number }[]; levels?: { level: number; share: number }[] }[] };
   variants?: { cores: string[]; share: number; avg: number; top4: number }[];
 }
 
@@ -184,8 +184,9 @@ export interface Comp extends Stats {
   units: CompUnit[];
   traits: { type: string; level: number; share: number | null }[];
   keyItems: { id: string; line: string; star: number | null; share: number }[];
-  placement: { n: number; typical: boolean; cells: { cell: number; line: string; star: number | null; share: number | null }[] } | null;
-  guide: { stages: { stage: number; n: number; units: { line: string; star: number | null; share: number; fresh: boolean }[] }[] } | null;
+  /** One best setup: every final unit once, on its most frequent hex (own boards first, usual hex from other comps otherwise). */
+  placement: { n: number; typical: boolean; cells: { cell: number; line: string; star: number | null; share: number | null; typical: boolean }[] } | null;
+  guide: { stages: { stage: number; n: number; level: number | null; units: { line: string; star: number | null; share: number; fresh: boolean }[] }[] } | null;
   variants: { cores: string[]; share: number; avg: number; top4: number }[];
 }
 

@@ -9,7 +9,7 @@ import { MIN_NE, TIERS } from "@/lib/tiers";
 import type { Comp, Tier } from "@/lib/types";
 import { cacheLife, cacheTag } from "next/cache";
 import { META_TAG } from "@/server/api";
-import { getMeta, itemName, typeName, unitName } from "@/server/meta";
+import { compsStartingWith, getMeta, itemName, lineName, typeName, unitName } from "@/server/meta";
 
 export const metadata: Metadata = {
   title: "Comps",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 const PAGE = 40;
 const SORTS = { best: "Best", played: "Most played", wins: "Most wins" } as const;
 type Sort = keyof typeof SORTS;
-type Search = Promise<{ sort?: string; tier?: string; small?: string; q?: string; page?: string }>;
+type Search = Promise<{ sort?: string; tier?: string; small?: string; q?: string; page?: string; from?: string; stage?: string }>;
 
 /**
  * Filters live in the URL and are plain links, so the list needs no client JavaScript.
@@ -44,14 +44,14 @@ async function CompList({ searchParams }: { searchParams: Search }) {
   const sp = await searchParams;
   const sort: Sort = sp.sort && sp.sort in SORTS ? (sp.sort as Sort) : "best";
   const tier = sp.tier === "all" ? "all" : TIERS.includes(sp.tier as Tier) ? (sp.tier as Tier) : "S";
-  return <CachedCompList sort={sort} tier={tier} small={sp.small === "1"} q={(sp.q ?? "").trim().toLowerCase()} page={Math.max(1, Number(sp.page) || 1)} />;
+  return <CachedCompList sort={sort} tier={sp.from ? "all" : tier} small={sp.small === "1"} q={(sp.q ?? "").trim().toLowerCase()} page={Math.max(1, Number(sp.page) || 1)} from={sp.from ?? ""} stage={sp.stage === "4" ? 4 : 3} />;
 }
 
 /**
  * The list for one combination of filters, cached and shared by every visitor: a click on a filter chip is a
  * cache hit after the first visitor, and the cached result can ride along in the link's prefetch.
  */
-async function CachedCompList({ sort, tier, small, q, page }: { sort: Sort; tier: Tier | "all"; small: boolean; q: string; page: number }) {
+async function CachedCompList({ sort, tier, small, q, page, from, stage }: { sort: Sort; tier: Tier | "all"; small: boolean; q: string; page: number; from: string; stage: 3 | 4 }) {
   "use cache";
   cacheTag(META_TAG);
   cacheLife("hours");
@@ -59,7 +59,8 @@ async function CachedCompList({ sort, tier, small, q, page }: { sort: Sort; tier
 
   const hay = (c: Comp) =>
     `${c.title} ${c.units.map((u) => unitName(meta, u.line, u.star)).join(" ")} ${c.units.flatMap((u) => u.items.map((i) => itemName(meta, i.id))).join(" ")} ${c.traits.map((t) => typeName(meta, t.type)).join(" ")}`.toLowerCase();
-  let list = meta.comps.filter((c) => (small || c.reliable) && (tier === "all" || c.tier === tier));
+  const fromLine = from && meta.lines[from] ? from : "";
+  let list = fromLine ? compsStartingWith(meta, fromLine, stage) : meta.comps.filter((c) => (small || c.reliable) && (tier === "all" || c.tier === tier));
   if (q) {
     const words = q.split(/\s+/);
     list = list.filter((c) => {
@@ -113,8 +114,19 @@ async function CachedCompList({ sort, tier, small, q, page }: { sort: Sort; tier
           <input className={`${ui.chip} min-w-[220px]`} type="search" name="q" defaultValue={q} placeholder="Search a Pokémon, item or type…" aria-label="Search comps" />
         </form>
       </div>
+      {fromLine && (
+        <p className={`${ui.note} mt-0 mb-2.5 flex flex-wrap items-center gap-2 text-[.9em]`}>
+          Final comps whose end-of-stage-{stage} board fields <b className="text-txt">{lineName(meta, fromLine)}</b>.
+          <Link className={ui.chip} href="/comps">
+            × Clear
+          </Link>
+          <Link className={ui.chip} href="/early">
+            ‹ Early and mid game
+          </Link>
+        </p>
+      )}
       <p className={`${ui.note} mt-0 mb-2.5`}>
-        {int(list.length)} comps{tier !== "all" ? ` in tier ${tier}` : ""}. &ldquo;Best&rdquo; sorts on avg + CI, the same number as the tier, so a noisy comp never jumps above a steady one. Gold ring = carry, silver = sub, green = tank.
+        {int(list.length)} comps{tier !== "all" && !fromLine ? ` in tier ${tier}` : ""}. &ldquo;Best&rdquo; sorts on avg + CI, the same number as the tier, so a noisy comp never jumps above a steady one. Gold ring = carry, silver = sub, green = tank.
       </p>
       {shown.length === 0 ? (
         <div className={ui.empty}>No comp matches. Try another tier or include the small samples.</div>
