@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 const PAGE = 40;
-const SORTS = { best: "Best", played: "Most played", wins: "Most wins" } as const;
+const SORTS = { best: "Best", played: "Most played", least: "Least played", wins: "Most wins" } as const;
 type Sort = keyof typeof SORTS;
 type Search = Promise<{ sort?: string; tier?: string; small?: string; q?: string; page?: string; from?: string; stage?: string }>;
 
@@ -68,7 +68,8 @@ async function CachedCompList({ sort, tier, small, q, page, from, stage }: { sor
       return words.every((w) => h.includes(w));
     });
   }
-  list.sort((a, b) => (sort === "best" ? a.score - b.score : sort === "played" ? b.use - a.use : b.win - a.win));
+  // "least": the good comps nobody contests, lowest usage first, ties on quality
+  list.sort((a, b) => (sort === "best" ? a.score - b.score : sort === "played" ? b.use - a.use : sort === "least" ? a.use - b.use || a.score - b.score : b.win - a.win));
   const smallCount = meta.comps.filter((c) => !c.reliable && (tier === "all" || c.tier === tier)).length;
   const pages = Math.max(1, Math.ceil(list.length / PAGE));
   const shown = list.slice((page - 1) * PAGE, page * PAGE);
@@ -120,8 +121,8 @@ async function CachedCompList({ sort, tier, small, q, page, from, stage }: { sor
           <Link className={ui.chip} href="/comps">
             × Clear
           </Link>
-          <Link className={ui.chip} href="/early">
-            ‹ Early and mid game
+          <Link className={ui.chip} href="/game-plan">
+            ‹ Game plan
           </Link>
         </p>
       )}

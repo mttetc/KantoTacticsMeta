@@ -42,7 +42,7 @@ export default async function RootLayout({ children, modal }: LayoutProps<"/">) 
   const nav = [
     { href: "/", label: "Pokémon", count: meta.units.length },
     { href: "/comps", label: "Comps", count: meta.comps.filter((c) => c.reliable).length },
-    { href: "/early", label: "Early game" },
+    { href: "/game-plan", label: "Game plan" },
     { href: "/items", label: "Items", count: meta.items.length },
     { href: "/types", label: "Types", count: meta.traits.length },
     { href: "/seals", label: "Seals", count: meta.seals.length },

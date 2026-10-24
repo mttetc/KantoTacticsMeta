@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: url("/"), lastModified: at, changeFrequency: "daily", priority: 1 },
     { url: url("/comps"), lastModified: at, changeFrequency: "daily", priority: 0.9 },
-    { url: url("/early"), lastModified: at, changeFrequency: "daily", priority: 0.8 },
+    { url: url("/game-plan"), lastModified: at, changeFrequency: "daily", priority: 0.8 },
     { url: url("/items"), lastModified: at, changeFrequency: "daily", priority: 0.7 },
     { url: url("/types"), lastModified: at, changeFrequency: "daily", priority: 0.7 },
     { url: url("/seals"), lastModified: at, changeFrequency: "weekly", priority: 0.5 },
