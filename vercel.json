@@ -1,7 +1,24 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "crons": [{ "path": "/api/revalidate", "schedule": "20 4 * * *" }],
+  "framework": "nextjs",
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "outputDirectory": ".next",
+  "crons": [
+    {
+      "path": "/api/revalidate",
+      "schedule": "20 4 * * *"
+    }
+  ],
   "headers": [
-    { "source": "/(sd|thumb|items|types|trainers)/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
+    {
+      "source": "/(sd|thumb|items|types|trainers)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
   ]
 }
