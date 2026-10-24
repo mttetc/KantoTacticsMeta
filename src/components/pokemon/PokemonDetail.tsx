@@ -12,6 +12,8 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
   const held = itemsOnLine(meta, unit.line);
   const comps = bestComps(meta, (c) => c.units.some((u) => u.line === unit.line && (u.share ?? 0) >= 50));
   const maxUse = Math.max(...meta.units.map((u) => u.use));
+  const sComps = meta.comps.filter((c) => c.reliable && c.tier === "S");
+  const inS = sComps.filter((c) => c.units.some((u) => u.line === unit.line && (u.share ?? 0) >= 50)).length;
   return (
     <>
       <div className="detail">
@@ -50,6 +52,10 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
             </p>
           )}
           <StatsRow s={unit} maxUse={maxUse} />
+          <p className="note">
+            Tier {unit.tier} is the average place of every player who ended a game with {lineName(meta, unit.line)} on the board, in any comp. It sits in <b style={{ color: "var(--txt)" }}>{inS} of the {sComps.length}</b> tier S comps this week
+            {inS > 0 && unit.tier !== "S" ? ": strong in the right team, weaker as a filler" : ""}.
+          </p>
           {unit.onlyRules && <p className="note">Only rules v{unit.onlyRules} counted for this one.</p>}
         </div>
       </div>
