@@ -25,7 +25,7 @@ const COLS: { k: Key; label: string; asc: boolean; title: string }[] = [
 ];
 
 /** One stage's ranking, sortable by any column. */
-export function StageTable({ title, sub, rows, stage }: { title: string; sub: string; rows: StageRow[]; stage: 3 | 4 }) {
+export function StageTable({ title, sub, rows, stage }: { title: string; sub: string; rows: StageRow[]; stage: 3 | 4 | "final" }) {
   const [sort, setSort] = useState<{ k: Key; asc: boolean }>({ k: "presence", asc: false });
   const sorted = useMemo(() => [...rows].sort((a, b) => (sort.asc ? a[sort.k] - b[sort.k] : b[sort.k] - a[sort.k]) || b.presence - a.presence), [rows, sort]);
   const toggle = (k: Key) => setSort((s) => (s.k === k ? { k, asc: !s.asc } : { k, asc: COLS.find((c) => c.k === k)!.asc }));
@@ -54,7 +54,7 @@ export function StageTable({ title, sub, rows, stage }: { title: string; sub: st
             {sorted.map((p) => (
               <tr key={p.line} className="hover:bg-white/3">
                 <td>
-                  <Link href={`/comps?from=${p.line}&stage=${stage}`} className="group inline-flex items-center gap-2 text-txt no-underline" title={`Final comps whose stage ${stage} board fields ${p.name}`}>
+                  <Link href={stage === "final" ? `/pokemon/${p.line}` : `/comps?from=${p.line}&stage=${stage}`} className="group inline-flex items-center gap-2 text-txt no-underline" title={stage === "final" ? `${p.name}: its page and best comps` : `Final comps whose stage ${stage} board fields ${p.name}`}>
                     <Sprite dex={p.dex} name={p.name} cost={p.cost} size={36} anim={false} />
                     <span className="font-semibold">{p.name}</span>
                   </Link>

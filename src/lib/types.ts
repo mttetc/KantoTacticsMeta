@@ -94,6 +94,9 @@ export interface ApiSeal {
   cat?: string;
   rounds?: string[];
   hero?: string;
+  /** "type": one seal per type in `types`, with {T} in the texts */
+  template?: string;
+  types?: string[];
   name: I18n;
   text: { round?: string; line?: I18n; detail?: I18n }[];
 }
@@ -213,6 +216,8 @@ export interface Seal {
   cat: string;
   rounds: string[];
   hero: string | null;
+  /** types a "{T}" template seal exists for (empty for a normal seal) */
+  types: string[];
   name: string;
   text: { round: string; line: string; detail: string | null }[];
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useDeferredValue, useMemo, useState } from "react";
+import { Select } from "@/components/ui/Select";
 import { Sprite } from "@/components/ui/Sprite";
 import { costColor, ui } from "@/components/ui/styles";
 import { TierRows } from "@/components/ui/TierRows";
@@ -24,11 +25,9 @@ export interface UnitRow {
   use: number;
 }
 
-type SortKey = "avg" | "top4" | "win" | "use";
+type SortKey = "avg" | "use";
 const SORTS: { k: SortKey; label: string }[] = [
   { k: "avg", label: "Best place" },
-  { k: "top4", label: "Top 4" },
-  { k: "win", label: "Wins" },
   { k: "use", label: "Most played" },
 ];
 export interface Filters {
@@ -69,7 +68,7 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
         const hay = `${u.allNames.join(" ")} ${u.typeNames.join(" ")}`.toLowerCase();
         return words.every((w) => hay.includes(w));
       })
-      .sort((a, b) => (sort === "avg" ? a.avg - b.avg : b[sort] - a[sort]));
+      .sort((a, b) => (sort === "avg" ? a.avg - b.avg : b.use - a.use));
   }, [units, f.cost, f.type, dq, sort]);
 
   return (
@@ -90,14 +89,14 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
           </button>
         ))}
         <span className={ui.sep} />
-        <select className={ui.chip} value={f.type} onChange={(e) => update({ type: e.target.value })} aria-label="Type">
+        <Select value={f.type} onChange={(e) => update({ type: e.target.value })} aria-label="Type">
           <option value="">Any type</option>
           {types.map((t) => (
             <option key={t.id} value={t.id}>
               {t.name}
             </option>
           ))}
-        </select>
+        </Select>
         <input className={`${ui.chip} ml-auto min-w-[220px]`} type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a Pokémon or a type…" aria-label="Search" />
       </div>
       <TierRows

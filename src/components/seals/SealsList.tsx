@@ -1,8 +1,10 @@
 "use client";
 
 import { useDeferredValue, useMemo, useState } from "react";
-import { Sprite } from "@/components/ui/Sprite";
+import { Sprite, TypeGlyph } from "@/components/ui/Sprite";
+import { Select } from "@/components/ui/Select";
 import { ui } from "@/components/ui/styles";
+import { Tabs } from "@/components/ui/Tabs";
 import type { Seal } from "@/lib/types";
 
 export interface SealRow extends Seal {
@@ -27,6 +29,7 @@ interface F {
 
 export function SealsList({ seals, rounds, rules, offer, initial }: { seals: SealRow[]; rounds: string[]; rules: number; offer: string; initial: F }) {
   const [f, setF] = useState<F>(initial);
+  const [round, setRound] = useState(rounds[0] ?? "");
   const dq = useDeferredValue(f.q.trim().toLowerCase());
   const cats = useMemo(() => [...new Set(seals.map((x) => x.cat).filter(Boolean))], [seals]);
   const update = (patch: Partial<F>) => {
@@ -60,30 +63,28 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
           </button>
         ))}
         <span className={ui.sep} />
-        <select className={ui.chip} value={f.cat} onChange={(e) => update({ cat: e.target.value })} aria-label="Category">
+        <Select value={f.cat} onChange={(e) => update({ cat: e.target.value })} aria-label="Category">
           <option value="">Any category</option>
           {cats.map((c) => (
             <option key={c} value={c}>
               {CATS[c] ?? c}
             </option>
           ))}
-        </select>
+        </Select>
         <input className={`${ui.chip} min-w-[200px]`} type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a seal…" aria-label="Search" />
         <span className="ml-auto">
           {list.length} seals{offer ? ` · ${offer}` : ""}
         </span>
       </div>
       <p className={`${ui.tierNote} mb-2.5`}>
-        Seals are the picks offered at rounds {rounds.join(", ")} (the game&apos;s augments, since rules v34). The Meta API publishes no pick rate or placement for them, so this is the catalogue for rules v{rules}: no tiers, no win rate.
+        Seals are the picks offered at rounds {rounds.join(", ")} (the game&apos;s augments, since rules v34). The Meta API publishes no pick rate or placement for them, so this is the catalogue for rules v{rules}: no tiers, no win rate. One tab per round.
       </p>
-      {rounds.map((r) => {
-        const L = list.filter((x) => x.rounds.includes(r));
-        if (!L.length) return null;
-        return (
-          <section key={r}>
-            <h2 className="mt-3.5 mb-2 flex items-center gap-2.5 text-[1.05em] font-bold first:mt-0">
-              Round {r} <small className="font-medium text-dim">{L.length} seals</small>
-            </h2>
+      <Tabs items={rounds.map((r) => ({ key: r, label: `Round ${r}`, count: list.filter((x) => x.rounds.includes(r)).length }))} value={round} onChange={setRound} label="Round" />
+      <section role="tabpanel" id={`panel-${round}`} aria-labelledby={`tab-${round}`}>
+        {(() => {
+          const L = list.filter((x) => x.rounds.includes(round));
+          if (!L.length) return <div className={ui.empty}>No seal matches at round {round}.</div>;
+          return (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2">
               {L.map((x) => (
                 <article key={x.id} className={`${ui.card} flex min-w-0 animate-card-in flex-col gap-1 rounded-xl border-2 border-ink px-3 py-2.5 ${RAR_STYLE[x.rarity].ring}`} style={{ animationDelay: `${(0.1 + Math.min(k++, 30) * 0.02).toFixed(3)}s` } as React.CSSProperties}>
@@ -92,12 +93,21 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
                     <b className="min-w-0 flex-1 truncate text-[1em]">{x.name}</b>
                     <span className={`rounded-full px-[7px] text-[.68em] font-bold tracking-[.06em] text-[#1a1f2e] uppercase ${RAR_STYLE[x.rarity].badge}`}>{RAR[x.rarity]}</span>
                   </div>
-                  {x.text.map((t, i) => (
-                    <div key={i}>
-                      <div className="text-[.92em] leading-[1.35]">{t.line}</div>
-                      {t.detail && <div className="text-[.8em] leading-[1.4] text-dim">{t.detail}</div>}
-                    </div>
-                  ))}
+                  {x.text
+                    .filter((t) => !t.round || t.round === round)
+                    .map((t, i) => (
+                      <div key={i}>
+                        <div className="text-[.92em] leading-[1.35]">{t.line}</div>
+                        {t.detail && <div className="text-[.8em] leading-[1.4] text-dim">{t.detail}</div>}
+                      </div>
+                    ))}
+                  {x.types.length > 0 && (
+                    <span className="flex flex-wrap items-center gap-1 pt-1" title={`One seal per type: ${x.types.join(", ")}`}>
+                      {x.types.map((t) => (
+                        <TypeGlyph key={t} type={t} size={16} />
+                      ))}
+                    </span>
+                  )}
                   <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[.72em] text-dim">
                     {x.hero && (
                       <>
@@ -105,13 +115,14 @@ export function SealsList({ seals, rounds, rules, offer, initial }: { seals: Sea
                       </>
                     )}
                     {CATS[x.cat] ?? x.cat}
+                    {x.rounds.length > 1 && ` · also at ${x.rounds.filter((r) => r !== round).join(", ")}`}
                   </span>
                 </article>
               ))}
             </div>
-          </section>
-        );
-      })}
+          );
+        })()}
+      </section>
     </>
   );
 }

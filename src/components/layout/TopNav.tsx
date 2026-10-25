@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 export interface NavItem {
   href: string;
@@ -9,10 +9,13 @@ export interface NavItem {
   count?: number;
 }
 
-/** The lobby's segmented nav. Client only for the active state; links prefetch like any other. */
+/**
+ * The lobby's segmented nav. Client only for the active state, read from the route tree rather than the
+ * pathname: the pathname of the prerendered home shell is not "/" on the host, which left no tab lit on load.
+ */
 export function TopNav({ items }: { items: NavItem[] }) {
-  const path = usePathname();
-  const active = (href: string) => (href === "/" ? path === "/" || path.startsWith("/pokemon") : path.startsWith(href));
+  const segment = useSelectedLayoutSegment(); // null on the home page
+  const active = (href: string) => (href === "/" ? segment === null || segment === "pokemon" : segment === href.slice(1));
   return (
     <nav aria-label="Meta sections" className="order-3 flex max-w-full flex-1 basis-full animate-card-in gap-1 overflow-x-auto rounded-[18px] border-2 border-white/35 bg-ink/60 p-[5px] [scrollbar-width:none] sm:order-none sm:flex-none sm:basis-auto">
       {items.map((it) => {

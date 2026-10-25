@@ -4,9 +4,11 @@ import { cache } from "react";
 import { assignRoles } from "@/lib/carry";
 import { FALLBACK_LINES } from "@/lib/fallback-lines";
 import { compSlug, traitSlug } from "@/lib/format";
+import { metaCacheLife } from "@/lib/freshness";
+import { moveTextEn } from "@/lib/move-text-en";
 import { bestSetup, buildTypicalCells } from "@/lib/placement";
 import { compScore, compTier, entityTier, MIN_NE } from "@/lib/tiers";
-import type { ApiData, ApiMeta, Comp, Item, Line, Meta, Seal, Trait } from "@/lib/types";
+import type { ApiData, ApiMeta, Comp, Item, Line, Meta, Seal, Tier, Trait } from "@/lib/types";
 import { fetchDataRaw, fetchMetaRaw, META_TAG } from "./api";
 
 function buildLines(data: ApiData, meta: ApiMeta): Record<string, Line> {
@@ -21,7 +23,7 @@ function buildLines(data: ApiData, meta: ApiMeta): Record<string, Line> {
       range: l.range ?? null,
       names: l.stars.map((s) => s.name),
       dex: l.stars.map((s) => s.dex),
-      move: last ? { name: last.move.name.en, type: last.move.type, text: last.move.text.en } : null,
+      move: last ? { name: last.move.name.en, type: last.move.type, text: moveTextEn(id, last.star, last.move.text.en, last.move.text.es) } : null,
       passive,
       fromChangelog: false,
     };
@@ -48,6 +50,8 @@ function buildTraits(data: ApiData): Record<string, Trait> {
   );
 }
 
+/** "{T} Heart" is one seal per type; the catalogue shows it once, with the placeholder spelled out. */
+const fillT = (s: string) => s.replace(/\{T\}/g, "Type");
 function buildSeals(data: ApiData): Seal[] {
   return Object.entries(data.seals ?? {}).map(([id, s]) => ({
     id,
@@ -56,8 +60,9 @@ function buildSeals(data: ApiData): Seal[] {
     cat: s.cat ?? "",
     rounds: s.rounds ?? [],
     hero: s.hero ?? null,
-    name: s.name.en,
-    text: s.text.map((t) => ({ round: t.round ?? "", line: t.line?.en ?? "", detail: t.detail?.en ?? null })),
+    types: s.template === "type" ? (s.types ?? []) : [],
+    name: fillT(s.name.en),
+    text: s.text.map((t) => ({ round: t.round ?? "", line: fillT(t.line?.en ?? ""), detail: t.detail?.en ? fillT(t.detail.en) : null })),
   }));
 }
 
@@ -115,14 +120,18 @@ function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Record<st
   });
 }
 
-/** The whole normalised model, built once per revalidation window and shared by every page. */
+/**
+ * The whole normalised model, shared by every page: the one cache boundary over the API. Its life ends right
+ * after the API's next daily run (see `metaCacheLife`), with a hard expiry, so the first render after that
+ * fetches the day's data instead of serving the old copy while refreshing.
+ */
 export async function getMeta(): Promise<Meta> {
   "use cache";
   cacheTag(META_TAG);
   const [m, d] = await Promise.all([fetchMetaRaw(), fetchDataRaw()]);
   const meta = m.value, data = d.value;
   const fromSnapshot = m.source === "snapshot" || d.source === "snapshot";
-  cacheLife(fromSnapshot ? { stale: 60, revalidate: 300, expire: 3600 } : { stale: 3600, revalidate: 3600, expire: 60 * 60 * 24 * 3 });
+  cacheLife(metaCacheLife(meta.generated, fromSnapshot));
   const lines = buildLines(data, meta);
   const itemData = buildItems(data);
   const traitData = buildTraits(data);
@@ -217,16 +226,17 @@ export interface StagePick {
   keep: number;
   comps: number;
 }
-export function stageRanking(m: Meta, stage: 3 | 4): StagePick[] {
+export type RankStage = 3 | 4 | "final";
+export function stageRanking(m: Meta, stage: RankStage): StagePick[] {
   const acc: Record<string, { w: number; pres: number; score: number; keep: number; comps: number }> = {};
   const guided = m.comps.filter((c) => c.reliable && c.guide);
   let totalW = 0;
   for (const c of guided) {
-    const st = c.guide!.stages.find((s) => s.stage === stage);
-    if (!st) continue;
+    const units = stage === "final" ? c.units.map((u) => ({ line: u.line, share: u.share ?? 0 })) : c.guide!.stages.find((s) => s.stage === stage)?.units;
+    if (!units) continue;
     const w = c.n;
     totalW += w;
-    for (const u of st.units) {
+    for (const u of units) {
       if (u.share < 20) continue;
       const a = (acc[u.line] ??= { w: 0, pres: 0, score: 0, keep: 0, comps: 0 });
       a.w += w;
@@ -243,6 +253,41 @@ export function stageRanking(m: Meta, stage: 3 | 4): StagePick[] {
 /** Final comps whose end-of-stage board usually fields this line. */
 export const compsStartingWith = (m: Meta, line: string, stage: 3 | 4 = 3) =>
   m.comps.filter((c) => c.reliable && c.guide?.stages.some((s) => s.stage === stage && s.units.some((u) => u.line === line && u.share >= 40)));
+
+/** Two types active together in the good comps: how often, how well those comps finish, and the best of them. */
+export interface TraitPair {
+  a: string;
+  b: string;
+  /** games of the reliable comps that run both */
+  games: number;
+  comps: number;
+  /** games-weighted avg + CI of those comps (lower is better) */
+  score: number;
+  bestSlug: string;
+  bestTier: Tier;
+}
+const PAIR_SHARE = 50;
+export function traitPairs(m: Meta, max = 30): TraitPair[] {
+  const acc = new Map<string, { a: string; b: string; games: number; comps: number; score: number; best: Comp }>();
+  for (const c of m.comps) {
+    if (!c.reliable) continue;
+    const types = [...new Set(c.traits.filter((t) => (t.share ?? 100) >= PAIR_SHARE).map((t) => t.type))].sort();
+    for (let i = 0; i < types.length; i++)
+      for (let j = i + 1; j < types.length; j++) {
+        const key = `${types[i]}+${types[j]}`;
+        const e = acc.get(key) ?? { a: types[i], b: types[j], games: 0, comps: 0, score: 0, best: c };
+        e.games += c.n;
+        e.comps += 1;
+        e.score += c.score * c.n;
+        if (c.score < e.best.score) e.best = c;
+        acc.set(key, e);
+      }
+  }
+  return [...acc.values()]
+    .map((e) => ({ a: e.a, b: e.b, games: e.games, comps: e.comps, score: e.score / e.games, bestSlug: e.best.slug, bestTier: e.best.tier }))
+    .sort((x, y) => y.games - x.games)
+    .slice(0, max);
+}
 
 /** Share of a unit's item slots per item, across reliable comps (weighted by games). */
 export function itemsOnLine(m: Meta, line: string) {

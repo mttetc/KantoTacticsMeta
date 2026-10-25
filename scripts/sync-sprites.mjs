@@ -13,7 +13,7 @@ const API = "https://einoow.com/api/meta/kanto/";
 const PK = "https://einoow.com/playables/kanto-tactics/pk/";
 const PUB = path.resolve(import.meta.dirname, "..", "public");
 // the same rules-35 additions as src/lib/fallback-lines.ts (dex numbers only)
-const EXTRA_DEX = [109, 110, 52, 53, 127, 49, 137, 139, 71, 114, 57, 31, 141, 25];
+const EXTRA_DEX = [49, 137, 139, 71, 114, 57, 31, 141, 25];
 
 const exists = (p) => access(p).then(() => true, () => false);
 async function fetchTo(rel, dest) {

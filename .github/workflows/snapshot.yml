@@ -3,6 +3,7 @@ name: Refresh API snapshot
 on:
   schedule:
     - cron: "40 4 * * *" # the API regenerates at 03:40 UTC
+    - cron: "40 6 * * *" # GitHub often runs scheduled jobs hours late; a second slot keeps the snapshot same-day
   workflow_dispatch:
 
 permissions:
@@ -26,3 +27,9 @@ jobs:
           if git diff --cached --quiet; then echo "no change"; exit 0; fi
           git commit -m "snapshot: API data $(date -u +%F)"
           git push
+      - name: Refresh the site's cache
+        # same value as CRON_SECRET on Vercel; skipped when the repository secret is not set
+        if: env.REVALIDATE_SECRET != ''
+        env:
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: curl -fsS -X POST -H "Authorization: Bearer $REVALIDATE_SECRET" https://kanto-tactics-meta.vercel.app/api/revalidate

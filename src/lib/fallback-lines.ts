@@ -1,7 +1,8 @@
 import type { Line } from "./types";
 
 /**
- * Units the Meta knows but the game data file does not describe yet (rules 35 additions).
+ * Units the Meta knows but the game data file does not describe yet (rules 35 additions; the character
+ * Pokémon Koga, Giovanni and Samurai are in the data file since rules 36, with their own sprites).
  * Cost, types and notes come from the game changelog; sprites are the standard Pokémon.
  */
 const F = (
@@ -15,9 +16,6 @@ const F = (
 
 export const FALLBACK_LINES: Record<string, Line> = Object.fromEntries(
   [
-    F("koga", ["Koffing", "Koga's Weezing"], [109, 110], 5, ["poison"], "Character Pokémon with its own look: ninja smoke that poisons and makes attacks miss."),
-    F("giovanni", ["Meowth", "Giovanni's Persian"], [52, 53], 5, ["normal"], "Character Pokémon with its own look: Fury Swipes."),
-    F("samurai", ["Samurai's Pinsir"], [127], 5, ["bug"], "Character Pokémon with its own look: Guillotine, a huge slash at its target."),
     F("venomoth", ["Venomoth"], [49], 3, ["bug", "poison"], "Ranged attacker."),
     F("porygon3", ["Porygon"], [137], 3, ["normal"], "Conversion changes its type to one that resists the last hit."),
     F("omastar", ["Omastar"], [139], 3, ["rock", "water"], "Throws rocks and hides in its shell."),

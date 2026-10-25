@@ -11,6 +11,10 @@
     {
       "path": "/api/revalidate",
       "schedule": "20 4 * * *"
+    },
+    {
+      "path": "/api/revalidate",
+      "schedule": "20 6 * * *"
     }
   ],
   "headers": [

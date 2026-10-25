@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { CompRow } from "@/components/comps/CompRow";
+import { CompsSearch } from "@/components/comps/CompsSearch";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { ui } from "@/components/ui/styles";
 import { int } from "@/lib/format";
@@ -18,13 +19,13 @@ export const metadata: Metadata = {
 };
 
 const PAGE = 40;
-const SORTS = { best: "Best", played: "Most played", least: "Least played", wins: "Most wins" } as const;
+const SORTS = { best: "Best", played: "Most played" } as const;
 type Sort = keyof typeof SORTS;
 type Search = Promise<{ sort?: string; tier?: string; small?: string; q?: string; page?: string; from?: string; stage?: string }>;
 
 /**
- * Filters live in the URL and are plain links, so the list needs no client JavaScript.
- * The panel is static; the list streams at request time for the given search params.
+ * Filters live in the URL: the chips are plain links, the search box replaces the URL from the client (a soft
+ * navigation, no reload). The panel is static; the list streams at request time for the given search params.
  */
 export default function CompsPage({ searchParams }: { searchParams: Search }) {
   return (
@@ -54,7 +55,8 @@ async function CompList({ searchParams }: { searchParams: Search }) {
 async function CachedCompList({ sort, tier, small, q, page, from, stage }: { sort: Sort; tier: Tier | "all"; small: boolean; q: string; page: number; from: string; stage: 3 | 4 }) {
   "use cache";
   cacheTag(META_TAG);
-  cacheLife("hours");
+  // hard expiry: once stale the list is rebuilt before being served, on the model's current data
+  cacheLife({ stale: 300, revalidate: 3600, expire: 3600 });
   const meta = await getMeta();
 
   const hay = (c: Comp) =>
@@ -68,8 +70,7 @@ async function CachedCompList({ sort, tier, small, q, page, from, stage }: { sor
       return words.every((w) => h.includes(w));
     });
   }
-  // "least": the good comps nobody contests, lowest usage first, ties on quality
-  list.sort((a, b) => (sort === "best" ? a.score - b.score : sort === "played" ? b.use - a.use : sort === "least" ? a.use - b.use || a.score - b.score : b.win - a.win));
+  list.sort((a, b) => (sort === "best" ? a.score - b.score : b.use - a.use || a.score - b.score));
   const smallCount = meta.comps.filter((c) => !c.reliable && (tier === "all" || c.tier === tier)).length;
   const pages = Math.max(1, Math.ceil(list.length / PAGE));
   const shown = list.slice((page - 1) * PAGE, page * PAGE);
@@ -108,12 +109,7 @@ async function CachedCompList({ sort, tier, small, q, page, from, stage }: { sor
         <Link className={chip(small)} href={href({ small: small ? "" : "1" })} title={`Comps under ${MIN_NE} effective games: the API only gives their 4 core units, no board detail`}>
           {small ? "Hide comps under 30 games" : `Include comps under 30 games (${int(smallCount)})`}
         </Link>
-        <form action="/comps" method="get" className="ml-auto flex gap-1.5">
-          {sort !== "best" && <input type="hidden" name="sort" value={sort} />}
-          {tier !== "S" && <input type="hidden" name="tier" value={tier} />}
-          {small && <input type="hidden" name="small" value="1" />}
-          <input className={`${ui.chip} min-w-[220px]`} type="search" name="q" defaultValue={q} placeholder="Search a Pokémon, item or type…" aria-label="Search comps" />
-        </form>
+        <CompsSearch q={q} base={{ ...(sort !== "best" ? { sort } : {}), ...(tier !== "S" ? { tier } : {}), ...(small ? { small: "1" } : {}), ...(from ? { from, stage: String(stage) } : {}) }} />
       </div>
       {fromLine && (
         <p className={`${ui.note} mt-0 mb-2.5 flex flex-wrap items-center gap-2 text-[.9em]`}>
