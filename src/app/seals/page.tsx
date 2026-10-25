@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
-import { SealsList, type SealRow } from "@/components/seals/SealsList";
+import type { SealRow } from "@/components/seals/SealCard";
+import { SealsList } from "@/components/seals/SealsList";
+import { SEAL_ROUNDS } from "@/lib/constants";
 import { ui } from "@/components/ui/styles";
 import { getMeta, lineDex, lineName } from "@/server/meta";
 
@@ -37,7 +39,7 @@ async function List({ searchParams }: { searchParams: Search }) {
   return (
     <SealsList
       seals={rows}
-      rounds={meta.sealRules?.rounds ?? ["2-1", "3-2", "4-2"]}
+      rounds={meta.sealRules?.rounds ?? SEAL_ROUNDS}
       rules={meta.dataRules}
       offer={meta.sealRules ? `${meta.sealRules.cards} offered, ${meta.sealRules.rerolls} reroll` : ""}
       initial={{ rarity: Number(sp.rarity) || 0, cat: sp.cat ?? "", q: sp.q ?? "" }}

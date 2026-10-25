@@ -4,7 +4,8 @@ import type { StageRow } from "@/components/plan/StageTable";
 import { StageTabs } from "@/components/plan/StageTabs";
 import { ui } from "@/components/ui/styles";
 import type { Meta } from "@/lib/types";
-import { getMeta, lineDex, lineName, stageRanking, type RankStage } from "@/server/meta";
+import { getMeta, lineDex, lineName } from "@/server/meta";
+import { stageRanking, type RankStage } from "@/server/queries";
 
 export const metadata: Metadata = {
   title: "Game plan",

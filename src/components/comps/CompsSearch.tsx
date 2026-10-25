@@ -1,8 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { ui } from "@/components/ui/styles";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
+
+const DEBOUNCE_MS = 250;
 
 /**
  * The comps search box. Typing updates the URL with a soft navigation (the list streams in, the page stays),
@@ -18,12 +21,11 @@ export function CompsSearch({ q, base }: { q: string; base: Record<string, strin
     setValue(q);
   }
   const [pending, startTransition] = useTransition();
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const go = (next: string) => {
+  const { debounced: search, flush } = useDebouncedCallback((next: string) => {
     const p = new URLSearchParams(base);
     if (next.trim()) p.set("q", next.trim());
     startTransition(() => router.replace(`/comps${p.size ? `?${p}` : ""}`, { scroll: false }));
-  };
+  }, DEBOUNCE_MS);
   return (
     <span className="relative ml-auto inline-flex">
       <input
@@ -32,15 +34,9 @@ export function CompsSearch({ q, base }: { q: string; base: Record<string, strin
         value={value}
         onChange={(e) => {
           setValue(e.target.value);
-          if (timer.current) clearTimeout(timer.current);
-          timer.current = setTimeout(() => go(e.target.value), 250);
+          search(e.target.value);
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (timer.current) clearTimeout(timer.current);
-            go(value);
-          }
-        }}
+        onKeyDown={(e) => e.key === "Enter" && flush()}
         placeholder="Search a Pokémon, item or type…"
         aria-label="Search comps"
       />

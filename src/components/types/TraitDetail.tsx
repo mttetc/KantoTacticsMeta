@@ -4,7 +4,8 @@ import { Sprite, TypeIcon } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
 import { typeColor, ui } from "@/components/ui/styles";
 import type { Meta, Trait, TraitStat } from "@/lib/types";
-import { bestComps, lineDex, lineName } from "@/server/meta";
+import { lineDex, lineName } from "@/server/meta";
+import { bestComps } from "@/server/queries";
 
 export function TraitDetail({ meta, stat, trait }: { meta: Meta; stat: TraitStat; trait: Trait }) {
   const users = meta.units.filter((u) => meta.lines[u.line]?.types.includes(stat.type)).sort((a, b) => a.avg - b.avg);

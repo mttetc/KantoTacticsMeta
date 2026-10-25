@@ -6,7 +6,8 @@ import { TierBadge } from "@/components/ui/TierBadge";
 import { typeColor, ui } from "@/components/ui/styles";
 import { TierRows } from "@/components/ui/TierRows";
 import { fmt2, int } from "@/lib/format";
-import { getMeta, traitPairs, typeName } from "@/server/meta";
+import { getMeta, typeName } from "@/server/meta";
+import { traitPairs } from "@/server/queries";
 
 export const metadata: Metadata = {
   title: "Types tier list",

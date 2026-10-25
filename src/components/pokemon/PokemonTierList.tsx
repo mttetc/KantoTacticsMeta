@@ -1,93 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useMemo } from "react";
+import { CostChips } from "@/components/ui/CostChips";
 import { Select } from "@/components/ui/Select";
 import { Sprite } from "@/components/ui/Sprite";
-import { costColor, ui } from "@/components/ui/styles";
+import { ui } from "@/components/ui/styles";
 import { TierRows } from "@/components/ui/TierRows";
+import { useUrlState } from "@/hooks/useUrlState";
 import { fmt2 } from "@/lib/format";
-import type { Tier } from "@/lib/types";
+import { matchesAll, searchWords } from "@/lib/search";
+import { compareUnits, DEFAULT_UNIT_SORT, UNIT_SORTS, type UnitFilters, type UnitRow, type UnitSort } from "@/lib/unit-filters";
 
-/** What the server hands the client: one flat, serialisable row per Pokémon line. */
-export interface UnitRow {
-  line: string;
-  name: string;
-  allNames: string[];
-  dex: number | null;
-  cost: number | null;
-  types: string[];
-  typeNames: string[];
-  tier: Tier;
-  avg: number;
-  top4: number;
-  win: number;
-  use: number;
-}
-
-type SortKey = "avg" | "use";
-const SORTS: { k: SortKey; label: string }[] = [
-  { k: "avg", label: "Best place" },
-  { k: "use", label: "Most played" },
-];
-export interface Filters {
-  sort: string;
-  cost: number;
-  type: string;
-  q: string;
-}
+const toParams = (f: UnitFilters) => ({ sort: f.sort !== DEFAULT_UNIT_SORT ? f.sort : undefined, cost: f.cost ? String(f.cost) : undefined, type: f.type || undefined, q: f.q.trim() || undefined });
+const cardDelay = (k: number) => ({ animationDelay: `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` }) as React.CSSProperties;
 
 /**
  * Rendered on the server with the URL's filters (so the first paint matches the link), then the
  * client owns the state: 70 rows sort and filter instantly, and every change is mirrored to the URL.
  */
-export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; types: { id: string; name: string }[]; initial: Filters }) {
-  const [f, setF] = useState<Filters>(initial);
-  const sort = (SORTS.find((s) => s.k === f.sort)?.k ?? "avg") as SortKey;
-  const dq = useDeferredValue(f.q.trim().toLowerCase());
+export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; types: { id: string; name: string }[]; initial: UnitFilters }) {
+  const [f, update] = useUrlState(initial, toParams);
+  const words = searchWords(useDeferredValue(f.q));
 
-  const update = (patch: Partial<Filters>) => {
-    const next = { ...f, ...patch };
-    setF(next);
-    const p = new URLSearchParams();
-    if (next.sort !== "avg") p.set("sort", next.sort);
-    if (next.cost) p.set("cost", String(next.cost));
-    if (next.type) p.set("type", next.type);
-    if (next.q.trim()) p.set("q", next.q.trim());
-    // native history: Next keeps useSearchParams in sync and makes no server request
-    window.history.replaceState(null, "", `${window.location.pathname}${p.size ? `?${p}` : ""}`);
-  };
-
-  const rows = useMemo(() => {
-    const words = dq.split(/\s+/).filter(Boolean);
-    return units
-      .filter((u) => {
-        if (f.cost && u.cost !== f.cost) return false;
-        if (f.type && !u.types.includes(f.type)) return false;
-        if (!words.length) return true;
-        const hay = `${u.allNames.join(" ")} ${u.typeNames.join(" ")}`.toLowerCase();
-        return words.every((w) => hay.includes(w));
-      })
-      .sort((a, b) => (sort === "avg" ? a.avg - b.avg : b.use - a.use));
-  }, [units, f.cost, f.type, dq, sort]);
+  const rows = useMemo(
+    () => units.filter((u) => (!f.cost || u.cost === f.cost) && (!f.type || u.types.includes(f.type)) && matchesAll(`${u.allNames.join(" ")} ${u.typeNames.join(" ")}`, words)).sort(compareUnits[f.sort]),
+    [units, f.cost, f.type, f.sort, words],
+  );
 
   return (
     <>
       <div className={ui.sort} role="group" aria-label="Sort and filter">
         <span className="mr-0.5">Sort</span>
-        {SORTS.map((s) => (
-          <button key={s.k} type="button" className={`${ui.chip} ${sort === s.k ? ui.chipOn : ""}`} onClick={() => update({ sort: s.k })} aria-pressed={sort === s.k}>
-            {s.label}
+        {(Object.keys(UNIT_SORTS) as UnitSort[]).map((k) => (
+          <button key={k} type="button" className={`${ui.chip} ${f.sort === k ? ui.chipOn : ""}`} onClick={() => update({ sort: k })} aria-pressed={f.sort === k}>
+            {UNIT_SORTS[k]}
           </button>
         ))}
         <span className={ui.sep} />
-        <span className="mr-0.5">Cost</span>
-        {[1, 2, 3, 4, 5].map((c) => (
-          <button key={c} type="button" className={`${ui.chip} ${f.cost === c ? ui.chipOn : ""}`} onClick={() => update({ cost: f.cost === c ? 0 : c })} aria-pressed={f.cost === c}>
-            <i className="h-2.5 w-2.5 rounded-full shadow-[0_0_0_1px_#0008]" style={{ background: costColor(c) }} />
-            {c}
-          </button>
-        ))}
+        <CostChips value={f.cost} onChange={(cost) => update({ cost })} />
         <span className={ui.sep} />
         <Select value={f.type} onChange={(e) => update({ type: e.target.value })} aria-label="Type">
           <option value="">Any type</option>
@@ -104,7 +55,7 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
           rows
             .filter((u) => u.tier === t)
             .map((u, k) => (
-              <Link key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+              <Link key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={cardDelay(k)}>
                 <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} className="max-sm:h-[56px]! max-sm:w-[56px]!" />
                 <span className="mt-[3px] text-[.86em] leading-none font-bold">{fmt2(u.avg)}</span>
                 <small>{u.name}</small>
@@ -112,9 +63,7 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
             ))
         }
       />
-      <p className={ui.tierNote}>
-        Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by {SORTS.find((s) => s.k === sort)?.label.toLowerCase()} inside each tier. Click a Pokémon for its items and best comps.
-      </p>
+      <p className={ui.tierNote}>Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by {UNIT_SORTS[f.sort].toLowerCase()} inside each tier. Click a Pokémon for its items and best comps.</p>
     </>
   );
 }

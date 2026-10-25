@@ -6,7 +6,8 @@ import { ui } from "@/components/ui/styles";
 import { TypeChip } from "@/components/ui/TypeChip";
 import { stars } from "@/lib/format";
 import type { Line, Meta, Unit } from "@/lib/types";
-import { bestComps, itemName, itemsOnLine, lineDex, lineName, typeName } from "@/server/meta";
+import { itemName, lineDex, lineName, typeName } from "@/server/meta";
+import { bestComps, itemsOnLine } from "@/server/queries";
 
 /** Shared by the Pokémon page and its intercepted modal. */
 export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; line: Line }) {

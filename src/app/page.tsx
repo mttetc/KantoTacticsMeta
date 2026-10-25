@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
-import { PokemonTierList, type UnitRow } from "@/components/pokemon/PokemonTierList";
+import { PokemonTierList } from "@/components/pokemon/PokemonTierList";
+import { parseUnitSort, type UnitRow } from "@/lib/unit-filters";
 import { ui } from "@/components/ui/styles";
 import { getMeta, lineDex, lineName, typeName } from "@/server/meta";
 
@@ -44,13 +45,11 @@ async function TierList({ searchParams }: { searchParams: Search }) {
       typeNames: (l?.types ?? []).map((t) => typeName(meta, t)),
       tier: u.tier,
       avg: u.avg,
-      top4: u.top4,
-      win: u.win,
       use: u.use,
     };
   });
   const types = Object.values(meta.traitData).map((t) => ({ id: t.id, name: t.name }));
-  const initial = { sort: sp.sort ?? "avg", cost: Number(sp.cost) || 0, type: sp.type ?? "", q: sp.q ?? "" };
+  const initial = { sort: parseUnitSort(sp.sort), cost: Number(sp.cost) || 0, type: sp.type ?? "", q: sp.q ?? "" };
   return <PokemonTierList units={rows} types={types} initial={initial} />;
 }
 

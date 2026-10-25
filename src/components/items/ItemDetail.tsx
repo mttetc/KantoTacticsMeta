@@ -4,7 +4,8 @@ import { ItemIcon, Sprite } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
 import { ui } from "@/components/ui/styles";
 import type { Item, ItemStat, Meta } from "@/lib/types";
-import { bestComps, itemName, lineDex, lineName } from "@/server/meta";
+import { itemName, lineDex, lineName } from "@/server/meta";
+import { bestComps } from "@/server/queries";
 
 const KIND = { full: "combined", part: "component", tool: "tool", emblem: "emblem" } as const;
 
