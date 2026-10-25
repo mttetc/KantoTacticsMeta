@@ -1,5 +1,6 @@
 import "server-only";
 import { assignRoles } from "@/lib/carry";
+import { compFamily } from "@/lib/comp-family";
 import { compSlug } from "@/lib/format";
 import { bestSetup, buildTypicalCells } from "@/lib/placement";
 import { compScore, compTier, MIN_NE } from "@/lib/tiers";
@@ -37,6 +38,7 @@ export function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Re
       title: `${traits[c.name.trait]?.name ?? c.name.trait} · ${c.name.units.map(name).join(" & ")}`,
       nameTrait: c.name.trait,
       nameUnits: c.name.units,
+      family: compFamily(c.name.trait, c.name.units),
       tier: compTier(c.avg, c.ic, meta.ref),
       apiTier: c.tier,
       score: compScore(c.avg, c.ic),

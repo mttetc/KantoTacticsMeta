@@ -8,8 +8,8 @@ import type { Comp, Meta } from "@/lib/types";
 import { itemName, unitDex, unitName } from "@/server/meta";
 import { CompTitle } from "./CompTitle";
 
-/** One comp in a list, like the game's Meta rows. The whole row links to the comp page. */
-export function CompRow({ meta, comp: c, index = 0 }: { meta: Meta; comp: Comp; index?: number }) {
+/** One comp in a list, like the game's Meta rows. The whole row links to the comp page; `variants` = other versions folded under it. */
+export function CompRow({ meta, comp: c, index = 0, variants = 0 }: { meta: Meta; comp: Comp; index?: number; variants?: number }) {
   const few = !c.coreOnly && c.ne < MIN_NE;
   return (
     <article className={`${ui.card} animate-card-in overflow-hidden rounded-[14px] border-2 border-ink shadow-panel`} style={{ animationDelay: `${(0.05 + Math.min(index, 12) * 0.05).toFixed(2)}s` } as React.CSSProperties}>
@@ -22,6 +22,11 @@ export function CompRow({ meta, comp: c, index = 0 }: { meta: Meta; comp: Comp; 
             </h3>
             {c.use >= 2 && <span className="inline-flex items-center gap-[3px] rounded-full border border-ink bg-[#ffc078] px-2 pl-1.5 text-[.74em] font-bold text-ink">🔥 {pct(c.use)}</span>}
             {few && <span className="rounded-full border border-dashed border-line px-2 text-[.74em] text-dim">{int(c.ne)} games</span>}
+            {variants > 0 && (
+              <span className="rounded-full border border-line bg-black/20 px-2 text-[.74em] text-dim" title="Other builds of this comp, a unit or two apart, listed on its page">
+                +{variants} {variants === 1 ? "version" : "versions"}
+              </span>
+            )}
             {c.coreOnly && (
               <span className="rounded-full border border-[#ffe06666] px-2 text-[.74em] text-gold-hi" title={`Fewer than ${MIN_NE} games: the API only gives the 4 core units, with each unit's usual items, no stars or board`}>
                 core only · {int(c.n)} games

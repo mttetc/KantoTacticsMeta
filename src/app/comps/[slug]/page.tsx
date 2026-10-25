@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CompDetail } from "@/components/comps/CompDetail";
 import { CompTitle } from "@/components/comps/CompTitle";
+import { CompVersions } from "@/components/comps/CompVersions";
 import { FavoriteSlot, FavoriteSlotFallback } from "@/components/comps/FavoriteSlot";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -54,6 +55,7 @@ export default async function CompPage({ params }: { params: Params }) {
       </PanelHead>
       <PanelBody>
         <div className="flex flex-col gap-3.5">
+          <CompVersions meta={meta} comp={comp} />
           <CompDetail meta={meta} comp={comp} />
         </div>
       </PanelBody>

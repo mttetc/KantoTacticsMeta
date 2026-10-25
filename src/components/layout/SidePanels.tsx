@@ -5,7 +5,7 @@ import { RankItem, RankList, RankThumbs, RankTitle } from "@/components/ui/RankL
 import { Sprite } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
-import { fmt2, int, pct } from "@/lib/format";
+import { fmt2, pct } from "@/lib/format";
 import { COMP_THRESHOLDS, D_GAP, MIN_NE, TIER_HELP } from "@/lib/tiers";
 import type { Meta } from "@/lib/types";
 import { lineDex, lineName } from "@/server/meta";
@@ -34,33 +34,15 @@ function H({ children, sub }: { children: ReactNode; sub?: ReactNode }) {
 }
 
 const blk = "rounded-xl border-2 border-ink bg-linear-to-b from-surface-hi to-surface to-60% p-2.5 shadow-panel";
-const kv = "flex justify-between gap-2 border-b border-line py-[3px] text-[14px] text-dim last:border-b-0 [&>b]:text-txt [&>b]:tabular-nums";
 
-/** Left panel: the window, how tiers are read, the shop odds. Static per Meta refresh. */
+/** Left panel: how tiers are read, the shop odds. Static per Meta refresh. */
 export function LeftPanel({ meta: m }: { meta: Meta }) {
   const levels = Object.keys(m.pvp.odds)
     .map(Number)
     .sort((a, b) => a - b)
     .filter((l) => l >= 3);
   return (
-    <Side side="left" label="Snapshot and rules">
-      <section>
-        <H sub={`${m.from} → ${m.to}`}>Snapshot</H>
-        <div className={blk}>
-          <div className={kv}><span>Player seats</span><b>{int(m.seats)}</b></div>
-          <div className={kv}><span>≈ Games (8 players)</span><b>{int(m.games)}</b></div>
-          <div className={kv}><span>Reference place</span><b>{fmt2(m.ref)}</b></div>
-          {m.versions.map((v) => (
-            <div className={kv} key={v.rules}>
-              <span>
-                Rules v{v.rules} <small>{v.from}{v.from !== v.to ? ` → ${v.to}` : ""}</small>
-              </span>
-              <b>{int(v.n)}</b>
-            </div>
-          ))}
-          <div className={kv}><span>Generated</span><b>{m.generated.slice(0, 10)}</b></div>
-        </div>
-      </section>
+    <Side side="left" label="Tiers and rules">
       <section>
         <H sub="average place vs. reference">Tiers</H>
         <div className={`${blk} flex flex-col gap-[5px] text-[14px] text-dim [&_b]:text-txt [&_b]:tabular-nums [&>div]:flex [&>div]:items-center [&>div]:gap-2`}>

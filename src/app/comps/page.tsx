@@ -7,6 +7,7 @@ import { CompsSearch } from "@/components/comps/CompsSearch";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { ui } from "@/components/ui/styles";
 import { COMP_SORTS, compareComps, compParams, COMPS_PAGE_SIZE, compsHref, parseCompFilters, type CompFilters, type CompSearchParams, type CompSort } from "@/lib/comps-filters";
+import { groupVariants } from "@/lib/comp-family";
 import { int } from "@/lib/format";
 import { matchesAll, searchWords } from "@/lib/search";
 import { MIN_NE, TIERS } from "@/lib/tiers";
@@ -62,8 +63,11 @@ async function CachedCompList({ f }: { f: CompFilters }) {
   const words = searchWords(q);
   const list = (fromLine ? compsStartingWith(meta, fromLine, stage) : meta.comps.filter((c) => (small || c.reliable) && inTier(c))).filter((c) => matchesAll(hay(c), words)).sort(compareComps[sort]);
   const smallCount = meta.comps.filter((c) => !c.reliable && inTier(c)).length;
-  const pages = Math.max(1, Math.ceil(list.length / COMPS_PAGE_SIZE));
-  const shown = list.slice((page - 1) * COMPS_PAGE_SIZE, page * COMPS_PAGE_SIZE);
+  // one row per comp family: its best version, the others folded under it
+  const groups = groupVariants(list);
+  const folded = list.length - groups.length;
+  const pages = Math.max(1, Math.ceil(groups.length / COMPS_PAGE_SIZE));
+  const shown = groups.slice((page - 1) * COMPS_PAGE_SIZE, page * COMPS_PAGE_SIZE);
   const href = (patch: Partial<CompFilters>) => compsHref(f, patch);
   const chip = (on: boolean) => `${ui.chip} ${on ? ui.chipOn : ""}`;
 
@@ -103,14 +107,15 @@ async function CachedCompList({ f }: { f: CompFilters }) {
         </p>
       )}
       <p className={`${ui.note} mt-0 mb-2.5`}>
-        {int(list.length)} comps{tier !== "all" && !fromLine ? ` in tier ${tier}` : ""}. &ldquo;Best&rdquo; sorts on avg + CI, the same number as the tier, so a noisy comp never jumps above a steady one. Gold ring = carry, silver = sub, green = tank.
+        {int(groups.length)} comps{tier !== "all" && !fromLine ? ` in tier ${tier}` : ""}
+        {folded > 0 ? `, ${int(folded)} other versions folded under their best build` : ""}. &ldquo;Best&rdquo; sorts on avg + CI, the same number as the tier, so a noisy comp never jumps above a steady one. Gold ring = carry, silver = sub, green = tank.
       </p>
       {shown.length === 0 ? (
         <div className={ui.empty}>No comp matches. Try another tier or include the small samples.</div>
       ) : (
         <div className="flex flex-col gap-2">
-          {shown.map((c, i) => (
-            <CompRow key={c.id} meta={meta} comp={c} index={i} />
+          {shown.map((g, i) => (
+            <CompRow key={g.comp.id} meta={meta} comp={g.comp} index={i} variants={g.variants} />
           ))}
         </div>
       )}

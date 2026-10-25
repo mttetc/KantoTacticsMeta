@@ -177,6 +177,8 @@ export interface Comp extends Stats {
   /** The trait and the two lines that name the comp ("Psychic · Mewtwo & Starmie"). */
   nameTrait: string;
   nameUnits: string[];
+  /** Comps sharing a title are versions of one comp: this key groups them (see lib/comp-family). */
+  family: string;
   tier: Tier;
   apiTier: ApiTier;
   /** avg + ic: what the comp tier and the "best" sort use. */
