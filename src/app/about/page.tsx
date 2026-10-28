@@ -18,7 +18,7 @@ export default async function AboutPage() {
   const m = await getMeta();
   return (
     <>
-      <PanelHead subtitle="About the data" />
+      <PanelHead title="About the data" />
       <PanelBody>
         <div className="flex max-w-[760px] flex-col gap-3">
           <div className={ui.sec}>

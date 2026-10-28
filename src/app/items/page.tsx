@@ -20,7 +20,7 @@ export default async function ItemsPage() {
   let k = 0;
   return (
     <>
-      <PanelHead subtitle="Items tier list · average place of the holder at the end of the game" />
+      <PanelHead title="Items tier list" subtitle="average place of the holder at the end of the game" />
       <PanelBody>
         <TierRows
           render={(t) =>

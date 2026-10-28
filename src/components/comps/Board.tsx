@@ -31,15 +31,13 @@ export function Board({ meta, comp }: { meta: Meta; comp: Comp }) {
             const op = c.typical ? 0.55 : 0.5 + Math.min(1, c.share! / 60) * 0.5;
             return (
               <g key={cell}>
+                {/* on the group, not inside <image>: the HTML parser drops children of <image>, which broke hydration */}
+                <title>
+                  {unitName(meta, c.line, c.star)}
+                  {c.typical ? " · usual hex (from other comps)" : ` · ${pct(c.share)} of this comp's boards`}
+                </title>
                 <polygon points={pts} className={`stroke-[1.5] ${c.line === carry ? "fill-[#ffd43b2e] stroke-gold" : c.typical ? "fill-[#5f86ef1a] stroke-cobalt/60 [stroke-dasharray:4_3]" : "fill-[#5f86ef2e] stroke-cobalt"}`} />
-                {dex && (
-                  <image href={`/thumb/${dex}.webp`} x={cx - 18} y={(cy - 24).toFixed(1)} width={36} height={36} opacity={op.toFixed(2)} className="[image-rendering:pixelated]">
-                    <title>
-                      {unitName(meta, c.line, c.star)}
-                      {c.typical ? " · usual hex (from other comps)" : ` · ${pct(c.share)} of this comp's boards`}
-                    </title>
-                  </image>
-                )}
+                {dex && <image href={`/thumb/${dex}.webp`} x={cx - 18} y={(cy - 24).toFixed(1)} width={36} height={36} opacity={op.toFixed(2)} className="[image-rendering:pixelated]" />}
                 <text x={cx} y={(cy + 22).toFixed(1)} textAnchor="middle">
                   {c.typical ? "~" : `${Math.round(c.share!)} %`}
                 </text>

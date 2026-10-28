@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <PanelHead subtitle="Pokémon tier list · Ranked, humans only, last 7 days" />
+      <PanelHead title="Pokémon tier list" subtitle="Ranked, humans only, last 7 days" />
       <PanelBody>
         <Suspense fallback={<TierListSkeleton />}>
           <TierList />

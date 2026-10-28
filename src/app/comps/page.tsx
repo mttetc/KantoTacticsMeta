@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function CompsPage({ searchParams }: { searchParams: Promise<CompSearchParams> }) {
   return (
     <>
-      <PanelHead subtitle="Comps · what is winning in Ranked right now" />
+      <PanelHead title="Comps" subtitle="what is winning in Ranked right now" />
       <PanelBody>
         <Suspense fallback={<ListSkeleton />}>
           <CompList searchParams={searchParams} />

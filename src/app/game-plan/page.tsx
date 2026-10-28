@@ -22,7 +22,7 @@ export default async function GamePlanPage() {
   const guided = meta.comps.filter((c) => c.reliable && c.guide).length;
   return (
     <>
-      <PanelHead subtitle="Game plan · what the good comps field at each point of the game" />
+      <PanelHead title="Game plan" subtitle="what the good comps field at each point of the game" />
       <PanelBody>
         <p className={`${ui.note} mt-0 mb-3 text-[.9em]`}>
           The API only scores the end of the game, so there is no &ldquo;best early comp&rdquo;. What it does publish is the board of the players who finished on a good comp at the end of stages 3 and 4 ({guided} reliable comps). Below: the units they fielded at

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default function SealsPage() {
   return (
     <>
-      <PanelHead subtitle="Seals · the game's augments, catalogue for the current rules" />
+      <PanelHead title="Seals" subtitle="the game's augments, catalogue for the current rules" />
       <PanelBody>
         <Suspense fallback={<div className={`${ui.skeleton} min-h-[320px]`} />}>
           <List />

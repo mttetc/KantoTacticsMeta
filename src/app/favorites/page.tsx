@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "Saved comps", robots: { index: false
 export default function FavoritesPage() {
   return (
     <>
-      <PanelHead subtitle="Saved comps · kept in a cookie on this browser, no account" />
+      <PanelHead title="Saved comps" subtitle="kept in a cookie on this browser, no account" />
       <PanelBody>
         <Suspense fallback={<div className={`${ui.skeleton} min-h-[160px]`} />}>
           <Saved />

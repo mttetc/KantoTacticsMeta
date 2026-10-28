@@ -22,7 +22,7 @@ export default async function TypesPage() {
   let k = 0;
   return (
     <>
-      <PanelHead subtitle="Types tier list · a type at a given synergy level" />
+      <PanelHead title="Types tier list" subtitle="a type at a given synergy level" />
       <PanelBody>
         <TierRows
           render={(t) =>
