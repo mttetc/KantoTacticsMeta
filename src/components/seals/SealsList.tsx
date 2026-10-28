@@ -13,12 +13,14 @@ export interface SealFilters {
   cat: string;
   q: string;
 }
+const DEFAULTS: SealFilters = { rarity: 0, cat: "", q: "" };
+const fromParams = (p: URLSearchParams): SealFilters => ({ rarity: Number(p.get("rarity")) || 0, cat: p.get("cat") ?? "", q: p.get("q") ?? "" });
 const toParams = (f: SealFilters) => ({ rarity: f.rarity ? String(f.rarity) : undefined, cat: f.cat || undefined, q: f.q.trim() || undefined });
 const RARITIES = [1, 2, 3] as const;
 
 /** The seal catalogue: one tab per round, filters on rarity, category and text. */
-export function SealsList({ seals, rounds, rules, offer, initial }: { seals: SealRow[]; rounds: string[]; rules: number; offer: string; initial: SealFilters }) {
-  const [f, update] = useUrlState(initial, toParams);
+export function SealsList({ seals, rounds, rules, offer }: { seals: SealRow[]; rounds: string[]; rules: number; offer: string }) {
+  const [f, update] = useUrlState(DEFAULTS, toParams, fromParams);
   const [round, setRound] = useState(rounds[0] ?? "");
   const words = searchWords(useDeferredValue(f.q));
   const cats = useMemo(() => [...new Set(seals.map((x) => x.cat).filter(Boolean))], [seals]);

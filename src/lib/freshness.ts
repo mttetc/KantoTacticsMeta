@@ -27,13 +27,16 @@ export interface Life {
  * Cache life of the model built from an API answer generated at `generated`.
  * - Data of the current slot: keep it until the next slot. `expire` equals `revalidate`, so a page rendered after
  *   that point regenerates with fresh data in one pass instead of serving the old entry while it refreshes.
- * - Data older than the slot (the API's run is late, or the snapshot was served): back in an hour (five minutes
- *   for the snapshot), the API's polling limit.
+ * - Data older than the slot (the API's run is late, or the snapshot was served): poll again in an hour, the
+ *   API's limit, and keep serving the current entry while that happens (`expire` a day later). With the API
+ *   down for days, a shorter life meant every page regenerating every few minutes, each visitor waiting on the
+ *   API's timeout, and a cache write per page per cycle.
  */
 export function metaCacheLife(generated: string, fromSnapshot: boolean, now = Date.now()): Life {
   const slot = refreshSlot(now);
   const gen = Date.parse(generated);
   const upToDate = !fromSnapshot && Number.isFinite(gen) && gen >= slot - HOUR;
-  const secs = fromSnapshot ? 300 : upToDate ? Math.max(MIN_LIFE, Math.ceil((slot + DAY - now) / 1000)) : 3600;
+  if (!upToDate) return { stale: 3600, revalidate: 3600, expire: DAY / 1000 };
+  const secs = Math.max(MIN_LIFE, Math.ceil((slot + DAY - now) / 1000));
   return { stale: Math.min(secs, 3600), revalidate: secs, expire: secs };
 }

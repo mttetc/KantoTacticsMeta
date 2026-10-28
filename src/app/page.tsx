@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { PokemonTierList } from "@/components/pokemon/PokemonTierList";
-import { parseUnitSort, type UnitRow } from "@/lib/unit-filters";
+import type { UnitRow } from "@/lib/unit-filters";
 import { ui } from "@/components/ui/styles";
 import { getMeta, lineDex, lineName, typeName } from "@/server/meta";
 
@@ -12,27 +12,25 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-type Search = Promise<{ sort?: string; cost?: string; type?: string; q?: string }>;
-
 /**
- * Static shell (header, panel) + a request-time list: the URL's filters are read on the server so the
- * first paint already matches the link, then the client component takes over without a round trip.
+ * Fully static: the Meta is cached, the URL's filters are read in the browser (see useUrlState), so the page
+ * is served by the CDN and no function runs per visit.
  */
-export default function Home({ searchParams }: { searchParams: Search }) {
+export default function Home() {
   return (
     <>
       <PanelHead subtitle="Pokémon tier list · Ranked, humans only, last 7 days" />
       <PanelBody>
         <Suspense fallback={<TierListSkeleton />}>
-          <TierList searchParams={searchParams} />
+          <TierList />
         </Suspense>
       </PanelBody>
     </>
   );
 }
 
-async function TierList({ searchParams }: { searchParams: Search }) {
-  const [meta, sp] = await Promise.all([getMeta(), searchParams]);
+async function TierList() {
+  const meta = await getMeta();
   const rows: UnitRow[] = meta.units.map((u) => {
     const l = meta.lines[u.line];
     return {
@@ -49,8 +47,7 @@ async function TierList({ searchParams }: { searchParams: Search }) {
     };
   });
   const types = Object.values(meta.traitData).map((t) => ({ id: t.id, name: t.name }));
-  const initial = { sort: parseUnitSort(sp.sort), cost: Number(sp.cost) || 0, type: sp.type ?? "", q: sp.q ?? "" };
-  return <PokemonTierList units={rows} types={types} initial={initial} />;
+  return <PokemonTierList units={rows} types={types} />;
 }
 
 function TierListSkeleton() {

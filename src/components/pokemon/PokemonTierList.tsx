@@ -10,17 +10,17 @@ import { TierRows } from "@/components/ui/TierRows";
 import { useUrlState } from "@/hooks/useUrlState";
 import { fmt2 } from "@/lib/format";
 import { matchesAll, searchWords } from "@/lib/search";
-import { compareUnits, DEFAULT_UNIT_SORT, UNIT_SORTS, type UnitFilters, type UnitRow, type UnitSort } from "@/lib/unit-filters";
+import { compareUnits, DEFAULT_UNIT_FILTERS, DEFAULT_UNIT_SORT, UNIT_SORTS, unitFiltersFromParams, type UnitFilters, type UnitRow, type UnitSort } from "@/lib/unit-filters";
 
 const toParams = (f: UnitFilters) => ({ sort: f.sort !== DEFAULT_UNIT_SORT ? f.sort : undefined, cost: f.cost ? String(f.cost) : undefined, type: f.type || undefined, q: f.q.trim() || undefined });
 const cardDelay = (k: number) => ({ animationDelay: `${(0.15 + Math.min(k, 30) * 0.025).toFixed(3)}s` }) as React.CSSProperties;
 
 /**
- * Rendered on the server with the URL's filters (so the first paint matches the link), then the
- * client owns the state: 70 rows sort and filter instantly, and every change is mirrored to the URL.
+ * Prerendered unfiltered (the page is static), then the client owns the state: a deep link's filters apply
+ * right after hydration, 70 rows sort and filter instantly, and every change is mirrored to the URL.
  */
-export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; types: { id: string; name: string }[]; initial: UnitFilters }) {
-  const [f, update] = useUrlState(initial, toParams);
+export function PokemonTierList({ units, types }: { units: UnitRow[]; types: { id: string; name: string }[] }) {
+  const [f, update] = useUrlState(DEFAULT_UNIT_FILTERS, toParams, unitFiltersFromParams);
   const words = searchWords(useDeferredValue(f.q));
 
   const rows = useMemo(
@@ -55,7 +55,7 @@ export function PokemonTierList({ units, types, initial }: { units: UnitRow[]; t
           rows
             .filter((u) => u.tier === t)
             .map((u, k) => (
-              <Link key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={cardDelay(k)}>
+              <Link key={u.line} prefetch={false} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={cardDelay(k)}>
                 <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} className="max-sm:h-[56px]! max-sm:w-[56px]!" />
                 <span className="mt-[3px] text-[.86em] leading-none font-bold">{fmt2(u.avg)}</span>
                 <small>{u.name}</small>

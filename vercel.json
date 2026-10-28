@@ -19,7 +19,7 @@
   ],
   "headers": [
     {
-      "source": "/(sd|thumb|items|types|trainers)/(.*)",
+      "source": "/(sd|thumb|items|types)/(.*)\\.(gif|png|webp)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -27,5 +27,6 @@
         }
       ]
     }
-  ]
+  ],
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':!data/snapshot'"
 }

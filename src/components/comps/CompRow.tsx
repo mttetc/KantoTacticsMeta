@@ -13,7 +13,7 @@ export function CompRow({ meta, comp: c, index = 0, variants = 0 }: { meta: Meta
   const few = !c.coreOnly && c.ne < MIN_NE;
   return (
     <article className={`${ui.card} animate-card-in overflow-hidden rounded-[14px] border-2 border-ink shadow-panel`} style={{ animationDelay: `${(0.05 + Math.min(index, 12) * 0.05).toFixed(2)}s` } as React.CSSProperties}>
-      <Link href={`/comps/${c.slug}`} prefetch className="grid w-full grid-cols-[28px_minmax(0,1fr)_auto_12px] items-center gap-2 p-2 text-left text-inherit no-underline hover:bg-white/3 sm:grid-cols-[32px_minmax(0,1fr)_auto_14px] sm:gap-2.5 sm:p-2.5">
+      <Link href={`/comps/${c.slug}`} className="grid w-full grid-cols-[28px_minmax(0,1fr)_auto_12px] items-center gap-2 p-2 text-left text-inherit no-underline hover:bg-white/3 sm:grid-cols-[32px_minmax(0,1fr)_auto_14px] sm:gap-2.5 sm:p-2.5">
         <TierBadge tier={c.tier} variant="row" />
         <span className="flex min-w-0 flex-col gap-1">
           <span className="flex min-w-0 flex-wrap items-center gap-1.5">

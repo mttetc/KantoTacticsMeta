@@ -27,7 +27,7 @@ export default async function ItemsPage() {
             items
               .filter((it) => it.tier === t)
               .map((it) => (
-                <Link key={it.id} className={`${ui.unit} w-[92px]! animate-card-in`} href={`/items/${it.id}`} title={`${itemName(meta, it.id)} · avg ${fmt2(it.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+                <Link key={it.id} prefetch={false} className={`${ui.unit} w-[92px]! animate-card-in`} href={`/items/${it.id}`} title={`${itemName(meta, it.id)} · avg ${fmt2(it.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
                   <span className="grid h-[68px] w-[68px] place-items-center rounded-2xl border-2 border-ink bg-surface shadow-[inset_0_0_0_1px_var(--color-rim-soft)] transition-shadow group-hover:shadow-[0_0_0_2px_var(--color-gold)]">
                     <ItemIcon id={it.id} name={itemName(meta, it.id)} size={44} className="rounded-lg" />
                   </span>

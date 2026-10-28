@@ -18,16 +18,20 @@ describe("metaCacheLife", () => {
     expect(life.expire).toBe(life.revalidate);
     expect(life.stale).toBe(3600);
   });
-  it("polls hourly while the API's run is late", () => {
+  it("polls hourly while the API's run is late, serving the current entry meanwhile", () => {
     const now = at("2026-10-25T05:00:00Z");
-    expect(metaCacheLife("2026-10-24T03:32:46.853Z", false, now).revalidate).toBe(3600);
+    const life = metaCacheLife("2026-10-24T03:32:46.853Z", false, now);
+    expect(life.revalidate).toBe(3600);
+    expect(life.expire).toBe(86400);
   });
   it("accepts a run that landed just before the slot, and never keeps an entry under ten minutes", () => {
     const now = at("2026-10-25T03:45:00Z"); // after the API's 03:32 run, before the 03:50 slot
     const life = metaCacheLife("2026-10-25T03:32:00Z", false, now);
     expect(life.revalidate).toBe(600);
   });
-  it("retries the snapshot every five minutes", () => {
-    expect(metaCacheLife("2026-10-25T03:32:00Z", true).revalidate).toBe(300);
+  it("retries the live API hourly while on the snapshot, without expiring the entry", () => {
+    const life = metaCacheLife("2026-10-25T03:32:00Z", true);
+    expect(life.revalidate).toBe(3600);
+    expect(life.expire).toBe(86400);
   });
 });

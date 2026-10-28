@@ -13,23 +13,22 @@ export const metadata: Metadata = {
   alternates: { canonical: "/seals" },
 };
 
-type Search = Promise<{ rarity?: string; cat?: string; q?: string }>;
-
-export default function SealsPage({ searchParams }: { searchParams: Search }) {
+/** Fully static: the URL's filters are read in the browser (see useUrlState). */
+export default function SealsPage() {
   return (
     <>
       <PanelHead subtitle="Seals · the game's augments, catalogue for the current rules" />
       <PanelBody>
         <Suspense fallback={<div className={`${ui.skeleton} min-h-[320px]`} />}>
-          <List searchParams={searchParams} />
+          <List />
         </Suspense>
       </PanelBody>
     </>
   );
 }
 
-async function List({ searchParams }: { searchParams: Search }) {
-  const [meta, sp] = await Promise.all([getMeta(), searchParams]);
+async function List() {
+  const meta = await getMeta();
   const rows: SealRow[] = meta.seals.map((x) => ({
     ...x,
     heroName: x.hero ? lineName(meta, x.hero) : null,
@@ -42,7 +41,6 @@ async function List({ searchParams }: { searchParams: Search }) {
       rounds={meta.sealRules?.rounds ?? SEAL_ROUNDS}
       rules={meta.dataRules}
       offer={meta.sealRules ? `${meta.sealRules.cards} offered, ${meta.sealRules.rerolls} reroll` : ""}
-      initial={{ rarity: Number(sp.rarity) || 0, cat: sp.cat ?? "", q: sp.q ?? "" }}
     />
   );
 }

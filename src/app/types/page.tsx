@@ -29,7 +29,7 @@ export default async function TypesPage() {
             traits
               .filter((x) => x.tier === t)
               .map((x) => (
-                <Link key={x.slug} className={`${ui.unit} w-[98px]! animate-card-in`} href={`/types/${x.slug}`} title={`${typeName(meta, x.type)} ${x.level} · avg ${fmt2(x.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+                <Link key={x.slug} prefetch={false} className={`${ui.unit} w-[98px]! animate-card-in`} href={`/types/${x.slug}`} title={`${typeName(meta, x.type)} ${x.level} · avg ${fmt2(x.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
                   <span className="grid h-[68px] w-[68px] place-items-center rounded-2xl border-2 border-ink bg-surface shadow-[inset_0_0_0_1px_var(--color-rim-soft)] transition-shadow group-hover:shadow-[0_0_0_2px_var(--color-gold)]">
                     <TypeIcon type={x.type} name={typeName(meta, x.type)} size={60} />
                   </span>

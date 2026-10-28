@@ -1,6 +1,6 @@
 import type { Tier } from "./types";
 
-/** The Pokémon tier list's filters: plain module, so the server can parse the URL and the client can own the state. */
+/** The Pokémon tier list's filters: plain module shared by the page (rows) and the client list (state). */
 
 /** What the server hands the client: one flat, serialisable row per Pokémon line. */
 export interface UnitRow {
@@ -27,4 +27,7 @@ export interface UnitFilters {
   type: string;
   q: string;
 }
+export const DEFAULT_UNIT_FILTERS: UnitFilters = { sort: DEFAULT_UNIT_SORT, cost: 0, type: "", q: "" };
+/** The URL's query string, as read in the browser after hydration. */
+export const unitFiltersFromParams = (p: URLSearchParams): UnitFilters => ({ sort: parseUnitSort(p.get("sort") ?? undefined), cost: Number(p.get("cost")) || 0, type: p.get("type") ?? "", q: p.get("q") ?? "" });
 export const compareUnits: Record<UnitSort, (a: UnitRow, b: UnitRow) => number> = { avg: (a, b) => a.avg - b.avg, use: (a, b) => b.use - a.use };

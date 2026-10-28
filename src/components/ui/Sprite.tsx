@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import type { Role } from "@/lib/types";
 import { ROLE_LABEL } from "@/lib/carry";
@@ -36,6 +38,8 @@ const TAG_BG: Record<Exclude<Role, null>, string> = {
 /**
  * A Pokémon in its square frame, like the game's unit cards: the image is clipped inside, items overhang the
  * bottom edge above the ring, the frame grows on hover of the enclosing `group`. Pure and serialisable.
+ * A client component on purpose: a page shows up to ~130 of these, and the RSC payload then carries a few
+ * props per sprite instead of its whole markup (3x smaller pages, faster navigation).
  */
 export function Sprite({ dex, name, cost, size = 44, anim = true, items, itemSize = 20, role, tag, className = "", priority }: SpriteProps) {
   const glow = cost === 4 ? "shadow-[0_0_8px_#cc5de873]" : cost === 5 ? "shadow-[0_0_12px_#fcc41999]" : "";

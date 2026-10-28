@@ -3,10 +3,12 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { getMeta } from "./meta";
-import { FAV_COOKIE, FAV_MAX, readFavorites } from "./favorites";
+import { FAV_COOKIE, FAV_MAX } from "@/lib/favorites";
+import { readFavorites } from "./favorites";
 import { META_TAG } from "./api";
 
-const COOKIE_OPTS = { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" as const, httpOnly: true, secure: process.env.NODE_ENV === "production" };
+// not httpOnly: the browser reads it to show the saved state on static comp pages (lib/favorites); it holds comp ids only
+const COOKIE_OPTS = { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" as const, httpOnly: false, secure: process.env.NODE_ENV === "production" };
 
 /** Save or unsave a comp for this visitor (cookie, no account). Returns the new state. */
 export async function toggleFavorite(compId: string): Promise<{ saved: boolean; count: number }> {

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import { CompDetail } from "@/components/comps/CompDetail";
 import { CompTitle } from "@/components/comps/CompTitle";
 import { CompVersions } from "@/components/comps/CompVersions";
-import { FavoriteSlot, FavoriteSlotFallback } from "@/components/comps/FavoriteSlot";
+import { FavoriteButton } from "@/components/comps/FavoriteButton";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
@@ -48,10 +47,8 @@ export default async function CompPage({ params }: { params: Params }) {
         back={{ href: "/comps", label: "Comps" }}
         subtitle={`Comp · Ranked, rules v${meta.rules}, ${meta.from} to ${meta.to}`}
       >
-        {/* the only request-time piece of the page: the visitor's cookie, streamed under Suspense */}
-        <Suspense fallback={<FavoriteSlotFallback />}>
-          <FavoriteSlot compId={comp.id} />
-        </Suspense>
+        {/* reads the visitor's cookie in the browser, so the whole page stays static */}
+        <FavoriteButton compId={comp.id} />
       </PanelHead>
       <PanelBody>
         <div className="flex flex-col gap-3.5">
