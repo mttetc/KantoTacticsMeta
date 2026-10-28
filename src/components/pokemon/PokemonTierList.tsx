@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { useDeferredValue, useMemo } from "react";
 import { CostChips } from "@/components/ui/CostChips";
 import { Select } from "@/components/ui/Select";
@@ -55,11 +55,11 @@ export function PokemonTierList({ units, types }: { units: UnitRow[]; types: { i
           rows
             .filter((u) => u.tier === t)
             .map((u, k) => (
-              <Link key={u.line} prefetch={false} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={cardDelay(k)}>
+              <IntentLink key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · avg ${fmt2(u.avg)}`} style={cardDelay(k)}>
                 <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} className="max-sm:h-[56px]! max-sm:w-[56px]!" />
                 <span className="mt-[3px] text-[.86em] leading-none font-bold">{fmt2(u.avg)}</span>
                 <small>{u.name}</small>
-              </Link>
+              </IntentLink>
             ))
         }
       />

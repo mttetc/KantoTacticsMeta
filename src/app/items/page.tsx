@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { ItemIcon } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
@@ -30,13 +30,13 @@ export default async function ItemsPage() {
             items
               .filter((it) => it.tier === t)
               .map((it) => (
-                <Link key={it.id} prefetch={false} className={`${ui.unit} w-[92px]! animate-card-in`} href={`/items/${it.id}`} title={`${itemName(meta, it.id)} · avg ${fmt2(it.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+                <IntentLink key={it.id} className={`${ui.unit} w-[92px]! animate-card-in`} href={`/items/${it.id}`} title={`${itemName(meta, it.id)} · avg ${fmt2(it.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
                   <span className="grid h-[68px] w-[68px] place-items-center rounded-2xl border-2 border-ink bg-surface shadow-[inset_0_0_0_1px_var(--color-rim-soft)] transition-shadow group-hover:shadow-[0_0_0_2px_var(--color-gold)]">
                     <ItemIcon id={it.id} name={itemName(meta, it.id)} size={44} className="rounded-lg" />
                   </span>
                   <span className="mt-1 text-[.86em] leading-none font-bold">{fmt2(it.avg)}</span>
                   <small>{itemName(meta, it.id)}</small>
-                </Link>
+                </IntentLink>
               ))
           }
         />
@@ -48,13 +48,13 @@ export default async function ItemsPage() {
             </h2>
             <div className="flex flex-wrap gap-x-1.5 gap-y-2.5 pt-1">
               {parts.map((it) => (
-                <Link key={it.id} prefetch={false} className={`${ui.unit} w-[92px]!`} href={`/items/${it.id}`} title={`${itemName(meta, it.id)} · avg ${fmt2(it.avg)}`}>
+                <IntentLink key={it.id} className={`${ui.unit} w-[92px]!`} href={`/items/${it.id}`} title={`${itemName(meta, it.id)} · avg ${fmt2(it.avg)}`}>
                   <span className="grid h-[56px] w-[56px] place-items-center rounded-2xl border-2 border-ink bg-surface shadow-[inset_0_0_0_1px_var(--color-rim-soft)] transition-shadow group-hover:shadow-[0_0_0_2px_var(--color-gold)]">
                     <ItemIcon id={it.id} name={itemName(meta, it.id)} size={36} className="rounded-lg" />
                   </span>
                   <span className="mt-1 text-[.86em] leading-none font-bold">{fmt2(it.avg)}</span>
                   <small>{itemName(meta, it.id)}</small>
-                </Link>
+                </IntentLink>
               ))}
             </div>
           </div>

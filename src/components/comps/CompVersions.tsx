@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import { Sprite } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -25,7 +25,7 @@ export function CompVersions({ meta, comp }: { meta: Meta; comp: Comp }) {
           const current = v.id === comp.id;
           return (
             <li key={v.id}>
-              <Link
+              <IntentLink
                 href={`/comps/${v.slug}`}
                 aria-current={current ? "page" : undefined}
                 className={`grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 rounded-xl border-2 px-2 py-1.5 text-inherit no-underline ${current ? "border-gold bg-gold/8" : "border-transparent hover:border-line hover:bg-white/3"}`}
@@ -51,7 +51,7 @@ export function CompVersions({ meta, comp }: { meta: Meta; comp: Comp }) {
                   <b className="text-[1.1em]">{fmt2(v.avg)}</b>
                   <small className="text-[.76em] whitespace-nowrap text-dim">{int(v.ne)} games</small>
                 </span>
-              </Link>
+              </IntentLink>
             </li>
           );
         })}

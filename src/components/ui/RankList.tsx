@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { IntentLink } from "@/components/ui/IntentLink";
 import type { ReactNode } from "react";
 
 const NUM_BG = [
@@ -19,9 +19,9 @@ export function RankItem({ rank, href, value, valueTitle, children }: { rank?: n
       {rank != null && (
         <span className={`grid h-[38px] w-[34px] place-items-center rounded-lg text-[20px] font-bold ${NUM_BG[rank - 1] ?? NUM_DEFAULT}`}>{rank}</span>
       )}
-      <Link href={href} className="flex min-w-0 flex-col gap-[3px] text-inherit no-underline">
+      <IntentLink href={href} className="flex min-w-0 flex-col gap-[3px] text-inherit no-underline">
         {children}
-      </Link>
+      </IntentLink>
       <span className="rounded-full bg-ink/60 px-2 py-0.5 text-[12px] font-bold whitespace-nowrap text-[#fff3bf] tabular-nums shadow-[inset_0_0_0_1.5px_#ffd43bbf]" title={valueTitle}>
         {value}
       </span>
