@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { Tier } from "@/lib/types";
 import { TIER_BG } from "./styles";
 
@@ -8,8 +9,9 @@ const SIZE = {
 };
 
 export function TierBadge({ tier, variant = "", title }: { tier: Tier; variant?: keyof typeof SIZE; title?: string }) {
+  const t = useTranslations("common");
   return (
-    <span className={`inline-grid shrink-0 place-items-center border-2 border-ink leading-none font-bold text-white ${TIER_BG[tier]} ${SIZE[variant]}`} title={title ?? `Tier ${tier}`} aria-label={`Tier ${tier}`}>
+    <span className={`inline-grid shrink-0 place-items-center border-2 border-ink leading-none font-bold text-white ${TIER_BG[tier]} ${SIZE[variant]}`} title={title ?? t("tier", { tier })} aria-label={t("tier", { tier })}>
       {tier}
     </span>
   );

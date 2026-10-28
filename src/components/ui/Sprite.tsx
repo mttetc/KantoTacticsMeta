@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { Role } from "@/lib/types";
-import { ROLE_LABEL } from "@/lib/carry";
 import { costColor } from "./styles";
 
 export interface SpriteProps {
@@ -42,6 +42,7 @@ const TAG_BG: Record<Exclude<Role, null>, string> = {
  * props per sprite instead of its whole markup (3x smaller pages, faster navigation).
  */
 export function Sprite({ dex, name, cost, size = 44, anim = true, items, itemSize = 20, role, tag, className = "", priority }: SpriteProps) {
+  const t = useTranslations("roles.tag");
   const glow = cost === 4 ? "shadow-[0_0_8px_#cc5de873]" : cost === 5 ? "shadow-[0_0_12px_#fcc41999]" : "";
   return (
     <span
@@ -51,7 +52,7 @@ export function Sprite({ dex, name, cost, size = 44, anim = true, items, itemSiz
     >
       {tag && role && role !== "holder" && (
         <span className={`absolute -top-9 left-1/2 z-[4] -translate-x-1/2 -rotate-[4deg] rounded-full border-[1.5px] border-ink px-1.5 text-[9px] leading-[14px] font-bold tracking-[.06em] whitespace-nowrap text-[#1a1f2e] shadow-[0_2px_0_#0a0e1a] ${TAG_BG[role]}`}>
-          {ROLE_LABEL[role]}
+          {t(role)}
         </span>
       )}
       {dex ? (

@@ -84,6 +84,7 @@ export interface ApiItem {
 }
 export interface ApiTrait {
   en: string;
+  es?: string;
   th: number[];
   values: number[];
   desc: I18n;
@@ -116,6 +117,18 @@ export interface ApiData {
     xpPerRound?: number;
     seals?: { rounds: string[]; cards: number; rerolls: number };
   };
+}
+
+/** lang.json?lang=xx: the game's own texts in one language, same keys as data.json (API doc, "Reading lang.json"). */
+export interface ApiLang {
+  rules: number;
+  lang: string;
+  pokemon: Record<string, string>;
+  types: Record<string, string>;
+  lines: Record<string, { stars?: { star: number; move?: { name?: string; text?: string } }[]; passive?: string }>;
+  items: Record<string, { name?: string; text?: string; short?: string }>;
+  traits: Record<string, { desc?: string }>;
+  seals?: Record<string, { name?: string; text?: { round?: string; line?: string; detail?: string }[] }>;
 }
 
 /** Normalised model the pages read. Everything here is serialisable (it goes through `use cache`). */
@@ -228,6 +241,8 @@ export interface Seal {
 }
 
 export interface Meta {
+  /** The language of every name and text below. */
+  locale: string;
   /** "api" when the live API answered, "snapshot" when the committed copy was served instead. */
   source: "api" | "snapshot";
   snapshotAt: string | null;

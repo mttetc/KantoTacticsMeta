@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { routing } from "@/i18n/routing";
 import { getMeta } from "./meta";
 import { FAV_COOKIE, FAV_MAX } from "@/lib/favorites";
 import { readFavorites } from "./favorites";
@@ -12,19 +13,20 @@ const COOKIE_OPTS = { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" as 
 
 /** Save or unsave a comp for this visitor (cookie, no account). Returns the new state. */
 export async function toggleFavorite(compId: string): Promise<{ saved: boolean; count: number }> {
-  const meta = await getMeta();
+  // ids are language-independent; root params are not readable in a Server Action, so the default locale's model does
+  const meta = await getMeta(routing.defaultLocale);
   if (!meta.comps.some((c) => c.id === compId)) throw new Error("Unknown comp");
   const current = await readFavorites();
   const saved = !current.includes(compId);
   const next = saved ? [compId, ...current].slice(0, FAV_MAX) : current.filter((id) => id !== compId);
   (await cookies()).set(FAV_COOKIE, JSON.stringify(next), COOKIE_OPTS);
-  revalidatePath("/favorites");
+  revalidatePath("/[locale]/favorites", "page");
   return { saved, count: next.length };
 }
 
 export async function clearFavorites(): Promise<void> {
   (await cookies()).delete(FAV_COOKIE);
-  revalidatePath("/favorites");
+  revalidatePath("/[locale]/favorites", "page");
 }
 
 /**

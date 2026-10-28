@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState, type ComponentProps } from "react";
+import { Link } from "@/i18n/navigation";
 
 type Props = Omit<ComponentProps<typeof Link>, "prefetch">;
 

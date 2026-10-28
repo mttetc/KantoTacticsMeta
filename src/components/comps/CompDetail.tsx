@@ -1,8 +1,9 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ItemIcon, Sprite } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
 import { ui } from "@/components/ui/styles";
 import { TypeChip } from "@/components/ui/TypeChip";
+import { Link } from "@/i18n/navigation";
 import { fmt2, int, pct, stars } from "@/lib/format";
 import { MIN_NE } from "@/lib/tiers";
 import type { Comp, Meta, Role } from "@/lib/types";
@@ -16,15 +17,18 @@ const ROLE_TEXT: Record<string, string> = { carry: "text-gold-hi font-bold", sub
 
 /** Everything the API knows about one comp. Server component, static per Meta refresh. */
 export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
+  const t = useTranslations("comp");
+  const tr = useTranslations("roles.name");
   const maxUse = Math.max(...meta.comps.map((x) => x.use));
   if (c.coreOnly) {
     return (
       <>
-        <div className={ui.strip}>{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} />)}</div>
+        <div className={ui.strip}>{c.traits.map((x) => <TypeChip key={x.type} type={x.type} name={typeName(meta, x.type)} level={x.level} count={meta.traitData[x.type]?.thresholds[x.level - 1]} />)}</div>
         <StatsRow s={c} maxUse={maxUse} />
         <div className={ui.sec}>
           <h2 className={ui.secTitle}>
-            Core units<small>{int(c.n)} games only: the API publishes the 4 core units and each unit&apos;s usual items across all comps, not this comp&apos;s board</small>
+            {t("coreUnits")}
+            <small>{t("coreUnitsSub", { n: int(c.n) })}</small>
           </h2>
           <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-3.5">
             {c.units.map((u) => (
@@ -34,9 +38,7 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
               </Link>
             ))}
           </div>
-          <p className={ui.note}>
-            Average place {fmt2(c.avg)} ± {fmt2(c.ic)}: with so few games, trust the interval, not the average.
-          </p>
+          <p className={ui.note}>{t("coreNote", { avg: fmt2(c.avg), ic: fmt2(c.ic) })}</p>
         </div>
       </>
     );
@@ -56,7 +58,7 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
   const card = (u: (typeof ordered)[number]) => {
     const lead = u.role === "carry";
     return (
-      <Link key={u.line} className={`${ui.unit} ${lead ? "w-[94px]!" : "w-[78px]!"} [&>small:first-of-type]:mt-2.5`} href={`/pokemon/${u.line}`} title={`${unitName(meta, u.line, u.star)} · in ${pct(u.share)} of games`}>
+      <Link key={u.line} className={`${ui.unit} ${lead ? "w-[94px]!" : "w-[78px]!"} [&>small:first-of-type]:mt-2.5`} href={`/pokemon/${u.line}`} title={t("unitTitle", { name: unitName(meta, u.line, u.star), pct: pct(u.share) })}>
         <span className={ui.stars}>{stars(u.star)}</span>
         <Sprite
           dex={unitDex(meta, u.line, u.star)}
@@ -75,18 +77,14 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
   };
   return (
     <>
-      <div className={ui.strip}>{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} count={meta.traitData[t.type]?.thresholds[t.level - 1]} share={t.share} />)}</div>
+      <div className={ui.strip}>{c.traits.map((x) => <TypeChip key={x.type} type={x.type} name={typeName(meta, x.type)} level={x.level} count={meta.traitData[x.type]?.thresholds[x.level - 1]} share={x.share} />)}</div>
       <StatsRow s={c} maxUse={maxUse} />
-      {c.apiTier !== c.tier && (
-        <p className={`${ui.note} m-0`}>
-          Game tier {c.apiTier}; here {c.tier} because the tier uses avg + CI ({fmt2(c.score)}) against the reference {fmt2(meta.ref)}.
-        </p>
-      )}
-      {c.ne < MIN_NE && <p className={`${ui.note} m-0`}>Only {int(c.ne)} effective games: a small sample, read the interval.</p>}
+      {c.apiTier !== c.tier && <p className={`${ui.note} m-0`}>{t("tierNote", { api: c.apiTier, tier: c.tier, score: fmt2(c.score), ref: fmt2(meta.ref) })}</p>}
+      {c.ne < MIN_NE && <p className={`${ui.note} m-0`}>{t("fewGames", { n: int(c.ne) })}</p>}
       {c.keyItems.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-[.84em] text-dim" title="The items this comp builds, most important first: at the carousel, take the components of the first one before the next">
-            Items to build
+          <span className="mr-1 text-[.84em] text-dim" title={t("itemsToBuildTitle")}>
+            {t("itemsToBuild")}
           </span>
           {c.keyItems.map((k, i) => {
             const recipe = meta.itemData[k.id]?.recipe;
@@ -103,7 +101,7 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
                     <ItemIcon id={recipe[1]} name={itemName(meta, recipe[1])} size={20} />
                   </span>
                 )}
-                <i>on</i>
+                <i>{t("on")}</i>
                 <Sprite dex={unitDex(meta, k.line, k.star)} name={unitName(meta, k.line, k.star)} cost={meta.lines[k.line]?.cost} size={22} anim={false} />
                 <i>{Math.round(k.share)} %</i>
               </Link>
@@ -114,14 +112,15 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
 
       <div className={ui.sec}>
         <h2 className={ui.secTitle}>
-          Final team<small>level 8 board · share of games with that unit · carry first</small>
+          {t("finalTeam")}
+          <small>{t("finalTeamSub")}</small>
         </h2>
         {/* top padding leaves room for the role tags above the stars */}
         <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-5.5">{atEight.map(card)}</div>
         {atNine.length > 0 && (
           <div className="mt-2.5 flex flex-wrap items-start gap-x-2 gap-y-2.5 border-t border-line pt-5.5">
-            <span className="mt-6 mr-1 inline-flex items-center rounded-full border border-line bg-black/20 px-2.5 py-0.5 text-[.8em] font-bold text-gold-hi" title="What players add once they reach level 9">
-              Level 9 · add
+            <span className="mt-6 mr-1 inline-flex items-center rounded-full border border-line bg-black/20 px-2.5 py-0.5 text-[.8em] font-bold text-gold-hi" title={t("level9Title")}>
+              {t("level9")}
             </span>
             {atNine.map(card)}
           </div>
@@ -135,7 +134,7 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
                   <b className={`inline-flex min-w-0 items-center gap-2 truncate ${u.role && u.role !== "holder" ? ROLE_TEXT[u.role] : ""}`}>
                     <Sprite dex={unitDex(meta, u.line, u.star)} name={unitName(meta, u.line, u.star)} cost={meta.lines[u.line]?.cost} size={38} anim={false} />
                     {unitName(meta, u.line, u.star)}
-                    {u.role && u.role !== "holder" ? ` · ${u.role}` : ""}
+                    {u.role && u.role !== "holder" ? ` · ${tr(u.role)}` : ""}
                   </b>
                   <span className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-x-2.5 gap-y-1 text-dim">
                     {its.map((i, k) => (
@@ -159,7 +158,8 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
       {c.variants.length > 0 && (
         <div className={ui.sec}>
           <h2 className={ui.secTitle}>
-            Variants<small>the 4 core units players pair with this comp</small>
+            {t("variants")}
+            <small>{t("variantsSub")}</small>
           </h2>
           {c.variants.slice(0, 8).map((v) => (
             <div className="flex flex-wrap items-center gap-2.5 border-b border-line py-1.5 text-[.88em] text-dim last:border-b-0 [&_b]:text-txt" key={v.cores.join()}>
@@ -168,18 +168,18 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
                   <Sprite key={l} dex={lineDex(meta, l)} name={lineName(meta, l)} cost={meta.lines[l]?.cost} size={42} anim={false} />
                 ))}
               </span>
-              <span>{pct(v.share)} of games</span>
+              <span>{t("ofGames", { pct: pct(v.share) })}</span>
               <span>
-                avg <b>{fmt2(v.avg)}</b>
+                {t("avg")} <b>{fmt2(v.avg)}</b>
               </span>
               <span>
-                top 4 <b>{pct(v.top4)}</b>
+                {t("top4")} <b>{pct(v.top4)}</b>
               </span>
             </div>
           ))}
         </div>
       )}
-      {c.onlyRules && <p className={ui.note}>Only rules v{c.onlyRules} counted for this comp.</p>}
+      {c.onlyRules && <p className={ui.note}>{t("onlyRules", { v: c.onlyRules })}</p>}
     </>
   );
 }

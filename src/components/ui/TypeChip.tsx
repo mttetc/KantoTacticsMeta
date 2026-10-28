@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { traitSlug } from "@/lib/format";
 import { TypeGlyph } from "./Sprite";
 import { typeColor, ui } from "./styles";

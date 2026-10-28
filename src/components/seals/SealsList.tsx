@@ -1,12 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useDeferredValue, useMemo, useState } from "react";
 import { Select } from "@/components/ui/Select";
 import { ui } from "@/components/ui/styles";
 import { Tabs } from "@/components/ui/Tabs";
 import { useUrlState } from "@/hooks/useUrlState";
 import { matchesAll, searchWords } from "@/lib/search";
-import { categoryName, RARITY, SealCard, type SealRow } from "./SealCard";
+import { isSealCategory, SealCard, type SealRow } from "./SealCard";
 
 export interface SealFilters {
   rarity: number;
@@ -20,46 +21,48 @@ const RARITIES = [1, 2, 3] as const;
 
 /** The seal catalogue: one tab per round, filters on rarity, category and text. */
 export function SealsList({ seals, rounds, rules, offer }: { seals: SealRow[]; rounds: string[]; rules: number; offer: string }) {
+  const t = useTranslations("seals");
   const [f, update] = useUrlState(DEFAULTS, toParams, fromParams);
   const [round, setRound] = useState(rounds[0] ?? "");
   const words = searchWords(useDeferredValue(f.q));
+  const catName = (c: string) => (isSealCategory(c) ? t(`cat.${c}`) : c);
   const cats = useMemo(() => [...new Set(seals.map((x) => x.cat).filter(Boolean))], [seals]);
   const list = useMemo(
-    () => seals.filter((x) => (!f.rarity || x.rarity === f.rarity) && (!f.cat || x.cat === f.cat) && matchesAll(`${x.name} ${x.text.map((t) => `${t.line} ${t.detail ?? ""}`).join(" ")} ${categoryName(x.cat)} ${x.heroName ?? ""}`, words)),
+    () => seals.filter((x) => (!f.rarity || x.rarity === f.rarity) && (!f.cat || x.cat === f.cat) && matchesAll(`${x.name} ${x.text.map((y) => `${y.line} ${y.detail ?? ""}`).join(" ")} ${catName(x.cat)} ${x.heroName ?? ""}`, words)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- catName only depends on the translations, stable for a locale
     [seals, f.rarity, f.cat, words],
   );
   const atRound = (r: string) => list.filter((x) => x.rounds.includes(r));
   const shown = atRound(round);
   return (
     <>
-      <div className={ui.sort} role="group" aria-label="Filter seals">
-        <span className="mr-0.5">Rarity</span>
+      <div className={ui.sort} role="group" aria-label={t("filterLabel")}>
+        <span className="mr-0.5">{t("rarity")}</span>
         {RARITIES.map((r) => (
           <button key={r} type="button" className={`${ui.chip} ${f.rarity === r ? ui.chipOn : ""}`} onClick={() => update({ rarity: f.rarity === r ? 0 : r })} aria-pressed={f.rarity === r}>
-            {RARITY[r]}
+            {t(`rarityName.${r}`)}
           </button>
         ))}
         <span className={ui.sep} />
-        <Select value={f.cat} onChange={(e) => update({ cat: e.target.value })} aria-label="Category">
-          <option value="">Any category</option>
+        <Select value={f.cat} onChange={(e) => update({ cat: e.target.value })} aria-label={t("category")}>
+          <option value="">{t("anyCategory")}</option>
           {cats.map((c) => (
             <option key={c} value={c}>
-              {categoryName(c)}
+              {catName(c)}
             </option>
           ))}
         </Select>
-        <input className={`${ui.chip} min-w-[200px]`} type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder="Search a seal…" aria-label="Search" />
+        <input className={`${ui.chip} min-w-[200px]`} type="search" value={f.q} onChange={(e) => update({ q: e.target.value })} placeholder={t("searchPlaceholder")} aria-label={t("searchLabel")} />
         <span className="ml-auto">
-          {list.length} seals{offer ? ` · ${offer}` : ""}
+          {t("count", { n: list.length })}
+          {offer ? ` · ${offer}` : ""}
         </span>
       </div>
-      <p className={`${ui.tierNote} mb-2.5`}>
-        Seals are the picks offered at rounds {rounds.join(", ")} (the game&apos;s augments, since rules v34). The Meta API publishes no pick rate or placement for them, so this is the catalogue for rules v{rules}: no tiers, no win rate. One tab per round.
-      </p>
-      <Tabs items={rounds.map((r) => ({ key: r, label: `Round ${r}`, count: atRound(r).length }))} value={round} onChange={setRound} label="Round" />
+      <p className={`${ui.tierNote} mb-2.5`}>{t("note", { rounds: rounds.join(", "), rules })}</p>
+      <Tabs items={rounds.map((r) => ({ key: r, label: t("round", { r }), count: atRound(r).length }))} value={round} onChange={setRound} label={t("roundLabel")} />
       <section role="tabpanel" id={`panel-${round}`} aria-labelledby={`tab-${round}`}>
         {shown.length === 0 ? (
-          <div className={ui.empty}>No seal matches at round {round}.</div>
+          <div className={ui.empty}>{t("empty", { round })}</div>
         ) : (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2">
             {shown.map((x, k) => (

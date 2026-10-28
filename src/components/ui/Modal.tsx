@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -8,6 +9,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * content is a Server Component passed as children, the URL is shareable, and Back closes it.
  */
 export function Modal({ title, children }: { title: ReactNode; children: ReactNode }) {
+  const t = useTranslations("modal");
   const router = useRouter();
   const path = usePathname();
   const [openedAt] = useState(path);
@@ -37,7 +39,7 @@ export function Modal({ title, children }: { title: ReactNode; children: ReactNo
           <h2 id="modal-title" className="m-0 flex min-w-0 flex-1 flex-wrap items-center gap-2 text-[24px] leading-[1.1] font-bold text-gold [-webkit-text-stroke:1.2px_#0b0e18] [paint-order:stroke] [text-shadow:0_3px_#b8860b]">
             {title}
           </h2>
-          <button type="button" onClick={close} aria-label="Close" className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-white/30 bg-white/8 text-[22px] font-bold text-white shadow-[0_3px_#00000080] hover:bg-white/16">
+          <button type="button" onClick={close} aria-label={t("close")} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-white/30 bg-white/8 text-[22px] font-bold text-white shadow-[0_3px_#00000080] hover:bg-white/16">
             ×
           </button>
         </header>

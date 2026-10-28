@@ -1,4 +1,4 @@
-import { IntentLink } from "@/components/ui/IntentLink";
+import { IntentLink } from "./IntentLink";
 import type { ReactNode } from "react";
 
 const NUM_BG = [

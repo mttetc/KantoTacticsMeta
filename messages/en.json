@@ -1,0 +1,415 @@
+{
+  "common": {
+    "avg": "avg",
+    "avgPlace": "avg place",
+    "averagePlace": "average place",
+    "top4": "top 4",
+    "wins": "wins",
+    "usage": "usage",
+    "games": "games",
+    "effective": "{n} effective",
+    "tier": "Tier {tier}",
+    "cost": "Cost",
+    "search": "Search",
+    "nothingHere": "Nothing here with this filter",
+    "reliableBest": "reliable samples, best first"
+  },
+  "nav": {
+    "pokemon": "Pokémon",
+    "comps": "Comps",
+    "gamePlan": "Game plan",
+    "items": "Items",
+    "types": "Types",
+    "seals": "Seals",
+    "saved": "Saved"
+  },
+  "layout": {
+    "description": "Tier lists and comp guides for Kanto Tactics Ranked, from the game's public Meta API. Pokémon, comps, items, types and seals, updated daily.",
+    "snapshot": "The game's API is not answering right now. Showing the last snapshot; the live data comes back on its own.",
+    "snapshotFrom": "The game's API is not answering right now. Showing the last snapshot from {date}; the live data comes back on its own.",
+    "rulesTitle": "Game rules version in this window",
+    "rules": "Rules v{v}",
+    "ranked": "Ranked",
+    "gamesWeek": "games · 7 days",
+    "navLabel": "Meta sections",
+    "openGame": "Kanto Tactics, open the game",
+    "play": "Play Kanto Tactics!",
+    "credits": "Data: <api>Kanto Tactics Meta API</api>, Ranked, humans only · Unofficial fan page, not affiliated with Nintendo, Creatures or GAME FREAK · Sprites and icons belong to the game",
+    "moreLabel": "More",
+    "about": "About the data",
+    "changelog": "Changelog",
+    "source": "Source",
+    "language": "Language",
+    "backToTop": "Back to top"
+  },
+  "panels": {
+    "leftLabel": "Tiers and rules",
+    "tiers": "Tiers",
+    "tiersSub": "average place vs. reference",
+    "tiersNote": "Pokémon, items, types: the game's tiers (the API stops at C; D is this page's split, mirroring S). <b2>Comps</b2> are graded stricter, on the pessimistic average (avg + CI) against the reference: S ≤ {s}, A ≤ {a}, B ≤ {b}, C ≤ {c}, D above. A noisy sample cannot be S. Comps under {minNe} effective games are hidden by default.",
+    "rightLabel": "Top of the week",
+    "bestComps": "Best comps",
+    "bestCompsSub": "avg + CI",
+    "mostPlayed": "Most played",
+    "mostPlayedSub": "usage",
+    "bestPokemon": "Best Pokémon",
+    "bestPokemonSub": "avg place",
+    "averagePlace": "average place",
+    "usage": "usage"
+  },
+  "tiers": {
+    "help": {
+      "S": "well below the reference place",
+      "A": "below the reference",
+      "B": "around the reference",
+      "C": "above the reference",
+      "D": "well above the reference"
+    }
+  },
+  "roles": {
+    "tag": {
+      "carry": "CARRY",
+      "sub": "SUB",
+      "tank": "TANK",
+      "holder": "·"
+    },
+    "name": {
+      "carry": "carry",
+      "sub": "sub",
+      "tank": "tank",
+      "holder": "holder"
+    }
+  },
+  "home": {
+    "title": "Pokémon tier list",
+    "description": "Every Pokémon of Kanto Tactics Ranked ranked S to D by average place over the last 7 days, with cost, types and the comps that carry them.",
+    "subtitle": "Ranked, humans only, last 7 days",
+    "sortLabel": "Sort and filter",
+    "sort": "Sort",
+    "sorts": {
+      "avg": "Best place",
+      "use": "Most played"
+    },
+    "type": "Type",
+    "anyType": "Any type",
+    "searchPlaceholder": "Search a Pokémon or a type…",
+    "note": "Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by {sort} inside each tier. Click a Pokémon for its items and best comps."
+  },
+  "comps": {
+    "title": "Comps",
+    "description": "The comps winning Kanto Tactics Ranked this week, graded S to D on average place with confidence, with carry, key items, placement and stage guide.",
+    "subtitle": "what is winning in Ranked right now",
+    "sort": {
+      "best": "Best",
+      "played": "Most played"
+    },
+    "tier": "Tier",
+    "all": "All",
+    "smallTitle": "Comps under {n} effective games: the API only gives their 4 core units, no board detail",
+    "hideSmall": "Hide comps under {n} games",
+    "includeSmall": "Include comps under {n} games ({count})",
+    "fromLine": "Final comps whose end-of-stage-{stage} board fields <b>{name}</b>.",
+    "clear": "× Clear",
+    "toGamePlan": "‹ Game plan",
+    "count": "{n} comps",
+    "inTier": " in tier {tier}",
+    "folded": ", {n} other versions folded under their best build",
+    "legend": "“Best” sorts on avg + CI, the same number as the tier, so a noisy comp never jumps above a steady one. Gold ring = carry, silver = sub, green = tank.",
+    "empty": "No comp matches. Try another tier or include the small samples.",
+    "pagesLabel": "Pages",
+    "previous": "‹ Previous",
+    "page": "Page {page} of {pages}",
+    "next": "Next ›",
+    "searchPlaceholder": "Search a Pokémon, item or type…",
+    "searchLabel": "Search comps",
+    "row": {
+      "games": "{n} games",
+      "versions": "{count, plural, one {+# version} other {+# versions}}",
+      "versionsTitle": "Other builds of this comp, a unit or two apart, listed on its page",
+      "coreOnly": "core only · {n} games",
+      "coreOnlyTitle": "Fewer than {n} games: the API only gives the 4 core units, with each unit's usual items, no stars or board",
+      "avgPlace": "avg place"
+    }
+  },
+  "comp": {
+    "unknown": "Unknown comp",
+    "metaTitle": "{title} · tier {tier}",
+    "metaDescription": "{title} in Kanto Tactics Ranked: average place {avg} ± {ic}, top 4 {top4}, wins {win}{carry, select, other {, carry {carry}} none {}}. Final team, items, placement and stage guide.",
+    "ogDescription": "Avg place {avg} · top 4 {top4} · wins {win}",
+    "back": "Comps",
+    "subtitle": "Comp · Ranked, rules v{rules}, {from} to {to}",
+    "coreUnits": "Core units",
+    "coreUnitsSub": "{n} games only: the API publishes the 4 core units and each unit's usual items across all comps, not this comp's board",
+    "coreNote": "Average place {avg} ± {ic}: with so few games, trust the interval, not the average.",
+    "tierNote": "Game tier {api}; here {tier} because the tier uses avg + CI ({score}) against the reference {ref}.",
+    "fewGames": "Only {n} effective games: a small sample, read the interval.",
+    "itemsToBuild": "Items to build",
+    "itemsToBuildTitle": "The items this comp builds, most important first: at the carousel, take the components of the first one before the next",
+    "on": "on",
+    "finalTeam": "Final team",
+    "finalTeamSub": "level 8 board · share of games with that unit · carry first",
+    "unitTitle": "{name} · in {pct} of games",
+    "level9": "Level 9 · add",
+    "level9Title": "What players add once they reach level 9",
+    "variants": "Variants",
+    "variantsSub": "the 4 core units players pair with this comp",
+    "ofGames": "{pct} of games",
+    "avg": "avg",
+    "top4": "top 4",
+    "onlyRules": "Only rules v{v} counted for this comp.",
+    "versions": "Versions",
+    "versionsSub": "{n} builds of this comp · best first · faded units are the ones they share with this one",
+    "onlyInVersion": "only in this version",
+    "games": "{n} games",
+    "board": {
+      "title": "Best setup",
+      "typical": "usual hexes, from other comps",
+      "from": "from {n} real boards",
+      "label": "Placement on your side of the board",
+      "hexUsual": "usual hex (from other comps)",
+      "hexShare": "{pct} of this comp's boards",
+      "note": "Every unit of the final board once, on the hex it most often stands on in this comp's real boards (the % is how often). Gold hex = the carry.",
+      "typicalNote": "Dashed hexes marked ~ have no data for this comp{n, plural, =0 {} other { (#)}}: they take the unit's usual hex across every other comp, or a free hex in the rows its range calls for."
+    },
+    "plan": {
+      "title": "Game plan",
+      "boards": "real games · {n} boards at stage 3",
+      "tempo": {
+        "reroll": "Reroll comp",
+        "fast": "Fast level",
+        "rerollText": "Players sit at <b>level {lv3}</b> through stage 3 and roll for <b>{targets}</b>{lv4, plural, =0 {} other {, then level up to # in stage 4}}.",
+        "fastText": "Level <b>{lv3}</b> by the end of stage 3{lv4, plural, =0 {} other {, <b>#</b> at stage 4}}{targets, select, other {, and roll there for <b>{targets}</b>}} ."
+      },
+      "steps": {
+        "opener": {
+          "label": "Opener",
+          "sub": "stages 1–2 · 1 and 2 costs"
+        },
+        "early": {
+          "label": "Stage 3",
+          "sub": "end of stage 3"
+        },
+        "mid": {
+          "label": "Stage 4",
+          "sub": "end of stage 4"
+        },
+        "final": {
+          "label": "Final",
+          "sub": "end of the game"
+        }
+      },
+      "lv": "Lv {n}",
+      "unitShare": "{pct} % of boards",
+      "atStage3": "at the end of stage 3",
+      "unitGone": "not on the {next} board",
+      "unitNew": "new at this step",
+      "openerNote": "Pick up these 1 and 2 costs in stages 1–2: they are the ones this comp's players still had at the end of stage 3.",
+      "stage3Note": "The board at the end of stage 3, with the level players had reached.",
+      "stage4Note": "The board at the end of stage 4.",
+      "gone": "Not on the {next} board any more: <b>{names}</b>.",
+      "finalNote": "The board the comp ends on; carry and items above.",
+      "note": "What players who finished on this comp had on their board at the end of each stage (units in 30 %+ of their games). The API starts at the end of stage 3, when most players are already level 7 or 8, so the opener is the 1 and 2 costs they were still holding then: the units to pick up in stages 1 and 2. Green ring = new at that step, faded = not on the next step's board. Lv = the most common player level at that point. Items are the ones the unit ends the game with (the API gives none per stage)."
+    }
+  },
+  "gamePlan": {
+    "title": "Game plan",
+    "description": "Which Pokémon to field early, mid and late game in Kanto Tactics Ranked: presence at the end of stages 3 and 4 and on the final board of the comps that finish well, and whether they stay until the end.",
+    "subtitle": "what the good comps field at each point of the game",
+    "intro": "The API only scores the end of the game, so there is no “best early comp”. What it does publish is the board of the players who finished on a good comp at the end of stages 3 and 4 ({guided} reliable comps), when they are already level 7 or 8. <b>Opener</b> keeps only the 1 and 2 costs of those stage 3 boards: the units worth picking up in stages 1 and 2, and the comps they lead to. The other tabs show the whole board at each point and whether a unit stays until the end. Click a unit for the final comps that field it there; every comp page has its own Opener → Stage 3 → Stage 4 → Final plan.",
+    "tabs": {
+      "opener": "Opener",
+      "openerSub": "1–2 costs to pick up in stages 1–2",
+      "stage3": "Stage 3",
+      "stage3Sub": "end of stage 3",
+      "stage4": "Stage 4",
+      "stage4Sub": "end of stage 4",
+      "final": "Final",
+      "finalSub": "final board"
+    },
+    "stageLabel": "Stage",
+    "costLabel": "Cost",
+    "empty": "No {cost}-cost unit on the boards at this point.",
+    "table": {
+      "pokemon": "Pokémon",
+      "presence": "On boards",
+      "presenceTitle": "share of the good comps' games that field it at that point",
+      "score": "Comps avg + CI",
+      "scoreTitle": "how well the comps it leads to finish (lower is better)",
+      "keep": "Kept to the end",
+      "keepTitle": "how often it is still on the final board",
+      "comps": "Comps",
+      "compsTitle": "number of reliable comps that field it",
+      "linkFinal": "{name}: its page and best comps",
+      "linkStage": "Final comps whose stage {stage} board fields {name}",
+      "note": "On boards = share of the good comps' games that field it at that point, weighted by games. Comps avg + CI = how well the comps it leads to finish (lower is better). Kept = how often it is still on the final board; red means a transition unit that leaves the board later. Click a column to sort."
+    }
+  },
+  "items": {
+    "title": "Items tier list",
+    "description": "Every item of Kanto Tactics ranked by the average place of the player holding it, with recipes, effects and the Pokémon that carry it.",
+    "subtitle": "average place of the holder at the end of the game",
+    "note": "Combined items only, by the average place of the player holding them at the end of the game. Components are not graded: everyone holds them on the way to an item.",
+    "components": "Components",
+    "componentsSub": "and tools · not graded · average place of the holder"
+  },
+  "item": {
+    "unknown": "Unknown item",
+    "metaTitle": "{name} · tier {tier}",
+    "metaDescription": "{name} in Kanto Tactics Ranked: {text}. Average place of the holder {avg}, top 4 {top4}. Recipe, carriers and best comps.",
+    "back": "Items",
+    "subtitle": "Item · Ranked, rules v{rules}, {from} to {to}",
+    "kind": {
+      "full": "combined",
+      "part": "component",
+      "tool": "tool",
+      "emblem": "emblem"
+    },
+    "recipe": "Recipe",
+    "makes": "Makes",
+    "usuallyOn": "Usually on",
+    "bestComps": "Best comps with it"
+  },
+  "types": {
+    "title": "Types tier list",
+    "description": "Every type synergy of Kanto Tactics ranked by the average place of the players who had it active, with thresholds, effects and the best comps.",
+    "subtitle": "a type at a given synergy level",
+    "cardTitle": "{name} {need} (level {level}) · avg {avg}",
+    "note": "The number is how many Pokémon of the type the level needs. Average place of players who had that level active at the end of the game.",
+    "pairs": "Type pairs",
+    "pairsSub": "two types active together in the reliable comps",
+    "pairTitle": "{comps} comps, {games} games · avg + CI {score} · best comp is tier {tier}",
+    "pairsNote": "Sorted by games played. Number = games-weighted avg + CI of the comps running both types (lower is better); badge = the tier of the best of them. Click for those comps."
+  },
+  "type": {
+    "unknown": "Unknown type",
+    "metaTitle": "{name} · tier {tier}",
+    "metaDescription": "{name} in Kanto Tactics Ranked: average place {avg}, top 4 {top4}, usage {use}. Thresholds, Pokémon of the type and best comps.",
+    "back": "Types",
+    "subtitle": "Type at synergy level {level} · Ranked, rules v{rules}, {from} to {to}",
+    "units": "{n} units",
+    "pokemonOf": "{name} Pokémon",
+    "onlyRules": "Only rules v{v} counted.",
+    "bestComps": "Best comps with {name} {level}+"
+  },
+  "pokemon": {
+    "unknown": "Unknown Pokémon",
+    "metaTitle": "{name} · tier {tier}",
+    "metaDescription": "{name} ({types}{cost, plural, =0 {} other {, cost #}}) in Kanto Tactics Ranked: average place {avg}, top 4 {top4}, usage {use}. Items and best comps.",
+    "ogDescription": "Average place {avg} · top 4 {top4} · {types}",
+    "back": "Tier list",
+    "subtitle": "Pokémon · Ranked, rules v{rules}, {from} to {to}",
+    "cost": "cost {n}",
+    "range": "range {n}",
+    "move": {
+      "physical": "Physical",
+      "special": "Special",
+      "mixed": "Physical + Special",
+      "utility": "Utility"
+    },
+    "moveHelp": {
+      "physical": "Scales with Attack: build Attack items",
+      "special": "Scales with Sp. Atk: build Sp. Atk items",
+      "mixed": "Scales with both Attack and Sp. Atk",
+      "utility": "No damage scaling: a buff, heal, shield or control move"
+    },
+    "passive": "Passive",
+    "rulesV": "Rules v{v}",
+    "newNote": "New in rules v{rules}: the game data file still describes v{data}, so the exact move text is not published yet. Shown with the standard sprite.",
+    "tierNote": "Tier {tier} is the average place of every player who ended a game with {name} on the board, in any comp. It sits in <b>{inS} of the {total}</b> tier S comps this week",
+    "tierNoteWeak": ": strong in the right team, weaker as a filler",
+    "onlyRules": "Only rules v{v} counted for this one.",
+    "itemsOn": "Items players put on it",
+    "itemsOnSub": "share of its item slots in reliable comps",
+    "bestComps": "Best comps with it"
+  },
+  "seals": {
+    "title": "Seals",
+    "description": "Catalogue of every Seal (the picks offered at rounds 2-1, 3-2 and 4-2) in Kanto Tactics, by rarity and category, for the current rules.",
+    "subtitle": "the game's augments, catalogue for the current rules",
+    "offer": "{cards} offered, {rerolls} reroll",
+    "filterLabel": "Filter seals",
+    "rarity": "Rarity",
+    "rarityName": {
+      "1": "Common",
+      "2": "Rare",
+      "3": "Mythic"
+    },
+    "category": "Category",
+    "anyCategory": "Any category",
+    "searchPlaceholder": "Search a seal…",
+    "searchLabel": "Search",
+    "count": "{n} seals",
+    "note": "Seals are the picks offered at rounds {rounds} (the game's augments, since rules v34). The Meta API publishes no pick rate or placement for them, so this is the catalogue for rules v{rules}: no tiers, no win rate. One tab per round.",
+    "round": "Round {r}",
+    "roundLabel": "Round",
+    "empty": "No seal matches at round {round}.",
+    "cat": {
+      "eco": "Economy",
+      "shop": "Shop",
+      "xp": "XP",
+      "item": "Items",
+      "combat": "Combat",
+      "board": "Board",
+      "role": "Roles",
+      "trait": "Types",
+      "hero": "Heroes",
+      "risk": "Risk",
+      "later": "Later",
+      "rule": "Rules"
+    },
+    "onePerType": "One seal per type: {types}",
+    "alsoAt": "also at {rounds}"
+  },
+  "favorites": {
+    "title": "Saved comps",
+    "subtitle": "kept in a cookie on this browser, no account",
+    "empty": "Nothing saved yet. Open a comp and press <b>☆ Save comp</b>; it will wait for you here. <link>Browse the comps</link>.",
+    "saved": "{n} saved",
+    "clearAll": "Clear all",
+    "save": "☆ Save comp",
+    "savedBtn": "★ Saved"
+  },
+  "teamCode": {
+    "copy": "⎘ Copy team code",
+    "copied": "✓ Code copied",
+    "title": "Copy this board as a Kanto Tactics team code and paste it in the game",
+    "prompt": "Team code"
+  },
+  "about": {
+    "title": "About the data",
+    "description": "Where the numbers come from, how tiers are computed, and what the Kanto Tactics Meta API does and does not publish.",
+    "source": "Source",
+    "sourceText": "Everything comes from the game's public <api>Meta API</api>: Ranked games, humans only, over the last 7 days across every rules version in the window ({from} to {to}). The API regenerates daily at 03:40 UTC; this site re-reads it once an hour at most, as the API asks, so a refresh lands within the hour.",
+    "tiers": "Tiers",
+    "tiersText1": "Pokémon, items and types use the game's own tiers: average place against the week's reference place ({ref}), S ≤ {s}, A ≤ {a}, B ≤ {b}. The API stops at C; D is this site's split, mirroring S: average place at or above {d}. A Pokémon's tier counts every board it ends on, in any comp, so a unit can be B on its own and still sit in most tier S comps; its page says in how many.",
+    "tiersText2": "Comps are graded stricter, on the pessimistic average (avg + 95 % CI): S ≤ {s}, A ≤ {a}, B ≤ {b}, C ≤ {c}, D above. The “Best” sort uses the same number, so a comp with 11 games and a ± 0.9 interval cannot sit above a steady one. Comps under {minNe} effective games only have their 4 core units in the API (no stars, shares or board) and are hidden unless you include them.",
+    "roles": "Carry, sub, tank",
+    "rolesText": "Items are split by the stat they give: offensive (Attack, Sp. Atk, attack speed, crit, Energy, drain) or defensive (HP, Defense, Sp. Def, shields). The carry is the unit that collects the most offensive item share, the sub the second one when it is geared at least 40 % as often, the tank the unit with the most defensive items. Any other unit whose most common item sits on it in 20 %+ of games shows its gear in the list rows too.",
+    "missing": "What the API does not give",
+    "missingText": "No pick rate or result for Seals (the Seals tab is a catalogue). No board for comps under 50 boards: the site then shows where each unit usually stands in the comps that do have one. New units of rules v{rules} that the game data file (v{data}) does not describe yet get their cost and type from the game changelog and the standard sprite. If the API stops answering, the site serves its last committed snapshot and says so.",
+    "disclaimer": "Unofficial fan page, not affiliated with Nintendo, Creatures or GAME FREAK. Game, data, sprites and icons belong to Kanto Tactics by Einoow."
+  },
+  "notFound": {
+    "title": "Nothing here",
+    "text": "That page does not exist, or this Pokémon, item or comp is not in this week's Meta. <link>Back to the tier list</link>."
+  },
+  "error": {
+    "text": "The Meta could not be loaded{ref, select, other { (ref. {ref})} none {}}. The game's API may be unreachable right now.",
+    "retry": "Try again"
+  },
+  "modal": {
+    "openAsPage": "<link>Open as a page</link> to share it.",
+    "close": "Close"
+  },
+  "og": {
+    "carry": "Carry: {name}",
+    "comp": "Comp",
+    "avgPlace": "avg place",
+    "top4": "top 4",
+    "wins": "wins",
+    "games": "games",
+    "usage": "usage",
+    "cost": "Cost {cost}",
+    "footer": "Kanto Tactics Meta · Ranked, last 7 days{rules, plural, =0 {} other { · rules v#}}"
+  }
+}

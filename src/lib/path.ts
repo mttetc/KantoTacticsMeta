@@ -11,8 +11,8 @@ export interface PathUnit {
 }
 export interface PathStep {
   key: "opener" | "early" | "mid" | "final";
-  /** Label of the following step, for "not on the X board any more". */
-  next: string | null;
+  /** Key of the following step, for "not on the X board any more". */
+  next: PathStep["key"] | null;
   label: string;
   sub: string;
   level: number | null;
@@ -56,7 +56,7 @@ export function compPath(c: Comp, lines: Record<string, Line>): PathStep[] | nul
     const next = raw[i + 1];
     return {
       ...step,
-      next: next?.label ?? null,
+      next: next?.key ?? null,
       units: step.units
         .sort((a, b) => b.share - a.share)
         // the opener is read from the stage 3 board itself, so by construction all of it is still there at stage 3

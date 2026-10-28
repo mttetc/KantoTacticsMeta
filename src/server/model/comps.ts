@@ -11,6 +11,7 @@ export function buildComps(meta: ApiMeta, lines: Record<string, Line>, items: Re
   const typical = buildTypicalCells(meta.comps);
   const ranges = Object.fromEntries(Object.values(lines).map((l) => [l.id, l.range]));
   const name = (line: string) => lines[line]?.names.at(-1) ?? line;
+  // the title is in the model's language: "Psychic · Mewtwo & Starmie" / "Psy · Mewtwo & Staross"
   return meta.comps.map((c) => {
     const coreOnly = c.units.some((u) => u.share == null);
     const { roles } = coreOnly ? { roles: {} as Record<string, never> } : assignRoles(c.units, items);

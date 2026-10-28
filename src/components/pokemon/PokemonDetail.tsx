@@ -1,24 +1,18 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { RelatedComps } from "@/components/comps/RelatedComps";
 import { ItemIcon, Sprite } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
 import { ui } from "@/components/ui/styles";
 import { TypeChip } from "@/components/ui/TypeChip";
+import { Link } from "@/i18n/navigation";
 import { stars } from "@/lib/format";
 import type { Line, Meta, Unit } from "@/lib/types";
 import { itemName, lineDex, lineName, typeName } from "@/server/meta";
 import { bestComps, itemsOnLine } from "@/server/queries";
 
 /** Shared by the Pokémon page and its intercepted modal. */
-const MOVE_CATEGORY = { physical: "Physical", special: "Special", mixed: "Physical + Special", utility: "Utility" } as const;
-const MOVE_CATEGORY_HELP = {
-  physical: "Scales with Attack: build Attack items",
-  special: "Scales with Sp. Atk: build Sp. Atk items",
-  mixed: "Scales with both Attack and Sp. Atk",
-  utility: "No damage scaling: a buff, heal, shield or control move",
-} as const;
-
 export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; line: Line }) {
+  const t = useTranslations("pokemon");
   const held = itemsOnLine(meta, unit.line);
   const comps = bestComps(meta, (c) => c.units.some((u) => u.line === unit.line && (u.share ?? 0) >= 50));
   const maxUse = Math.max(...meta.units.map((u) => u.use));
@@ -30,11 +24,11 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
         <Sprite dex={lineDex(meta, unit.line)} name={lineName(meta, unit.line)} cost={line.cost} size={84} priority />
         <div>
           <div className={`${ui.strip} items-center`}>
-            {line.cost && <span className={ui.trait}>cost {line.cost}</span>}
+            {line.cost && <span className={ui.trait}>{t("cost", { n: line.cost })}</span>}
             {line.types.map((t) => (
               <TypeChip key={t} type={t} name={typeName(meta, t)} />
             ))}
-            {line.range && <span className={ui.trait}>range {line.range}</span>}
+            {line.range && <span className={ui.trait}>{t("range", { n: line.range })}</span>}
           </div>
           {line.names.length > 1 && (
             <div className={`${ui.strip} my-1.5`}>
@@ -48,27 +42,28 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
           )}
           {line.move && (
             <p>
-              <b>{line.move.name}</b> ({typeName(meta, line.move.type)} · <span title={MOVE_CATEGORY_HELP[line.move.category]}>{MOVE_CATEGORY[line.move.category]}</span>) · {line.move.text}
+              <b>{line.move.name}</b> ({typeName(meta, line.move.type)} · <span title={t(`moveHelp.${line.move.category}`)}>{t(`move.${line.move.category}`)}</span>) · {line.move.text}
             </p>
           )}
           {line.passive && (
             <p>
-              <b>{line.fromChangelog ? `Rules v${meta.rules}` : "Passive"}</b> · {line.passive}
+              <b>{line.fromChangelog ? t("rulesV", { v: meta.rules }) : t("passive")}</b> · {line.passive}
             </p>
           )}
-          {line.fromChangelog && <p className={ui.note}>New in rules v{meta.rules}: the game data file still describes v{meta.dataRules}, so the exact move text is not published yet. Shown with the standard sprite.</p>}
+          {line.fromChangelog && <p className={ui.note}>{t("newNote", { rules: meta.rules, data: meta.dataRules })}</p>}
           <StatsRow s={unit} maxUse={maxUse} />
           <p className={ui.note}>
-            Tier {unit.tier} is the average place of every player who ended a game with {lineName(meta, unit.line)} on the board, in any comp. It sits in <b className="text-txt">{inS} of the {sComps.length}</b> tier S comps this week
-            {inS > 0 && unit.tier !== "S" ? ": strong in the right team, weaker as a filler" : ""}.
+            {t.rich("tierNote", { tier: unit.tier, name: lineName(meta, unit.line), inS, total: sComps.length, b: (c) => <b className="text-txt">{c}</b> })}
+            {inS > 0 && unit.tier !== "S" ? t("tierNoteWeak") : ""}.
           </p>
-          {unit.onlyRules && <p className={ui.note}>Only rules v{unit.onlyRules} counted for this one.</p>}
+          {unit.onlyRules && <p className={ui.note}>{t("onlyRules", { v: unit.onlyRules })}</p>}
         </div>
       </div>
       {held.length > 0 && (
         <div className={ui.sec}>
           <h2 className={ui.secTitle}>
-            Items players put on it<small>share of its item slots in reliable comps</small>
+            {t("itemsOn")}
+            <small>{t("itemsOnSub")}</small>
           </h2>
           <div className="flex flex-wrap gap-1.5">
             {held.map((h) => (
@@ -81,7 +76,7 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
           </div>
         </div>
       )}
-      <RelatedComps meta={meta} title="Best comps with it" comps={comps} />
+      <RelatedComps meta={meta} title={t("bestComps")} comps={comps} />
     </>
   );
 }

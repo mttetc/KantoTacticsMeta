@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { CostChips } from "@/components/ui/CostChips";
 import { ui } from "@/components/ui/styles";
@@ -17,6 +18,7 @@ export interface StagePanel {
 
 /** Opener / Stage 3 / Stage 4 / Final tabs over the stage rankings, with a cost filter shared by all. */
 export function StageTabs({ panels }: { panels: StagePanel[] }) {
+  const t = useTranslations("gamePlan");
   const [tab, setTab] = useState<StageKey>(panels[0]?.key ?? "opener");
   const [cost, setCost] = useState(0);
   const panel = panels.find((p) => p.key === tab) ?? panels[0];
@@ -24,12 +26,12 @@ export function StageTabs({ panels }: { panels: StagePanel[] }) {
   const rows = cost ? panel.rows.filter((r) => r.cost === cost) : panel.rows;
   return (
     <>
-      <Tabs items={panels.map((p) => ({ key: p.key, label: p.label, sub: p.sub, count: p.rows.length }))} value={tab} onChange={setTab} label="Stage" />
-      <div className={ui.sort} role="group" aria-label="Cost">
+      <Tabs items={panels.map((p) => ({ key: p.key, label: p.label, sub: p.sub, count: p.rows.length }))} value={tab} onChange={setTab} label={t("stageLabel")} />
+      <div className={ui.sort} role="group" aria-label={t("costLabel")}>
         <CostChips value={cost} onChange={setCost} />
       </div>
       <div role="tabpanel" id={`panel-${panel.key}`} aria-labelledby={`tab-${panel.key}`}>
-        {rows.length ? <StageTable title={panel.label} sub={panel.sub} rows={rows} stage={panel.stage} /> : <div className={ui.empty}>No {cost}-cost unit on the boards at this point.</div>}
+        {rows.length ? <StageTable title={panel.label} sub={panel.sub} rows={rows} stage={panel.stage} /> : <div className={ui.empty}>{t("empty", { cost })}</div>}
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { IntentLink } from "@/components/ui/IntentLink";
 import { Sprite } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
@@ -10,6 +11,7 @@ import { CompTitle } from "./CompTitle";
 
 /** One comp in a list, like the game's Meta rows. The whole row links to the comp page; `variants` = other versions folded under it. */
 export function CompRow({ meta, comp: c, index = 0, variants = 0 }: { meta: Meta; comp: Comp; index?: number; variants?: number }) {
+  const t = useTranslations("comps.row");
   const few = !c.coreOnly && c.ne < MIN_NE;
   return (
     <article className={`${ui.card} animate-card-in overflow-hidden rounded-[14px] border-2 border-ink shadow-panel`} style={{ animationDelay: `${(0.05 + Math.min(index, 12) * 0.05).toFixed(2)}s` } as React.CSSProperties}>
@@ -21,15 +23,15 @@ export function CompRow({ meta, comp: c, index = 0, variants = 0 }: { meta: Meta
               <CompTitle meta={meta} comp={c} />
             </h3>
             {c.use >= 2 && <span className="inline-flex items-center gap-[3px] rounded-full border border-ink bg-[#ffc078] px-2 pl-1.5 text-[.74em] font-bold text-ink">🔥 {pct(c.use)}</span>}
-            {few && <span className="rounded-full border border-dashed border-line px-2 text-[.74em] text-dim">{int(c.ne)} games</span>}
+            {few && <span className="rounded-full border border-dashed border-line px-2 text-[.74em] text-dim">{t("games", { n: int(c.ne) })}</span>}
             {variants > 0 && (
-              <span className="rounded-full border border-line bg-black/20 px-2 text-[.74em] text-dim" title="Other builds of this comp, a unit or two apart, listed on its page">
-                +{variants} {variants === 1 ? "version" : "versions"}
+              <span className="rounded-full border border-line bg-black/20 px-2 text-[.74em] text-dim" title={t("versionsTitle")}>
+                {t("versions", { count: variants })}
               </span>
             )}
             {c.coreOnly && (
-              <span className="rounded-full border border-[#ffe06666] px-2 text-[.74em] text-gold-hi" title={`Fewer than ${MIN_NE} games: the API only gives the 4 core units, with each unit's usual items, no stars or board`}>
-                core only · {int(c.n)} games
+              <span className="rounded-full border border-[#ffe06666] px-2 text-[.74em] text-gold-hi" title={t("coreOnlyTitle", { n: MIN_NE })}>
+                {t("coreOnly", { n: int(c.n) })}
               </span>
             )}
           </span>
@@ -58,7 +60,7 @@ export function CompRow({ meta, comp: c, index = 0, variants = 0 }: { meta: Meta
         </span>
         <span className="flex flex-col items-end leading-[1.05]">
           <b className="text-[1.3em] tabular-nums">{fmt2(c.avg)}</b>
-          <small className="text-[.76em] whitespace-nowrap text-[#cfd6ee]">avg place</small>
+          <small className="text-[.76em] whitespace-nowrap text-[#cfd6ee]">{t("avgPlace")}</small>
         </span>
         <span className="text-[.8em] text-dim" aria-hidden>
           ›

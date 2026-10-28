@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { IntentLink } from "@/components/ui/IntentLink";
 import { Sprite } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
@@ -12,13 +13,15 @@ import { unitDex, unitName } from "@/server/meta";
  * share with the one on screen are shown in full; the shared ones fade, so the difference reads at a glance.
  */
 export function CompVersions({ meta, comp }: { meta: Meta; comp: Comp }) {
+  const t = useTranslations("comp");
   const versions = compVersions(meta.comps, comp).filter((c) => !c.coreOnly);
   if (versions.length < 2) return null;
   const here = new Set(comp.units.map((u) => u.line));
   return (
     <div className={ui.sec}>
       <h2 className={ui.secTitle}>
-        Versions<small>{versions.length} builds of this comp · best first · faded units are the ones they share with this one</small>
+        {t("versions")}
+        <small>{t("versionsSub", { n: versions.length })}</small>
       </h2>
       <ul className="m-0 flex list-none flex-col gap-1 p-0">
         {versions.map((v) => {
@@ -38,7 +41,7 @@ export function CompVersions({ meta, comp }: { meta: Meta; comp: Comp }) {
                       <Sprite
                         key={u.line}
                         dex={unitDex(meta, u.line, u.star)}
-                        name={`${unitName(meta, u.line, u.star)}${shared ? "" : " · only in this version"}`}
+                        name={`${unitName(meta, u.line, u.star)}${shared ? "" : ` · ${t("onlyInVersion")}`}`}
                         cost={meta.lines[u.line]?.cost}
                         size={36}
                         anim={false}
@@ -49,7 +52,7 @@ export function CompVersions({ meta, comp }: { meta: Meta; comp: Comp }) {
                 </span>
                 <span className="flex flex-col items-end leading-[1.05] tabular-nums">
                   <b className="text-[1.1em]">{fmt2(v.avg)}</b>
-                  <small className="text-[.76em] whitespace-nowrap text-dim">{int(v.ne)} games</small>
+                  <small className="text-[.76em] whitespace-nowrap text-dim">{t("games", { n: int(v.ne) })}</small>
                 </span>
               </IntentLink>
             </li>

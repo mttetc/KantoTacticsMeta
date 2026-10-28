@@ -1,15 +1,15 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { RelatedComps } from "@/components/comps/RelatedComps";
 import { ItemIcon, Sprite } from "@/components/ui/Sprite";
 import { StatsRow } from "@/components/ui/Stats";
 import { ui } from "@/components/ui/styles";
+import { Link } from "@/i18n/navigation";
 import type { Item, ItemStat, Meta } from "@/lib/types";
 import { itemName, lineDex, lineName } from "@/server/meta";
 import { bestComps } from "@/server/queries";
 
-const KIND = { full: "combined", part: "component", tool: "tool", emblem: "emblem" } as const;
-
 export function ItemDetail({ meta, stat, item }: { meta: Meta; stat: ItemStat; item: Item }) {
+  const t = useTranslations("item");
   const holders: Record<string, number> = {};
   for (const c of meta.comps) {
     if (!c.reliable) continue;
@@ -29,13 +29,13 @@ export function ItemDetail({ meta, stat, item }: { meta: Meta; stat: ItemStat; i
         </span>
         <div>
           <div className={ui.strip}>
-            <span className={ui.trait}>{KIND[item.kind] ?? item.kind}</span>
+            <span className={ui.trait}>{t.has(`kind.${item.kind}`) ? t(`kind.${item.kind}`) : item.kind}</span>
             {item.stat && <span className={ui.trait}>{item.stat}</span>}
           </div>
           <p>{item.text}</p>
           {item.recipe && (
             <p>
-              <b>Recipe</b>{" "}
+              <b>{t("recipe")}</b>{" "}
               <span className="inline-flex items-center gap-1 align-middle [&>span]:font-bold [&>span]:text-dim">
                 <Link href={`/items/${item.recipe[0]}`}><ItemIcon id={item.recipe[0]} name={itemName(meta, item.recipe[0])} size={24} /></Link>
                 <span>+</span>
@@ -50,7 +50,7 @@ export function ItemDetail({ meta, stat, item }: { meta: Meta; stat: ItemStat; i
           )}
           {makes.length > 0 && (
             <p className="flex flex-wrap items-center gap-1">
-              <b>Makes</b>{" "}
+              <b>{t("makes")}</b>{" "}
               {makes.map((id) => (
                 <Link key={id} href={`/items/${id}`} title={itemName(meta, id)}>
                   <ItemIcon id={id} name={itemName(meta, id)} size={24} />
@@ -60,7 +60,7 @@ export function ItemDetail({ meta, stat, item }: { meta: Meta; stat: ItemStat; i
           )}
           {top.length > 0 && (
             <p className="flex flex-wrap items-center gap-1">
-              <b>Usually on</b>{" "}
+              <b>{t("usuallyOn")}</b>{" "}
               {top.map(([l]) => (
                 <Link key={l} href={`/pokemon/${l}`} title={lineName(meta, l)} className="group">
                   <Sprite dex={lineDex(meta, l)} name={lineName(meta, l)} cost={meta.lines[l]?.cost} size={38} anim={false} />
@@ -71,7 +71,7 @@ export function ItemDetail({ meta, stat, item }: { meta: Meta; stat: ItemStat; i
           <StatsRow s={stat} maxUse={maxUse} />
         </div>
       </div>
-      <RelatedComps meta={meta} title="Best comps with it" comps={comps} />
+      <RelatedComps meta={meta} title={t("bestComps")} comps={comps} />
     </>
   );
 }

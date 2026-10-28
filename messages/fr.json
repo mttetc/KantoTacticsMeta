@@ -1,0 +1,415 @@
+{
+  "common": {
+    "avg": "moy.",
+    "avgPlace": "place moy.",
+    "averagePlace": "place moyenne",
+    "top4": "top 4",
+    "wins": "victoires",
+    "usage": "usage",
+    "games": "parties",
+    "effective": "{n} effectives",
+    "tier": "Tier {tier}",
+    "cost": "Coût",
+    "search": "Rechercher",
+    "nothingHere": "Rien ici avec ce filtre",
+    "reliableBest": "échantillons fiables, meilleures d'abord"
+  },
+  "nav": {
+    "pokemon": "Pokémon",
+    "comps": "Compos",
+    "gamePlan": "Plan de jeu",
+    "items": "Objets",
+    "types": "Types",
+    "seals": "Sceaux",
+    "saved": "Favoris"
+  },
+  "layout": {
+    "description": "Tier lists et guides de compos pour le mode Classé de Kanto Tactics, depuis l'API Meta publique du jeu. Pokémon, compos, objets, types et sceaux, mis à jour chaque jour.",
+    "snapshot": "L'API du jeu ne répond pas pour le moment. Affichage de la dernière copie ; les données reviennent d'elles-mêmes.",
+    "snapshotFrom": "L'API du jeu ne répond pas pour le moment. Affichage de la copie du {date} ; les données reviennent d'elles-mêmes.",
+    "rulesTitle": "Version des règles du jeu sur cette période",
+    "rules": "Règles v{v}",
+    "ranked": "Classé",
+    "gamesWeek": "parties · 7 jours",
+    "navLabel": "Sections de la Meta",
+    "openGame": "Kanto Tactics, ouvrir le jeu",
+    "play": "Jouer à Kanto Tactics !",
+    "credits": "Données : <api>API Meta de Kanto Tactics</api>, Classé, humains uniquement · Page de fans non officielle, sans lien avec Nintendo, Creatures ou GAME FREAK · Sprites et icônes appartiennent au jeu",
+    "moreLabel": "Plus",
+    "about": "À propos des données",
+    "changelog": "Notes de version",
+    "source": "Code source",
+    "language": "Langue",
+    "backToTop": "Retour en haut"
+  },
+  "panels": {
+    "leftLabel": "Tiers et règles",
+    "tiers": "Tiers",
+    "tiersSub": "place moyenne vs référence",
+    "tiersNote": "Pokémon, objets, types : les tiers du jeu (l'API s'arrête à C ; D est le découpage de ce site, miroir de S). Les <b2>compos</b2> sont notées plus sévèrement, sur la moyenne pessimiste (moy. + IC) face à la référence : S ≤ {s}, A ≤ {a}, B ≤ {b}, C ≤ {c}, D au-dessus. Un échantillon bruité ne peut pas être S. Les compos sous {minNe} parties effectives sont masquées par défaut.",
+    "rightLabel": "Top de la semaine",
+    "bestComps": "Meilleures compos",
+    "bestCompsSub": "moy. + IC",
+    "mostPlayed": "Les plus jouées",
+    "mostPlayedSub": "usage",
+    "bestPokemon": "Meilleurs Pokémon",
+    "bestPokemonSub": "place moy.",
+    "averagePlace": "place moyenne",
+    "usage": "usage"
+  },
+  "tiers": {
+    "help": {
+      "S": "bien en dessous de la place de référence",
+      "A": "en dessous de la référence",
+      "B": "autour de la référence",
+      "C": "au-dessus de la référence",
+      "D": "bien au-dessus de la référence"
+    }
+  },
+  "roles": {
+    "tag": {
+      "carry": "CARRY",
+      "sub": "SUB",
+      "tank": "TANK",
+      "holder": "·"
+    },
+    "name": {
+      "carry": "carry",
+      "sub": "sub",
+      "tank": "tank",
+      "holder": "porteur"
+    }
+  },
+  "home": {
+    "title": "Tier list des Pokémon",
+    "description": "Tous les Pokémon du Classé de Kanto Tactics classés de S à D par place moyenne sur les 7 derniers jours, avec coût, types et les compos qui les portent.",
+    "subtitle": "Classé, humains uniquement, 7 derniers jours",
+    "sortLabel": "Tri et filtres",
+    "sort": "Tri",
+    "sorts": {
+      "avg": "Meilleure place",
+      "use": "Les plus joués"
+    },
+    "type": "Type",
+    "anyType": "Tous les types",
+    "searchPlaceholder": "Chercher un Pokémon ou un type…",
+    "note": "Nombre sous le sprite = place moyenne (de 1 à 8, plus bas est mieux). Couleur du cadre = coût. Tri par {sort} dans chaque tier. Cliquez sur un Pokémon pour ses objets et ses meilleures compos."
+  },
+  "comps": {
+    "title": "Compos",
+    "description": "Les compos qui gagnent en Classé cette semaine sur Kanto Tactics, notées de S à D sur la place moyenne avec intervalle de confiance, avec carry, objets clés, placement et guide par stage.",
+    "subtitle": "ce qui gagne en Classé en ce moment",
+    "sort": {
+      "best": "Meilleures",
+      "played": "Les plus jouées"
+    },
+    "tier": "Tier",
+    "all": "Toutes",
+    "smallTitle": "Compos sous {n} parties effectives : l'API ne donne que leurs 4 unités centrales, sans détail de board",
+    "hideSmall": "Masquer les compos sous {n} parties",
+    "includeSmall": "Inclure les compos sous {n} parties ({count})",
+    "fromLine": "Compos finales dont le board de fin de stage {stage} aligne <b>{name}</b>.",
+    "clear": "× Effacer",
+    "toGamePlan": "‹ Plan de jeu",
+    "count": "{n} compos",
+    "inTier": " en tier {tier}",
+    "folded": ", {n} autres versions repliées sous leur meilleur build",
+    "legend": "« Meilleures » trie sur moy. + IC, le même nombre que le tier, donc une compo bruitée ne passe jamais devant une compo stable. Cadre doré = carry, argent = sub, vert = tank.",
+    "empty": "Aucune compo ne correspond. Essayez un autre tier ou incluez les petits échantillons.",
+    "pagesLabel": "Pages",
+    "previous": "‹ Précédent",
+    "page": "Page {page} sur {pages}",
+    "next": "Suivant ›",
+    "searchPlaceholder": "Chercher un Pokémon, un objet ou un type…",
+    "searchLabel": "Chercher une compo",
+    "row": {
+      "games": "{n} parties",
+      "versions": "{count, plural, one {+# version} other {+# versions}}",
+      "versionsTitle": "Autres builds de cette compo, à une ou deux unités près, listés sur sa page",
+      "coreOnly": "noyau seul · {n} parties",
+      "coreOnlyTitle": "Moins de {n} parties : l'API ne donne que les 4 unités centrales, avec les objets habituels de chacune, sans étoiles ni board",
+      "avgPlace": "place moy."
+    }
+  },
+  "comp": {
+    "unknown": "Compo inconnue",
+    "metaTitle": "{title} · tier {tier}",
+    "metaDescription": "{title} en Classé sur Kanto Tactics : place moyenne {avg} ± {ic}, top 4 {top4}, victoires {win}{carry, select, other {, carry {carry}} none {}}. Équipe finale, objets, placement et guide par stage.",
+    "ogDescription": "Place moy. {avg} · top 4 {top4} · victoires {win}",
+    "back": "Compos",
+    "subtitle": "Compo · Classé, règles v{rules}, du {from} au {to}",
+    "coreUnits": "Unités centrales",
+    "coreUnitsSub": "{n} parties seulement : l'API publie les 4 unités centrales et les objets habituels de chacune toutes compos confondues, pas le board de cette compo",
+    "coreNote": "Place moyenne {avg} ± {ic} : avec si peu de parties, fiez-vous à l'intervalle, pas à la moyenne.",
+    "tierNote": "Tier {api} dans le jeu ; ici {tier} parce que le tier utilise moy. + IC ({score}) face à la référence {ref}.",
+    "fewGames": "Seulement {n} parties effectives : petit échantillon, lisez l'intervalle.",
+    "itemsToBuild": "Objets à construire",
+    "itemsToBuildTitle": "Les objets que cette compo construit, le plus important d'abord : au carrousel, prenez les composants du premier avant le suivant",
+    "on": "sur",
+    "finalTeam": "Équipe finale",
+    "finalTeamSub": "board niveau 8 · part des parties avec cette unité · carry d'abord",
+    "unitTitle": "{name} · dans {pct} des parties",
+    "level9": "Niveau 9 · ajouter",
+    "level9Title": "Ce que les joueurs ajoutent une fois niveau 9",
+    "variants": "Variantes",
+    "variantsSub": "les 4 unités centrales que les joueurs associent à cette compo",
+    "ofGames": "{pct} des parties",
+    "avg": "moy.",
+    "top4": "top 4",
+    "onlyRules": "Seules les règles v{v} comptent pour cette compo.",
+    "versions": "Versions",
+    "versionsSub": "{n} builds de cette compo · meilleur d'abord · les unités estompées sont celles partagées avec celle-ci",
+    "onlyInVersion": "seulement dans cette version",
+    "games": "{n} parties",
+    "board": {
+      "title": "Meilleur placement",
+      "typical": "hexagones habituels, d'après les autres compos",
+      "from": "d'après {n} boards réels",
+      "label": "Placement sur votre côté du board",
+      "hexUsual": "hexagone habituel (d'après les autres compos)",
+      "hexShare": "{pct} des boards de cette compo",
+      "note": "Chaque unité du board final une fois, sur l'hexagone où elle se trouve le plus souvent dans les boards réels de cette compo (le % dit à quelle fréquence). Hexagone doré = le carry.",
+      "typicalNote": "Les hexagones en pointillés marqués ~ n'ont pas de données pour cette compo{n, plural, =0 {} other { (#)}} : ils prennent l'hexagone habituel de l'unité dans les autres compos, ou un hexagone libre dans les rangées que sa portée demande."
+    },
+    "plan": {
+      "title": "Plan de jeu",
+      "boards": "parties réelles · {n} boards au stage 3",
+      "tempo": {
+        "reroll": "Compo reroll",
+        "fast": "Montée rapide",
+        "rerollText": "Les joueurs restent <b>niveau {lv3}</b> pendant le stage 3 et roll pour <b>{targets}</b>{lv4, plural, =0 {} other {, puis montent niveau # au stage 4}}.",
+        "fastText": "Niveau <b>{lv3}</b> à la fin du stage 3{lv4, plural, =0 {} other {, <b>#</b> au stage 4}}{targets, select, other {, et roll alors pour <b>{targets}</b>}} ."
+      },
+      "steps": {
+        "opener": {
+          "label": "Ouverture",
+          "sub": "stages 1–2 · coûts 1 et 2"
+        },
+        "early": {
+          "label": "Stage 3",
+          "sub": "fin du stage 3"
+        },
+        "mid": {
+          "label": "Stage 4",
+          "sub": "fin du stage 4"
+        },
+        "final": {
+          "label": "Final",
+          "sub": "fin de partie"
+        }
+      },
+      "lv": "Niv {n}",
+      "unitShare": "{pct} % des boards",
+      "atStage3": "à la fin du stage 3",
+      "unitGone": "absent du board {next}",
+      "unitNew": "nouveau à cette étape",
+      "openerNote": "Ramassez ces coûts 1 et 2 aux stages 1–2 : ce sont ceux que les joueurs de cette compo avaient encore à la fin du stage 3.",
+      "stage3Note": "Le board à la fin du stage 3, avec le niveau atteint par les joueurs.",
+      "stage4Note": "Le board à la fin du stage 4.",
+      "gone": "Plus sur le board {next} : <b>{names}</b>.",
+      "finalNote": "Le board sur lequel la compo termine ; carry et objets ci-dessus.",
+      "note": "Ce que les joueurs ayant fini sur cette compo avaient sur leur board à la fin de chaque stage (unités présentes dans 30 % ou plus de leurs parties). L'API commence à la fin du stage 3, quand la plupart des joueurs sont déjà niveau 7 ou 8 : l'ouverture, ce sont donc les coûts 1 et 2 qu'ils tenaient encore à ce moment, les unités à ramasser aux stages 1 et 2. Cadre vert = nouveau à cette étape, estompé = absent du board de l'étape suivante. Niv = niveau le plus fréquent à ce moment. Les objets sont ceux avec lesquels l'unité finit la partie (l'API n'en donne pas par stage)."
+    }
+  },
+  "gamePlan": {
+    "title": "Plan de jeu",
+    "description": "Quels Pokémon aligner en début, milieu et fin de partie en Classé sur Kanto Tactics : présence à la fin des stages 3 et 4 et sur le board final des compos qui finissent bien, et s'ils restent jusqu'au bout.",
+    "subtitle": "ce que les bonnes compos alignent à chaque moment de la partie",
+    "intro": "L'API ne note que la fin de partie : il n'y a donc pas de « meilleure compo de début ». Ce qu'elle publie, c'est le board des joueurs ayant fini sur une bonne compo à la fin des stages 3 et 4 ({guided} compos fiables), quand ils sont déjà niveau 7 ou 8. <b>Ouverture</b> ne garde que les coûts 1 et 2 de ces boards de stage 3 : les unités à ramasser aux stages 1 et 2, et les compos vers lesquelles elles mènent. Les autres onglets montrent tout le board à chaque moment et si une unité reste jusqu'au bout. Cliquez sur une unité pour les compos finales qui l'alignent là ; chaque page de compo a son propre plan Ouverture → Stage 3 → Stage 4 → Final.",
+    "tabs": {
+      "opener": "Ouverture",
+      "openerSub": "coûts 1–2 à ramasser aux stages 1–2",
+      "stage3": "Stage 3",
+      "stage3Sub": "fin du stage 3",
+      "stage4": "Stage 4",
+      "stage4Sub": "fin du stage 4",
+      "final": "Final",
+      "finalSub": "board final"
+    },
+    "stageLabel": "Stage",
+    "costLabel": "Coût",
+    "empty": "Aucune unité à {cost} de coût sur les boards à ce moment.",
+    "table": {
+      "pokemon": "Pokémon",
+      "presence": "Sur les boards",
+      "presenceTitle": "part des parties des bonnes compos qui l'alignent à ce moment",
+      "score": "Compos moy. + IC",
+      "scoreTitle": "à quel point les compos vers lesquelles elle mène finissent bien (plus bas est mieux)",
+      "keep": "Gardée jusqu'au bout",
+      "keepTitle": "à quelle fréquence elle est encore sur le board final",
+      "comps": "Compos",
+      "compsTitle": "nombre de compos fiables qui l'alignent",
+      "linkFinal": "{name} : sa page et ses meilleures compos",
+      "linkStage": "Compos finales dont le board de stage {stage} aligne {name}",
+      "note": "Sur les boards = part des parties des bonnes compos qui l'alignent à ce moment, pondérée par les parties. Compos moy. + IC = à quel point les compos vers lesquelles elle mène finissent bien (plus bas est mieux). Gardée = à quelle fréquence elle est encore sur le board final ; rouge = unité de transition qui quitte le board ensuite. Cliquez sur une colonne pour trier."
+    }
+  },
+  "items": {
+    "title": "Tier list des objets",
+    "description": "Tous les objets de Kanto Tactics classés par la place moyenne du joueur qui les porte, avec recettes, effets et les Pokémon qui les portent.",
+    "subtitle": "place moyenne du porteur en fin de partie",
+    "note": "Objets combinés uniquement, par la place moyenne du joueur qui les porte en fin de partie. Les composants ne sont pas notés : tout le monde en porte en route vers un objet.",
+    "components": "Composants",
+    "componentsSub": "et outils · non notés · place moyenne du porteur"
+  },
+  "item": {
+    "unknown": "Objet inconnu",
+    "metaTitle": "{name} · tier {tier}",
+    "metaDescription": "{name} en Classé sur Kanto Tactics : {text}. Place moyenne du porteur {avg}, top 4 {top4}. Recette, porteurs et meilleures compos.",
+    "back": "Objets",
+    "subtitle": "Objet · Classé, règles v{rules}, du {from} au {to}",
+    "kind": {
+      "full": "combiné",
+      "part": "composant",
+      "tool": "outil",
+      "emblem": "emblème"
+    },
+    "recipe": "Recette",
+    "makes": "Donne",
+    "usuallyOn": "Souvent sur",
+    "bestComps": "Meilleures compos avec"
+  },
+  "types": {
+    "title": "Tier list des types",
+    "description": "Toutes les synergies de type de Kanto Tactics classées par la place moyenne des joueurs qui les avaient actives, avec paliers, effets et meilleures compos.",
+    "subtitle": "un type à un palier de synergie donné",
+    "cardTitle": "{name} {need} (palier {level}) · moy. {avg}",
+    "note": "Le nombre est le nombre de Pokémon du type que le palier demande. Place moyenne des joueurs qui avaient ce palier actif en fin de partie.",
+    "pairs": "Paires de types",
+    "pairsSub": "deux types actifs ensemble dans les compos fiables",
+    "pairTitle": "{comps} compos, {games} parties · moy. + IC {score} · la meilleure compo est tier {tier}",
+    "pairsNote": "Tri par parties jouées. Nombre = moy. + IC pondérée par les parties des compos qui jouent les deux types (plus bas est mieux) ; badge = tier de la meilleure d'entre elles. Cliquez pour ces compos."
+  },
+  "type": {
+    "unknown": "Type inconnu",
+    "metaTitle": "{name} · tier {tier}",
+    "metaDescription": "{name} en Classé sur Kanto Tactics : place moyenne {avg}, top 4 {top4}, usage {use}. Paliers, Pokémon du type et meilleures compos.",
+    "back": "Types",
+    "subtitle": "Type au palier de synergie {level} · Classé, règles v{rules}, du {from} au {to}",
+    "units": "{n} unités",
+    "pokemonOf": "Pokémon {name}",
+    "onlyRules": "Seules les règles v{v} comptent.",
+    "bestComps": "Meilleures compos avec {name} {level}+"
+  },
+  "pokemon": {
+    "unknown": "Pokémon inconnu",
+    "metaTitle": "{name} · tier {tier}",
+    "metaDescription": "{name} ({types}{cost, plural, =0 {} other {, coût #}}) en Classé sur Kanto Tactics : place moyenne {avg}, top 4 {top4}, usage {use}. Objets et meilleures compos.",
+    "ogDescription": "Place moyenne {avg} · top 4 {top4} · {types}",
+    "back": "Tier list",
+    "subtitle": "Pokémon · Classé, règles v{rules}, du {from} au {to}",
+    "cost": "coût {n}",
+    "range": "portée {n}",
+    "move": {
+      "physical": "Physique",
+      "special": "Spéciale",
+      "mixed": "Physique + Spéciale",
+      "utility": "Utilitaire"
+    },
+    "moveHelp": {
+      "physical": "Dépend de l'Attaque : construisez des objets d'Attaque",
+      "special": "Dépend de l'Atq. Spé. : construisez des objets d'Atq. Spé.",
+      "mixed": "Dépend de l'Attaque et de l'Atq. Spé.",
+      "utility": "Pas de dégâts à l'échelle : un boost, un soin, un bouclier ou un contrôle"
+    },
+    "passive": "Passif",
+    "rulesV": "Règles v{v}",
+    "newNote": "Nouveau dans les règles v{rules} : le fichier de données du jeu décrit encore la v{data}, le texte exact de l'attaque n'est donc pas encore publié. Affiché avec le sprite standard.",
+    "tierNote": "Le tier {tier} est la place moyenne de tous les joueurs ayant fini une partie avec {name} sur le board, dans n'importe quelle compo. Il est présent dans <b>{inS} des {total}</b> compos tier S de la semaine",
+    "tierNoteWeak": " : fort dans la bonne équipe, plus faible en remplissage",
+    "onlyRules": "Seules les règles v{v} comptent pour celui-ci.",
+    "itemsOn": "Objets que les joueurs lui donnent",
+    "itemsOnSub": "part de ses emplacements d'objet dans les compos fiables",
+    "bestComps": "Meilleures compos avec"
+  },
+  "seals": {
+    "title": "Sceaux",
+    "description": "Catalogue de tous les Sceaux (les choix proposés aux manches 2-1, 3-2 et 4-2) de Kanto Tactics, par rareté et catégorie, pour les règles en cours.",
+    "subtitle": "les augments du jeu, catalogue des règles en cours",
+    "offer": "{cards} proposés, {rerolls} reroll",
+    "filterLabel": "Filtrer les sceaux",
+    "rarity": "Rareté",
+    "rarityName": {
+      "1": "Commun",
+      "2": "Rare",
+      "3": "Mythique"
+    },
+    "category": "Catégorie",
+    "anyCategory": "Toutes les catégories",
+    "searchPlaceholder": "Chercher un sceau…",
+    "searchLabel": "Rechercher",
+    "count": "{n} sceaux",
+    "note": "Les Sceaux sont les choix proposés aux manches {rounds} (les augments du jeu, depuis les règles v34). L'API Meta ne publie ni taux de choix ni placement pour eux : voici donc le catalogue des règles v{rules}, sans tiers ni taux de victoire. Un onglet par manche.",
+    "round": "Manche {r}",
+    "roundLabel": "Manche",
+    "empty": "Aucun sceau ne correspond à la manche {round}.",
+    "cat": {
+      "eco": "Économie",
+      "shop": "Boutique",
+      "xp": "XP",
+      "item": "Objets",
+      "combat": "Combat",
+      "board": "Board",
+      "role": "Rôles",
+      "trait": "Types",
+      "hero": "Héros",
+      "risk": "Risque",
+      "later": "Plus tard",
+      "rule": "Règles"
+    },
+    "onePerType": "Un sceau par type : {types}",
+    "alsoAt": "aussi en {rounds}"
+  },
+  "favorites": {
+    "title": "Compos favorites",
+    "subtitle": "gardées dans un cookie de ce navigateur, sans compte",
+    "empty": "Rien d'enregistré pour l'instant. Ouvrez une compo et appuyez sur <b>☆ Garder</b> ; elle vous attendra ici. <link>Parcourir les compos</link>.",
+    "saved": "{n} gardées",
+    "clearAll": "Tout effacer",
+    "save": "☆ Garder",
+    "savedBtn": "★ Gardée"
+  },
+  "teamCode": {
+    "copy": "⎘ Copier le code d'équipe",
+    "copied": "✓ Code copié",
+    "title": "Copier ce board en code d'équipe Kanto Tactics, à coller dans le jeu",
+    "prompt": "Code d'équipe"
+  },
+  "about": {
+    "title": "À propos des données",
+    "description": "D'où viennent les chiffres, comment les tiers sont calculés, et ce que l'API Meta de Kanto Tactics publie ou non.",
+    "source": "Source",
+    "sourceText": "Tout vient de l'<api>API Meta</api> publique du jeu : parties Classées, humains uniquement, sur les 7 derniers jours et toutes les versions de règles de la période (du {from} au {to}). L'API se régénère chaque jour à 03:40 UTC ; ce site la relit au plus une fois par heure, comme l'API le demande, donc une mise à jour arrive dans l'heure.",
+    "tiers": "Tiers",
+    "tiersText1": "Pokémon, objets et types utilisent les tiers du jeu : place moyenne face à la place de référence de la semaine ({ref}), S ≤ {s}, A ≤ {a}, B ≤ {b}. L'API s'arrête à C ; D est le découpage de ce site, miroir de S : place moyenne à partir de {d}. Le tier d'un Pokémon compte tous les boards sur lesquels il finit, quelle que soit la compo : une unité peut être B seule et siéger dans la plupart des compos S ; sa page dit dans combien.",
+    "tiersText2": "Les compos sont notées plus sévèrement, sur la moyenne pessimiste (moy. + IC à 95 %) : S ≤ {s}, A ≤ {a}, B ≤ {b}, C ≤ {c}, D au-dessus. Le tri « Meilleures » utilise le même nombre, donc une compo à 11 parties et ± 0,9 d'intervalle ne peut pas passer devant une compo stable. Les compos sous {minNe} parties effectives n'ont que leurs 4 unités centrales dans l'API (ni étoiles, ni parts, ni board) et sont masquées sauf si vous les incluez.",
+    "roles": "Carry, sub, tank",
+    "rolesText": "Les objets sont séparés selon la stat qu'ils donnent : offensive (Attaque, Atq. Spé., vitesse d'attaque, critique, Énergie, drain) ou défensive (PV, Défense, Déf. Spé., boucliers). Le carry est l'unité qui cumule le plus de part d'objets offensifs, le sub la deuxième quand elle est équipée au moins 40 % aussi souvent, le tank l'unité avec le plus d'objets défensifs. Toute autre unité dont l'objet le plus courant est sur elle dans 20 % ou plus des parties montre aussi son équipement dans les lignes de liste.",
+    "missing": "Ce que l'API ne donne pas",
+    "missingText": "Aucun taux de choix ni résultat pour les Sceaux (l'onglet Sceaux est un catalogue). Pas de board pour les compos sous 50 boards : le site montre alors où chaque unité se place d'habitude dans les compos qui en ont un. Les nouvelles unités des règles v{rules} que le fichier de données du jeu (v{data}) ne décrit pas encore prennent leur coût et leur type dans les notes de version du jeu, avec le sprite standard. Si l'API cesse de répondre, le site sert sa dernière copie et le dit.",
+    "disclaimer": "Page de fans non officielle, sans lien avec Nintendo, Creatures ou GAME FREAK. Jeu, données, sprites et icônes appartiennent à Kanto Tactics par Einoow."
+  },
+  "notFound": {
+    "title": "Rien ici",
+    "text": "Cette page n'existe pas, ou ce Pokémon, cet objet ou cette compo n'est pas dans la Meta de la semaine. <link>Retour à la tier list</link>."
+  },
+  "error": {
+    "text": "La Meta n'a pas pu être chargée{ref, select, other { (réf. {ref})} none {}}. L'API du jeu est peut-être injoignable en ce moment.",
+    "retry": "Réessayer"
+  },
+  "modal": {
+    "openAsPage": "<link>Ouvrir en page</link> pour partager.",
+    "close": "Fermer"
+  },
+  "og": {
+    "carry": "Carry : {name}",
+    "comp": "Compo",
+    "avgPlace": "place moy.",
+    "top4": "top 4",
+    "wins": "victoires",
+    "games": "parties",
+    "usage": "usage",
+    "cost": "Coût {cost}",
+    "footer": "Kanto Tactics Meta · Classé, 7 derniers jours{rules, plural, =0 {} other { · règles v#}}"
+  }
+}

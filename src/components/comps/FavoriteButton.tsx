@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, useSyncExternalStore, useTransition } from "react";
 import { ui } from "@/components/ui/styles";
 import { readFavoritesCookie } from "@/lib/favorites";
@@ -13,6 +14,7 @@ const notSaved = () => false;
  * hydration; the cookie is written by a Server Action and the button flips at once.
  */
 export function FavoriteButton({ compId }: { compId: string }) {
+  const t = useTranslations("favorites");
   const [pending, start] = useTransition();
   const fromCookie = useSyncExternalStore(noSubscribe, () => readFavoritesCookie().includes(compId), notSaved);
   const [toggled, setToggled] = useState<boolean | null>(null);
@@ -31,7 +33,7 @@ export function FavoriteButton({ compId }: { compId: string }) {
         })
       }
     >
-      {saved ? "★ Saved" : "☆ Save comp"}
+      {saved ? t("savedBtn") : t("save")}
     </button>
   );
 }

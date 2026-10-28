@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { CompThumbs } from "@/components/comps/CompThumbs";
 import { CompTitle } from "@/components/comps/CompTitle";
@@ -6,7 +7,7 @@ import { Sprite } from "@/components/ui/Sprite";
 import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
-import { COMP_THRESHOLDS, D_GAP, MIN_NE, TIER_HELP } from "@/lib/tiers";
+import { COMP_THRESHOLDS, D_GAP, MIN_NE } from "@/lib/tiers";
 import type { Meta } from "@/lib/types";
 import { lineDex, lineName } from "@/server/meta";
 
@@ -35,21 +36,20 @@ const blk = "rounded-xl border-2 border-ink bg-linear-to-b from-surface-hi to-su
 
 /** Left panel: how tiers are read. Static per Meta refresh. */
 export function LeftPanel({ meta: m }: { meta: Meta }) {
+  const t = useTranslations("panels");
+  const th = useTranslations("tiers.help");
+  const r = (n: number) => fmt2(m.ref + n);
   return (
-    <Side side="left" label="Tiers and rules">
+    <Side side="left" label={t("leftLabel")}>
       <section>
-        <H sub="average place vs. reference">Tiers</H>
+        <H sub={t("tiersSub")}>{t("tiers")}</H>
         <div className={`${blk} flex flex-col gap-[5px] text-[14px] text-dim [&_b]:text-txt [&_b]:tabular-nums [&>div]:flex [&>div]:items-center [&>div]:gap-2`}>
-          <div><TierBadge tier="S" /><span>≤ <b>{fmt2(m.ref + m.thresholds.tiers.S)}</b> · {TIER_HELP.S}</span></div>
-          <div><TierBadge tier="A" /><span>≤ <b>{fmt2(m.ref + m.thresholds.tiers.A)}</b> · {TIER_HELP.A}</span></div>
-          <div><TierBadge tier="B" /><span>≤ <b>{fmt2(m.ref + m.thresholds.tiers.B)}</b> · {TIER_HELP.B}</span></div>
-          <div><TierBadge tier="C" /><span>&lt; <b>{fmt2(m.ref + D_GAP)}</b> · {TIER_HELP.C}</span></div>
-          <div><TierBadge tier="D" /><span>≥ <b>{fmt2(m.ref + D_GAP)}</b> · {TIER_HELP.D}</span></div>
-          <p className={`${ui.note} mt-1`}>
-            Pokémon, items, types: the game&apos;s tiers (the API stops at C; D is this page&apos;s split, mirroring S). <b>Comps</b> are graded stricter, on the pessimistic average (avg + CI) against the
-            reference: S ≤ {fmt2(m.ref + COMP_THRESHOLDS.S)}, A ≤ {fmt2(m.ref + COMP_THRESHOLDS.A)}, B ≤ {fmt2(m.ref + COMP_THRESHOLDS.B)}, C ≤ {fmt2(m.ref + COMP_THRESHOLDS.C)}, D above. A noisy sample
-            cannot be S. Comps under {MIN_NE} effective games are hidden by default.
-          </p>
+          <div><TierBadge tier="S" /><span>≤ <b>{r(m.thresholds.tiers.S)}</b> · {th("S")}</span></div>
+          <div><TierBadge tier="A" /><span>≤ <b>{r(m.thresholds.tiers.A)}</b> · {th("A")}</span></div>
+          <div><TierBadge tier="B" /><span>≤ <b>{r(m.thresholds.tiers.B)}</b> · {th("B")}</span></div>
+          <div><TierBadge tier="C" /><span>&lt; <b>{r(D_GAP)}</b> · {th("C")}</span></div>
+          <div><TierBadge tier="D" /><span>≥ <b>{r(D_GAP)}</b> · {th("D")}</span></div>
+          <p className={`${ui.note} mt-1`}>{t.rich("tiersNote", { s: r(COMP_THRESHOLDS.S), a: r(COMP_THRESHOLDS.A), b: r(COMP_THRESHOLDS.B), c: r(COMP_THRESHOLDS.C), minNe: MIN_NE, b2: (c) => <b>{c}</b> })}</p>
         </div>
       </section>
     </Side>
@@ -58,6 +58,7 @@ export function LeftPanel({ meta: m }: { meta: Meta }) {
 
 /** Right panel: the week's leaderboard of comps and Pokémon, like the lobby's ranking panel. */
 export function RightPanel({ meta: m }: { meta: Meta }) {
+  const t = useTranslations("panels");
   const pool = m.comps.filter((c) => c.reliable);
   const best = [...pool].sort((a, b) => a.score - b.score).slice(0, 8);
   const played = [...pool].sort((a, b) => b.use - a.use).slice(0, 5);
@@ -76,20 +77,20 @@ export function RightPanel({ meta: m }: { meta: Meta }) {
     </RankItem>
   );
   return (
-    <Side side="right" label="Top of the week">
+    <Side side="right" label={t("rightLabel")}>
       <section>
-        <H sub="avg + CI">👑 Best comps</H>
-        <RankList>{best.map((c, i) => <CompRow key={c.id} c={c} i={i} value={fmt2(c.avg)} label="average place" />)}</RankList>
+        <H sub={t("bestCompsSub")}>👑 {t("bestComps")}</H>
+        <RankList>{best.map((c, i) => <CompRow key={c.id} c={c} i={i} value={fmt2(c.avg)} label={t("averagePlace")} />)}</RankList>
       </section>
       <section>
-        <H sub="usage">🔥 Most played</H>
-        <RankList>{played.map((c, i) => <CompRow key={c.id} c={c} i={i} value={pct(c.use)} label="usage" />)}</RankList>
+        <H sub={t("mostPlayedSub")}>🔥 {t("mostPlayed")}</H>
+        <RankList>{played.map((c, i) => <CompRow key={c.id} c={c} i={i} value={pct(c.use)} label={t("usage")} />)}</RankList>
       </section>
       <section>
-        <H sub="avg place">⭐ Best Pokémon</H>
+        <H sub={t("bestPokemonSub")}>⭐ {t("bestPokemon")}</H>
         <RankList>
           {mons.map((u, i) => (
-            <RankItem key={u.line} rank={i + 1} href={`/pokemon/${u.line}`} value={fmt2(u.avg)} valueTitle="average place">
+            <RankItem key={u.line} rank={i + 1} href={`/pokemon/${u.line}`} value={fmt2(u.avg)} valueTitle={t("averagePlace")}>
               <span className="flex items-center gap-2">
                 <Sprite dex={lineDex(m, u.line)} name={lineName(m, u.line)} cost={m.lines[u.line]?.cost} size={38} anim={false} />
                 <b className="text-[14px]">{lineName(m, u.line)}</b>

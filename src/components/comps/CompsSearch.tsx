@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { ui } from "@/components/ui/styles";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
+import { useRouter } from "@/i18n/navigation";
 
 const DEBOUNCE_MS = 250;
 
@@ -12,6 +13,7 @@ const DEBOUNCE_MS = 250;
  * instead of the full reload a GET form gave. `base` carries the other filters of the current URL.
  */
 export function CompsSearch({ q, base }: { q: string; base: Record<string, string> }) {
+  const t = useTranslations("comps");
   const router = useRouter();
   const [value, setValue] = useState(q);
   const [fromUrl, setFromUrl] = useState(q);
@@ -37,8 +39,8 @@ export function CompsSearch({ q, base }: { q: string; base: Record<string, strin
           search(e.target.value);
         }}
         onKeyDown={(e) => e.key === "Enter" && flush()}
-        placeholder="Search a Pokémon, item or type…"
-        aria-label="Search comps"
+        placeholder={t("searchPlaceholder")}
+        aria-label={t("searchLabel")}
       />
       {pending && <span aria-hidden className="absolute top-1/2 right-2.5 h-3 w-3 -translate-y-1/2 animate-spin rounded-full border-2 border-dim/40 border-t-gold" />}
     </span>

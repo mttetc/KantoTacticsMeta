@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { RankItem, RankList, RankThumbs, RankTitle } from "@/components/ui/RankList";
 import { ui } from "@/components/ui/styles";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -8,16 +9,17 @@ import { CompTitle } from "./CompTitle";
 
 /** "Best comps with it": a short ranked list, reliable samples only, best first. */
 export function RelatedComps({ meta, title, comps }: { meta: Meta; title: string; comps: Comp[] }) {
+  const t = useTranslations("common");
   if (!comps.length) return null;
   return (
     <div className={ui.sec}>
       <h2 className={ui.secTitle}>
         {title}
-        <small>reliable samples, best first</small>
+        <small>{t("reliableBest")}</small>
       </h2>
       <RankList>
         {comps.map((c) => (
-          <RankItem key={c.id} href={`/comps/${c.slug}`} value={fmt2(c.avg)} valueTitle="average place">
+          <RankItem key={c.id} href={`/comps/${c.slug}`} value={fmt2(c.avg)} valueTitle={t("averagePlace")}>
             <RankTitle>
               <TierBadge tier={c.tier} />
               <span className="t">
