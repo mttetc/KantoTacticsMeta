@@ -6,18 +6,18 @@ import { ui } from "@/components/ui/styles";
 import { Tabs } from "@/components/ui/Tabs";
 import { StageTable, type StageRow } from "./StageTable";
 
-export type StageKey = "early" | "mid" | "late";
+export type StageKey = "opener" | "early" | "mid" | "late";
 export interface StagePanel {
   key: StageKey;
   label: string;
   sub: string;
-  stage: 3 | 4 | "final";
+  stage: "opener" | 3 | 4 | "final";
   rows: StageRow[];
 }
 
-/** Early / Mid / Late tabs over the stage rankings, with a cost filter shared by the three. */
+/** Opener / Stage 3 / Stage 4 / Final tabs over the stage rankings, with a cost filter shared by all. */
 export function StageTabs({ panels }: { panels: StagePanel[] }) {
-  const [tab, setTab] = useState<StageKey>(panels[0]?.key ?? "early");
+  const [tab, setTab] = useState<StageKey>(panels[0]?.key ?? "opener");
   const [cost, setCost] = useState(0);
   const panel = panels.find((p) => p.key === tab) ?? panels[0];
   if (!panel) return null;

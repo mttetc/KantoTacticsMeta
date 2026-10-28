@@ -1,5 +1,6 @@
 import "server-only";
 import { CORE_SHARE, STAGE_PRESENCE_MIN, TRAIT_SHARE } from "@/lib/constants";
+import { OPENER_MAX_COST } from "@/lib/path";
 import type { Comp, Meta, Tier } from "@/lib/types";
 
 /** Read-only questions over the model, shared by the pages: best comps, stage rankings, type pairs, items per unit. */
@@ -21,13 +22,20 @@ export interface StagePick {
   keep: number;
   comps: number;
 }
-export type RankStage = 3 | 4 | "final";
+/** "opener" = the 1 and 2 costs on the stage 3 boards: what to pick up in stages 1 and 2. */
+export type RankStage = "opener" | 3 | 4 | "final";
 export function stageRanking(m: Meta, stage: RankStage): StagePick[] {
   const acc: Record<string, { w: number; pres: number; score: number; keep: number; comps: number }> = {};
   const guided = m.comps.filter((c) => c.reliable && c.guide);
   let totalW = 0;
   for (const c of guided) {
-    const units = stage === "final" ? c.units.map((u) => ({ line: u.line, share: u.share ?? 0 })) : c.guide!.stages.find((s) => s.stage === stage)?.units;
+    const stage3 = c.guide!.stages.find((s) => s.stage === 3)?.units;
+    const units =
+      stage === "final"
+        ? c.units.map((u) => ({ line: u.line, share: u.share ?? 0 }))
+        : stage === "opener"
+          ? stage3?.filter((u) => (m.lines[u.line]?.cost ?? 9) <= OPENER_MAX_COST)
+          : c.guide!.stages.find((s) => s.stage === stage)?.units;
     if (!units) continue;
     const w = c.n;
     totalW += w;

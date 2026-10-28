@@ -72,7 +72,7 @@ export interface ApiLine {
   n: string[];
   range?: number;
   passive?: I18n | string;
-  stars: { star: number; dex: number; name: string; move: { name: I18n; type: string; text: I18n } }[];
+  stars: { star: number; dex: number; name: string; move: { name: I18n; type: string; text: I18n; scale?: { atk: number; spa: number } | null } }[];
 }
 export interface ApiItem {
   en: string;
@@ -120,6 +120,8 @@ export interface ApiData {
 
 /** Normalised model the pages read. Everything here is serialisable (it goes through `use cache`). */
 
+export type MoveCategory = "physical" | "special" | "mixed" | "utility";
+
 export interface Line {
   id: string;
   cost: number | null;
@@ -128,7 +130,8 @@ export interface Line {
   /** Names by evolution stage; the last one is the line's display name. */
   names: string[];
   dex: number[];
-  move: { name: string; type: string; text: string } | null;
+  /** `category` from the move's scaling: Attack = physical, Sp. Atk = special, both = mixed, neither = utility. */
+  move: { name: string; type: string; text: string; category: MoveCategory } | null;
   passive: string | null;
   /** True when the unit is newer than the game data file (rules 35 additions). */
   fromChangelog: boolean;

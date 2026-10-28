@@ -25,14 +25,16 @@ export default async function GamePlanPage() {
       <PanelHead title="Game plan" subtitle="what the good comps field at each point of the game" />
       <PanelBody>
         <p className={`${ui.note} mt-0 mb-3 text-[.9em]`}>
-          The API only scores the end of the game, so there is no &ldquo;best early comp&rdquo;. What it does publish is the board of the players who finished on a good comp at the end of stages 3 and 4 ({guided} reliable comps). Below: the units they fielded at
-          each point, how good the comps they lead to are, and whether the unit stays until the end or gets sold. Filter by cost for the 1 and 2 costs to open with. Click a unit for the final comps that start with it; every comp page has its own Opener → Early → Mid → Final plan.
+          The API only scores the end of the game, so there is no &ldquo;best early comp&rdquo;. What it does publish is the board of the players who finished on a good comp at the end of stages 3 and 4 ({guided} reliable comps), when they are already level 7 or 8.
+          <b className="text-txt"> Opener</b> keeps only the 1 and 2 costs of those stage 3 boards: the units worth picking up in stages 1 and 2, and the comps they lead to. The other tabs show the whole board at each point and whether a unit stays until the end.
+          Click a unit for the final comps that field it there; every comp page has its own Opener → Stage 3 → Stage 4 → Final plan.
         </p>
         <StageTabs
           panels={[
-            { key: "early", label: "Early", sub: "end of stage 3", stage: 3, rows: rows(meta, 3) },
-            { key: "mid", label: "Mid", sub: "end of stage 4", stage: 4, rows: rows(meta, 4) },
-            { key: "late", label: "Late", sub: "final board", stage: "final", rows: rows(meta, "final") },
+            { key: "opener", label: "Opener", sub: "1–2 costs to pick up in stages 1–2", stage: "opener", rows: rows(meta, "opener") },
+            { key: "early", label: "Stage 3", sub: "end of stage 3", stage: 3, rows: rows(meta, 3) },
+            { key: "mid", label: "Stage 4", sub: "end of stage 4", stage: 4, rows: rows(meta, 4) },
+            { key: "late", label: "Final", sub: "final board", stage: "final", rows: rows(meta, "final") },
           ]}
         />
       </PanelBody>

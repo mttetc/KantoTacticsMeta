@@ -18,9 +18,6 @@ export function Board({ meta, comp }: { meta: Meta; comp: Comp }) {
         Best setup<small>{p.typical ? "usual hexes, from other comps" : `from ${int(p.n)} real boards`}</small>
       </h2>
       <div className="mx-auto max-w-[440px] text-center">
-        <div className="mb-1 text-[.76em] font-bold text-[#ff8787]">
-          ▲ Enemy · <span className="font-medium text-dim">front line</span>
-        </div>
         <svg viewBox={`0 0 ${BOARD.width} ${BOARD.height}`} role="img" aria-label="Placement on your side of the board" className="block h-auto w-full [&_text]:fill-white [&_text]:font-ui [&_text]:text-[10px] [&_text]:font-bold [&_text]:[paint-order:stroke] [&_text]:[stroke:var(--color-ink)] [&_text]:[stroke-width:3px]">
           {cells.map((cell) => {
             const { cx, cy } = hexCenter(cell);

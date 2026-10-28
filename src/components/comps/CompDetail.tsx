@@ -44,9 +44,38 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
 
   const ordered = [...c.units].sort((a, b) => rank(a.role) - rank(b.role) || (b.share ?? 0) - (a.share ?? 0));
   const holders = ordered.filter((u) => u.items.length > 0);
+  // the 8 most played units are the level 8 board; the rest is what players add at level 9
+  const board = new Set(
+    [...c.units]
+      .sort((a, b) => (b.share ?? 0) - (a.share ?? 0))
+      .slice(0, 8)
+      .map((u) => u.line),
+  );
+  const atEight = ordered.filter((u) => board.has(u.line));
+  const atNine = ordered.filter((u) => !board.has(u.line));
+  const card = (u: (typeof ordered)[number]) => {
+    const lead = u.role === "carry";
+    return (
+      <Link key={u.line} className={`${ui.unit} ${lead ? "w-[94px]!" : "w-[78px]!"} [&>small:first-of-type]:mt-2.5`} href={`/pokemon/${u.line}`} title={`${unitName(meta, u.line, u.star)} · in ${pct(u.share)} of games`}>
+        <span className={ui.stars}>{stars(u.star)}</span>
+        <Sprite
+          dex={unitDex(meta, u.line, u.star)}
+          name={unitName(meta, u.line, u.star)}
+          cost={meta.lines[u.line]?.cost}
+          size={lead ? 80 : 66}
+          role={u.role}
+          tag
+          items={u.items.slice(0, 3).map((i) => ({ id: i.id, name: itemName(meta, i.id) }))}
+          itemSize={lead ? 28 : 24}
+        />
+        <small className={u.role ? ROLE_TEXT[u.role] : ""}>{unitName(meta, u.line, u.star)}</small>
+        <small className="text-txt!">{Math.round(u.share ?? 0)} %</small>
+      </Link>
+    );
+  };
   return (
     <>
-      <div className={ui.strip}>{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} share={t.share} />)}</div>
+      <div className={ui.strip}>{c.traits.map((t) => <TypeChip key={t.type} type={t.type} name={typeName(meta, t.type)} level={t.level} count={meta.traitData[t.type]?.thresholds[t.level - 1]} share={t.share} />)}</div>
       <StatsRow s={c} maxUse={maxUse} />
       {c.apiTier !== c.tier && (
         <p className={`${ui.note} m-0`}>
@@ -56,46 +85,47 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
       {c.ne < MIN_NE && <p className={`${ui.note} m-0`}>Only {int(c.ne)} effective games: a small sample, read the interval.</p>}
       {c.keyItems.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-[.84em] text-dim">Key items</span>
-          {c.keyItems.map((k) => (
-            <Link key={`${k.id}-${k.line}`} href={`/items/${k.id}`} className="inline-flex items-center gap-1.5 rounded-full border-2 border-gold bg-ink/60 py-0.5 pr-2.5 pl-[3px] text-[.84em] font-semibold text-txt no-underline shadow-[0_0_12px_#ffd43b59] [&>i]:font-medium [&>i]:not-italic [&>i]:text-dim">
-              <ItemIcon id={k.id} name={itemName(meta, k.id)} size={30} className="rounded-[9px]" />
-              {itemName(meta, k.id)}
-              <i>on</i>
-              <Sprite dex={unitDex(meta, k.line, k.star)} name={unitName(meta, k.line, k.star)} cost={meta.lines[k.line]?.cost} size={22} anim={false} />
-              <i>{Math.round(k.share)} %</i>
-            </Link>
-          ))}
+          <span className="mr-1 text-[.84em] text-dim" title="The items this comp builds, most important first: at the carousel, take the components of the first one before the next">
+            Items to build
+          </span>
+          {c.keyItems.map((k, i) => {
+            const recipe = meta.itemData[k.id]?.recipe;
+            return (
+              <Link key={`${k.id}-${k.line}`} href={`/items/${k.id}`} className="inline-flex items-center gap-1.5 rounded-full border-2 border-gold bg-ink/60 py-0.5 pr-2.5 pl-[3px] text-[.84em] font-semibold text-txt no-underline shadow-[0_0_12px_#ffd43b59] [&>i]:font-medium [&>i]:not-italic [&>i]:text-dim">
+                <ItemIcon id={k.id} name={itemName(meta, k.id)} size={30} className="rounded-[9px]" />
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-gold text-[.8em] font-bold text-ink">{i + 1}</span>
+                {itemName(meta, k.id)}
+                {recipe && (
+                  <span className="inline-flex items-center gap-0.5 text-dim" title={`${itemName(meta, recipe[0])} + ${itemName(meta, recipe[1])}`}>
+                    <i>=</i>
+                    <ItemIcon id={recipe[0]} name={itemName(meta, recipe[0])} size={20} />
+                    <i>+</i>
+                    <ItemIcon id={recipe[1]} name={itemName(meta, recipe[1])} size={20} />
+                  </span>
+                )}
+                <i>on</i>
+                <Sprite dex={unitDex(meta, k.line, k.star)} name={unitName(meta, k.line, k.star)} cost={meta.lines[k.line]?.cost} size={22} anim={false} />
+                <i>{Math.round(k.share)} %</i>
+              </Link>
+            );
+          })}
         </div>
       )}
 
       <div className={ui.sec}>
         <h2 className={ui.secTitle}>
-          Final team<small>share of games with that unit · carry first</small>
+          Final team<small>level 8 board · share of games with that unit · carry first</small>
         </h2>
         {/* top padding leaves room for the role tags above the stars */}
-        <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-5.5">
-          {ordered.map((u) => {
-            const lead = u.role === "carry";
-            return (
-              <Link key={u.line} className={`${ui.unit} ${lead ? "w-[94px]!" : "w-[78px]!"} [&>small:first-of-type]:mt-2.5`} href={`/pokemon/${u.line}`} title={`${unitName(meta, u.line, u.star)} · in ${pct(u.share)} of games`}>
-                <span className={ui.stars}>{stars(u.star)}</span>
-                <Sprite
-                  dex={unitDex(meta, u.line, u.star)}
-                  name={unitName(meta, u.line, u.star)}
-                  cost={meta.lines[u.line]?.cost}
-                  size={lead ? 80 : 66}
-                  role={u.role}
-                  tag
-                  items={u.items.slice(0, 3).map((i) => ({ id: i.id, name: itemName(meta, i.id) }))}
-                  itemSize={lead ? 28 : 24}
-                />
-                <small className={u.role ? ROLE_TEXT[u.role] : ""}>{unitName(meta, u.line, u.star)}</small>
-                <small className="text-txt!">{Math.round(u.share ?? 0)} %</small>
-              </Link>
-            );
-          })}
-        </div>
+        <div className="flex flex-wrap gap-x-2 gap-y-2.5 pt-5.5">{atEight.map(card)}</div>
+        {atNine.length > 0 && (
+          <div className="mt-2.5 flex flex-wrap items-start gap-x-2 gap-y-2.5 border-t border-line pt-5.5">
+            <span className="mt-6 mr-1 inline-flex items-center rounded-full border border-line bg-black/20 px-2.5 py-0.5 text-[.8em] font-bold text-gold-hi" title="What players add once they reach level 9">
+              Level 9 · add
+            </span>
+            {atNine.map(card)}
+          </div>
+        )}
         {holders.length > 0 && (
           <ul className="m-0 mt-2.5 flex list-none flex-col gap-1 border-t border-line p-0 pt-2 text-[.88em]">
             {holders.map((u) => {

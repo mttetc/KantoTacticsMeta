@@ -18,6 +18,8 @@ export const metadata: Metadata = {
 export default async function TypesPage() {
   const meta = await getMeta();
   const traits = [...meta.traits].sort((a, b) => a.avg - b.avg);
+  // "Psychic 6": the units of the type needed for that level, as the game shows it
+  const need = (x: (typeof traits)[number]) => meta.traitData[x.type]?.thresholds[x.level - 1] ?? x.level;
   const pairs = traitPairs(meta, 24);
   let k = 0;
   return (
@@ -29,19 +31,19 @@ export default async function TypesPage() {
             traits
               .filter((x) => x.tier === t)
               .map((x) => (
-                <Link key={x.slug} prefetch={false} className={`${ui.unit} w-[98px]! animate-card-in`} href={`/types/${x.slug}`} title={`${typeName(meta, x.type)} ${x.level} · avg ${fmt2(x.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
+                <Link key={x.slug} prefetch={false} className={`${ui.unit} w-[98px]! animate-card-in`} href={`/types/${x.slug}`} title={`${typeName(meta, x.type)} ${need(x)} (level ${x.level}) · avg ${fmt2(x.avg)}`} style={{ animationDelay: `${(0.15 + Math.min(k++, 30) * 0.025).toFixed(3)}s` } as React.CSSProperties}>
                   <span className="grid h-[68px] w-[68px] place-items-center rounded-2xl border-2 border-ink bg-surface shadow-[inset_0_0_0_1px_var(--color-rim-soft)] transition-shadow group-hover:shadow-[0_0_0_2px_var(--color-gold)]">
                     <TypeIcon type={x.type} name={typeName(meta, x.type)} size={60} />
                   </span>
                   <span className="mt-1 text-[.86em] leading-none font-bold" style={{ color: typeColor(x.type) }}>
-                    {typeName(meta, x.type)} {x.level}
+                    {typeName(meta, x.type)} {need(x)}
                   </span>
                   <small>avg {fmt2(x.avg)}</small>
                 </Link>
               ))
           }
         />
-        <p className={ui.tierNote}>A type at a given level: level 1, 2 or 3 of the synergy. Average place of players who had that level active at the end of the game.</p>
+        <p className={ui.tierNote}>The number is how many Pokémon of the type the level needs. Average place of players who had that level active at the end of the game.</p>
         {pairs.length > 0 && (
           <div className={`${ui.sec} mt-3`}>
             <h2 className={ui.secTitle}>

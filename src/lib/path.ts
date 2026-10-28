@@ -11,6 +11,8 @@ export interface PathUnit {
 }
 export interface PathStep {
   key: "opener" | "early" | "mid" | "final";
+  /** Label of the following step, for "not on the X board any more". */
+  next: string | null;
   label: string;
   sub: string;
   level: number | null;
@@ -44,19 +46,45 @@ export function compPath(c: Comp, lines: Record<string, Line>): PathStep[] | nul
         .slice(0, OPENER_MAX)
         .map((u) => ({ line: u.line, star: u.star, share: u.share }));
       if (cheap.length) raw.push({ key: "opener", label: "Opener", sub: "stages 1–2 · 1 and 2 costs", level: null, n: s.n, units: cheap });
-      raw.push({ key: "early", label: "Early", sub: "end of stage 3", level: s.level, n: s.n, units });
+      raw.push({ key: "early", label: "Stage 3", sub: "end of stage 3", level: s.level, n: s.n, units });
     }
-    if (s.stage === 4) raw.push({ key: "mid", label: "Mid", sub: "end of stage 4", level: s.level, n: s.n, units });
+    if (s.stage === 4) raw.push({ key: "mid", label: "Stage 4", sub: "end of stage 4", level: s.level, n: s.n, units });
   }
   raw.push({ key: "final", label: "Final", sub: "end of the game", level: null, n: c.n, units: finalUnits });
-  return raw.map((step, i) => {
+  return raw.map((step, i): PathStep => {
     const prev = raw[i - 1];
     const next = raw[i + 1];
     return {
       ...step,
+      next: next?.label ?? null,
       units: step.units
         .sort((a, b) => b.share - a.share)
-        .map((u) => ({ ...u, kept: next ? next.units.some((x) => x.line === u.line) : true, fresh: prev ? !prev.units.some((x) => x.line === u.line) : false })),
+        // the opener is read from the stage 3 board itself, so by construction all of it is still there at stage 3
+        .map((u) => ({ ...u, kept: step.key === "opener" || !next || next.units.some((x) => x.line === u.line), fresh: prev ? !prev.units.some((x) => x.line === u.line) : false })),
     };
   });
+}
+
+export interface Tempo {
+  kind: "reroll" | "fast";
+  /** most common level at the end of stage 3 and 4 */
+  lv3: number | null;
+  lv4: number | null;
+  /** the units to roll for: 3★ or cheap 2★ for a reroll comp, the carry otherwise */
+  targets: string[];
+}
+
+/** Players sitting at level 6 or lower at the end of stage 3 are rolling for stars; the rest level first and roll at 7–8. */
+export function compTempo(c: Comp, lines: Record<string, Line>): Tempo | null {
+  if (!c.guide || c.coreOnly) return null;
+  const lv3 = c.guide.stages.find((s) => s.stage === 3)?.level ?? null;
+  const lv4 = c.guide.stages.find((s) => s.stage === 4)?.level ?? null;
+  if (lv3 == null && lv4 == null) return null;
+  const kind = lv3 != null && lv3 <= 6 ? "reroll" : "fast";
+  const byShare = [...c.units].sort((a, b) => (b.share ?? 0) - (a.share ?? 0));
+  const targets =
+    kind === "reroll"
+      ? byShare.filter((u) => (u.star ?? 1) >= 3 || ((u.star ?? 1) >= 2 && (lines[u.line]?.cost ?? 9) <= 2)).slice(0, 3)
+      : byShare.filter((u) => u.role === "carry" || u.role === "sub").slice(0, 2);
+  return { kind, lv3, lv4, targets: targets.map((u) => u.line) };
 }

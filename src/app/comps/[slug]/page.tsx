@@ -4,9 +4,11 @@ import { CompDetail } from "@/components/comps/CompDetail";
 import { CompTitle } from "@/components/comps/CompTitle";
 import { CompVersions } from "@/components/comps/CompVersions";
 import { FavoriteButton } from "@/components/comps/FavoriteButton";
+import { TeamCodeButton } from "@/components/comps/TeamCodeButton";
 import { PanelBody, PanelHead } from "@/components/layout/PanelHead";
 import { TierBadge } from "@/components/ui/TierBadge";
 import { fmt2, pct } from "@/lib/format";
+import { teamCode } from "@/lib/team-code";
 import { getComp, getMeta, lineName } from "@/server/meta";
 
 type Params = Promise<{ slug: string }>;
@@ -36,24 +38,26 @@ export default async function CompPage({ params }: { params: Params }) {
   const r = await getComp(slug);
   if (!r) notFound();
   const { meta, comp } = r;
+  const code = teamCode(meta, comp);
   return (
     <>
       <PanelHead
         title={
           <span className="inline-flex flex-wrap items-center gap-2">
-            <TierBadge tier={comp.tier} /> <CompTitle meta={meta} comp={comp} />
+            <TierBadge tier={comp.tier} /> <CompTitle meta={meta} comp={comp} heading />
           </span>
         }
         back={{ href: "/comps", label: "Comps" }}
         subtitle={`Comp · Ranked, rules v${meta.rules}, ${meta.from} to ${meta.to}`}
       >
+        {code && <TeamCodeButton code={code} />}
         {/* reads the visitor's cookie in the browser, so the whole page stays static */}
         <FavoriteButton compId={comp.id} />
       </PanelHead>
       <PanelBody>
         <div className="flex flex-col gap-3.5">
-          <CompVersions meta={meta} comp={comp} />
           <CompDetail meta={meta} comp={comp} />
+          <CompVersions meta={meta} comp={comp} />
         </div>
       </PanelBody>
     </>

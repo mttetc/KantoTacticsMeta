@@ -10,8 +10,6 @@ import { COMP_THRESHOLDS, D_GAP, MIN_NE, TIER_HELP } from "@/lib/tiers";
 import type { Meta } from "@/lib/types";
 import { lineDex, lineName } from "@/server/meta";
 
-const COST_COLORS = ["var(--c1)", "var(--c2)", "var(--c3)", "var(--c4)", "var(--c5)"];
-
 /** A lobby side panel: dark rounded box, sticky content, full width on one column. */
 function Side({ side, label, children }: { side: "left" | "right"; label: string; children: ReactNode }) {
   return (
@@ -35,12 +33,8 @@ function H({ children, sub }: { children: ReactNode; sub?: ReactNode }) {
 
 const blk = "rounded-xl border-2 border-ink bg-linear-to-b from-surface-hi to-surface to-60% p-2.5 shadow-panel";
 
-/** Left panel: how tiers are read, the shop odds. Static per Meta refresh. */
+/** Left panel: how tiers are read. Static per Meta refresh. */
 export function LeftPanel({ meta: m }: { meta: Meta }) {
-  const levels = Object.keys(m.pvp.odds)
-    .map(Number)
-    .sort((a, b) => a - b)
-    .filter((l) => l >= 3);
   return (
     <Side side="left" label="Tiers and rules">
       <section>
@@ -55,47 +49,6 @@ export function LeftPanel({ meta: m }: { meta: Meta }) {
             Pokémon, items, types: the game&apos;s tiers (the API stops at C; D is this page&apos;s split, mirroring S). <b>Comps</b> are graded stricter, on the pessimistic average (avg + CI) against the
             reference: S ≤ {fmt2(m.ref + COMP_THRESHOLDS.S)}, A ≤ {fmt2(m.ref + COMP_THRESHOLDS.A)}, B ≤ {fmt2(m.ref + COMP_THRESHOLDS.B)}, C ≤ {fmt2(m.ref + COMP_THRESHOLDS.C)}, D above. A noisy sample
             cannot be S. Comps under {MIN_NE} effective games are hidden by default.
-          </p>
-        </div>
-      </section>
-      <section>
-        <H sub="% per slot, by level">Shop odds</H>
-        <div className={blk}>
-          <table className="w-full border-collapse text-[13px] tabular-nums">
-            <thead>
-              <tr>
-                <th className="p-[2px_3px] text-left text-[12px] font-semibold text-dim">Lv</th>
-                {COST_COLORS.map((c, i) => (
-                  <th key={c} className="p-[2px_3px] text-right">
-                    <span className="inline-block h-2.5 w-2.5 rounded-full shadow-[0_0_0_1px_#0008]" style={{ background: c }} />
-                    <span className="sr-only">cost {i + 1}</span>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {levels.map((l) => (
-                <tr key={l}>
-                  <td className="border-t border-line p-[2px_3px] text-left"><b>{l}</b></td>
-                  {m.pvp.odds[l].map((o, i) => (
-                    <td key={i} className="relative border-t border-line p-[2px_3px] text-right">
-                      {o ? o : <span className="opacity-35">–</span>}
-                      <i className="absolute bottom-0 left-[3px] h-[2px] opacity-85" style={{ width: `${o}%`, background: COST_COLORS[i] }} />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className={`${ui.note} mt-1.5`}>
-            Pool:{" "}
-            {COST_COLORS.map((c, i) => (
-              <span key={c}>
-                {i > 0 && " · "}
-                <b style={{ color: c }}>{m.pvp.pool[i + 1]}</b>
-              </span>
-            ))}{" "}
-            copies per Pokémon by cost. Reroll {m.pvp.rerollCost} gold. A cost 4 carry is 12 % per slot at level 7, 26 % at level 8, when cost 5 appears.
           </p>
         </div>
       </section>

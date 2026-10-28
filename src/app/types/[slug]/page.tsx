@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const r = await getTrait(slug);
   if (!r) return { title: "Unknown type" };
-  const name = `${r.trait.name} ${r.stat.level}`;
+  const name = `${r.trait.name} ${r.trait.thresholds[r.stat.level - 1] ?? r.stat.level}`;
   return {
     title: `${name} · tier ${r.stat.tier}`,
     description: `${name} in Kanto Tactics Ranked: average place ${fmt2(r.stat.avg)}, top 4 ${pct(r.stat.top4)}, usage ${pct(r.stat.use)}. Thresholds, Pokémon of the type and best comps.`,
@@ -35,11 +35,11 @@ export default async function TraitPage({ params }: { params: Params }) {
       <PanelHead
         title={
           <span className="inline-flex flex-wrap items-center gap-2">
-            <span style={{ color: typeColor(r.stat.type) }}>{r.trait.name}</span> {r.stat.level} <TierBadge tier={r.stat.tier} />
+            <span style={{ color: typeColor(r.stat.type) }}>{r.trait.name}</span> {r.trait.thresholds[r.stat.level - 1] ?? r.stat.level} <TierBadge tier={r.stat.tier} />
           </span>
         }
         back={{ href: "/types", label: "Types" }}
-        subtitle={`Type · Ranked, rules v${r.meta.rules}, ${r.meta.from} to ${r.meta.to}`}
+        subtitle={`Type at synergy level ${r.stat.level} · Ranked, rules v${r.meta.rules}, ${r.meta.from} to ${r.meta.to}`}
       />
       <PanelBody>
         <div className="flex flex-col gap-3">

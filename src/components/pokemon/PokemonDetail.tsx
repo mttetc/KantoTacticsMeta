@@ -10,6 +10,14 @@ import { itemName, lineDex, lineName, typeName } from "@/server/meta";
 import { bestComps, itemsOnLine } from "@/server/queries";
 
 /** Shared by the Pokémon page and its intercepted modal. */
+const MOVE_CATEGORY = { physical: "Physical", special: "Special", mixed: "Physical + Special", utility: "Utility" } as const;
+const MOVE_CATEGORY_HELP = {
+  physical: "Scales with Attack: build Attack items",
+  special: "Scales with Sp. Atk: build Sp. Atk items",
+  mixed: "Scales with both Attack and Sp. Atk",
+  utility: "No damage scaling: a buff, heal, shield or control move",
+} as const;
+
 export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; line: Line }) {
   const held = itemsOnLine(meta, unit.line);
   const comps = bestComps(meta, (c) => c.units.some((u) => u.line === unit.line && (u.share ?? 0) >= 50));
@@ -40,7 +48,7 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
           )}
           {line.move && (
             <p>
-              <b>{line.move.name}</b> ({typeName(meta, line.move.type)}) · {line.move.text}
+              <b>{line.move.name}</b> ({typeName(meta, line.move.type)} · <span title={MOVE_CATEGORY_HELP[line.move.category]}>{MOVE_CATEGORY[line.move.category]}</span>) · {line.move.text}
             </p>
           )}
           {line.passive && (
