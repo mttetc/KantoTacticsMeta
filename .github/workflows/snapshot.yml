@@ -1,9 +1,10 @@
-name: Refresh API snapshot
+name: Refresh API data
 
+# The site is built from data/snapshot: committing a new copy of the API's daily run deploys the day's site.
 on:
   schedule:
     - cron: "40 4 * * *" # the API regenerates at 03:40 UTC
-    - cron: "40 6 * * *" # GitHub often runs scheduled jobs hours late; a second slot keeps the snapshot same-day
+    - cron: "40 6 * * *" # GitHub often runs scheduled jobs hours late; a second slot keeps the site same-day
   workflow_dispatch:
 
 permissions:
@@ -25,11 +26,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/snapshot
           if git diff --cached --quiet; then echo "no change"; exit 0; fi
-          git commit -m "snapshot: API data $(date -u +%F)"
+          git commit -m "data: API run of $(date -u +%F)"
           git push
-      - name: Refresh the site's cache
-        # same value as CRON_SECRET on Vercel; skipped when the repository secret is not set
-        if: env.REVALIDATE_SECRET != ''
-        env:
-          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
-        run: curl -fsS -X POST -H "Authorization: Bearer $REVALIDATE_SECRET" https://kanto-tactics-meta.vercel.app/api/revalidate

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cacheLife, cacheTag } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { CompRow } from "@/components/comps/CompRow";
@@ -14,7 +13,6 @@ import { groupVariants } from "@/lib/comp-family";
 import { matchesAll, searchWords } from "@/lib/search";
 import { MIN_NE, TIERS } from "@/lib/tiers";
 import type { Comp } from "@/lib/types";
-import { META_TAG } from "@/server/api";
 import { getMeta, itemName, lineName, typeName, unitName } from "@/server/meta";
 import { compsStartingWith } from "@/server/queries";
 
@@ -41,20 +39,12 @@ export default async function CompsPage({ searchParams }: { searchParams: Promis
   );
 }
 
-/** Reads the URL (runtime), then hands plain values to the cached list below. */
-async function CompList({ searchParams, locale }: { searchParams: Promise<CompSearchParams>; locale: Locale }) {
-  return <CachedCompList f={parseCompFilters(await searchParams)} locale={locale} />;
-}
-
 /**
- * The list for one combination of filters and one locale, cached and shared by every visitor: a click on a
- * filter chip is a cache hit after the first visitor.
+ * Reads the URL at request time and renders the list for those filters: the model is in memory, so the list is a
+ * filter and a sort, cheaper than a cache entry per combination.
  */
-async function CachedCompList({ f, locale }: { f: CompFilters; locale: Locale }) {
-  "use cache";
-  cacheTag(META_TAG);
-  // hard expiry: once stale the list is rebuilt before being served, on the model's current data
-  cacheLife({ stale: 300, revalidate: 3600, expire: 3600 });
+async function CompList({ searchParams, locale }: { searchParams: Promise<CompSearchParams>; locale: Locale }) {
+  const f = parseCompFilters(await searchParams);
   const [meta, t] = await Promise.all([getMeta(locale), getTranslations({ locale, namespace: "comps" })]);
 
   const { sort, tier, small, q, page, from, stage } = f;

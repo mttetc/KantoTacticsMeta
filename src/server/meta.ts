@@ -1,43 +1,40 @@
 import "server-only";
-import { cacheLife, cacheTag } from "next/cache";
 import { getLocale } from "next-intl/server";
 import { cache } from "react";
 import type { Locale } from "@/i18n/routing";
 import { traitSlug } from "@/lib/format";
-import { metaCacheLife } from "@/lib/freshness";
 import { entityTier } from "@/lib/tiers";
 import type { Meta } from "@/lib/types";
-import { fetchDataRaw, fetchLangRaw, fetchMetaRaw, META_TAG } from "./api";
+import { apiData, apiLang, apiMeta } from "./api";
 import { buildItems, buildSeals, buildTraits } from "./model/catalogue";
 import { buildComps } from "./model/comps";
 import { buildLines } from "./model/lines";
 import { makeTexts } from "./model/texts";
 
+/** The API has stopped publishing when the run this build comes from is older than this. */
+const STALE_AFTER = 36 * 60 * 60 * 1000;
+const models = new Map<Locale, Meta>();
+
 /**
- * The whole normalised model in the page's language, shared by every page: the one cache boundary over the API
- * (one entry per locale). Its life ends right after the API's next daily run (see `metaCacheLife`), with a hard
- * expiry, so the first render after that fetches the day's data instead of serving the old copy while refreshing.
- * Pass the locale where next-intl cannot read it (generateStaticParams, Server Actions, image routes).
+ * The whole normalised model in the page's language, shared by every page: built once per locale from the
+ * committed API files (server/api.ts) and kept in memory, so pages prerender from it and the few runtime functions
+ * reuse it. Pass the locale where next-intl cannot read it (generateStaticParams, Server Actions, image routes).
  */
 export async function getMeta(locale?: Locale): Promise<Meta> {
   return buildMeta(locale ?? ((await getLocale()) as Locale));
 }
 
-async function buildMeta(locale: Locale): Promise<Meta> {
-  "use cache";
-  cacheTag(META_TAG);
-  const [m, d, lang] = await Promise.all([fetchMetaRaw(), fetchDataRaw(), fetchLangRaw(locale)]);
-  const meta = m.value, data = d.value;
-  const fromSnapshot = m.source === "snapshot" || d.source === "snapshot";
-  cacheLife(metaCacheLife(meta.generated, fromSnapshot));
-  const tx = makeTexts(locale, lang);
+function buildMeta(locale: Locale): Meta {
+  const hit = models.get(locale);
+  if (hit) return hit;
+  const meta = apiMeta, data = apiData;
+  const tx = makeTexts(locale, apiLang(locale));
   const lines = buildLines(data, meta, tx);
   const itemData = buildItems(data, tx);
   const traitData = buildTraits(data, tx);
-  return {
+  const model: Meta = {
     locale,
-    source: m.source === "snapshot" || d.source === "snapshot" ? "snapshot" : "api",
-    snapshotAt: m.snapshotAt ?? d.snapshotAt,
+    stale: Date.now() - Date.parse(meta.generated) > STALE_AFTER,
     generated: meta.generated,
     rules: meta.rules,
     dataRules: data.rules,
@@ -60,6 +57,8 @@ async function buildMeta(locale: Locale): Promise<Meta> {
     sealRules: data.pvp.seals ?? null,
     pvp: data.pvp,
   };
+  models.set(locale, model);
+  return model;
 }
 
 /* ---- selectors: memoised per request so metadata and page share one read ---- */

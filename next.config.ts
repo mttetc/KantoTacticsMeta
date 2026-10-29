@@ -4,7 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
-  // the API snapshot is read from disk when the live API is down: ship it with every server function
+  // the site is built from the committed API files; the few runtime functions (comps list, favourites, OG images) read them too
   outputFileTracingIncludes: { "/**": ["./data/snapshot/*.json"] },
 };
 

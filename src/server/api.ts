@@ -1,32 +1,34 @@
 import "server-only";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import type { Locale } from "@/i18n/routing";
 import type { ApiData, ApiLang, ApiMeta } from "@/lib/types";
-import { withSnapshot, type Loaded } from "./snapshot";
-
-export const API_BASE = "https://einoow.com/api/meta/kanto/";
-export const META_TAG = "meta";
-
-async function getJson<T>(path: string): Promise<T> {
-  const res = await fetch(API_BASE + path, {
-    headers: { "User-Agent": "KantoTacticsMeta (github.com/mttetc/KantoTacticsMeta)" },
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (!res.ok) throw new Error(`Meta API ${path}: HTTP ${res.status}`);
-  return res.json() as Promise<T>;
-}
-
-/** Not cached here: `getMeta` is the one cache boundary, so a refresh never serves one stale layer inside another. */
-export const fetchMetaRaw = (): Promise<Loaded<ApiMeta>> => withSnapshot("meta", () => getJson<ApiMeta>("meta.json"));
-export const fetchDataRaw = (): Promise<Loaded<ApiData>> => withSnapshot("data", () => getJson<ApiData>("data.json"));
 
 /**
- * The game's texts in `lang`, or null when that route fails: the model then falls back to the texts of data.json
- * (English, or Spanish for es). Not cached here either, for the same reason as above.
+ * The site is built from the committed copy of the API in data/snapshot (meta.json, data.json, lang.<locale>.json),
+ * refreshed by `pnpm snapshot` and the daily workflow. A data refresh is a commit and a deploy: nothing is fetched,
+ * cached or regenerated at request time, so a page costs nothing after the build.
  */
-export async function fetchLangRaw(lang: string): Promise<ApiLang | null> {
-  try {
-    return await getJson<ApiLang>(`lang.json?lang=${encodeURIComponent(lang)}`);
-  } catch (err) {
-    console.warn(`[meta] lang.json?lang=${lang} failed, falling back to data.json texts:`, err instanceof Error ? err.message : err);
-    return null;
+const DIR = path.join(process.cwd(), "data", "snapshot");
+
+function load<T>(name: string): T {
+  return JSON.parse(readFileSync(path.join(DIR, name), "utf8")) as T;
+}
+
+export const apiMeta = load<ApiMeta>("meta.json");
+export const apiData = load<ApiData>("data.json");
+
+const langs = new Map<Locale, ApiLang | null>();
+
+/** The game's texts in `locale`, or null when that file is missing: the model then falls back to data.json's English. */
+export function apiLang(locale: Locale): ApiLang | null {
+  if (!langs.has(locale)) {
+    try {
+      langs.set(locale, load<ApiLang>(`lang.${locale}.json`));
+    } catch {
+      console.warn(`[meta] data/snapshot/lang.${locale}.json missing, falling back to data.json texts`);
+      langs.set(locale, null);
+    }
   }
+  return langs.get(locale) ?? null;
 }

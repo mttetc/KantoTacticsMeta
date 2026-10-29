@@ -25,8 +25,6 @@
   },
   "layout": {
     "description": "Tier lists et guides de compos pour le mode Classé de Kanto Tactics, depuis l'API Meta publique du jeu. Pokémon, compos, objets, types et sceaux, mis à jour chaque jour.",
-    "snapshot": "L'API du jeu ne répond pas pour le moment. Affichage de la dernière copie ; les données reviennent d'elles-mêmes.",
-    "snapshotFrom": "L'API du jeu ne répond pas pour le moment. Affichage de la copie du {date} ; les données reviennent d'elles-mêmes.",
     "rulesTitle": "Version des règles du jeu sur cette période",
     "rules": "Règles v{v}",
     "ranked": "Classé",
@@ -40,7 +38,8 @@
     "changelog": "Notes de version",
     "source": "Code source",
     "language": "Langue",
-    "backToTop": "Retour en haut"
+    "backToTop": "Retour en haut",
+    "stale": "L'API du jeu n'a rien publié depuis le {date} : voici ses derniers chiffres."
   },
   "panels": {
     "leftLabel": "Tiers et règles",
@@ -379,14 +378,14 @@
     "title": "À propos des données",
     "description": "D'où viennent les chiffres, comment les tiers sont calculés, et ce que l'API Meta de Kanto Tactics publie ou non.",
     "source": "Source",
-    "sourceText": "Tout vient de l'<api>API Meta</api> publique du jeu : parties Classées, humains uniquement, sur les 7 derniers jours et toutes les versions de règles de la période (du {from} au {to}). L'API se régénère chaque jour à 03:40 UTC ; ce site la relit au plus une fois par heure, comme l'API le demande, donc une mise à jour arrive dans l'heure.",
+    "sourceText": "Tout vient de l'<api>API Meta</api> publique du jeu : parties Classées, humains uniquement, sur les 7 derniers jours et toutes les versions de règles de la période (du {from} au {to}). L'API se régénère chaque jour à 03:40 UTC et ce site est reconstruit chaque matin à partir de cette mise à jour : chaque page est une copie statique des données du jour.",
     "tiers": "Tiers",
     "tiersText1": "Pokémon, objets et types utilisent les tiers du jeu : place moyenne face à la place de référence de la semaine ({ref}), S ≤ {s}, A ≤ {a}, B ≤ {b}. L'API s'arrête à C ; D est le découpage de ce site, miroir de S : place moyenne à partir de {d}. Le tier d'un Pokémon compte tous les boards sur lesquels il finit, quelle que soit la compo : une unité peut être B seule et siéger dans la plupart des compos S ; sa page dit dans combien.",
     "tiersText2": "Les compos sont notées plus sévèrement, sur la moyenne pessimiste (moy. + IC à 95 %) : S ≤ {s}, A ≤ {a}, B ≤ {b}, C ≤ {c}, D au-dessus. Le tri « Meilleures » utilise le même nombre, donc une compo à 11 parties et ± 0,9 d'intervalle ne peut pas passer devant une compo stable. Les compos sous {minNe} parties effectives n'ont que leurs 4 unités centrales dans l'API (ni étoiles, ni parts, ni board) et sont masquées sauf si vous les incluez.",
     "roles": "Carry, sub, tank",
     "rolesText": "Les objets sont séparés selon la stat qu'ils donnent : offensive (Attaque, Atq. Spé., vitesse d'attaque, critique, Énergie, drain) ou défensive (PV, Défense, Déf. Spé., boucliers). Le carry est l'unité qui cumule le plus de part d'objets offensifs, le sub la deuxième quand elle est équipée au moins 40 % aussi souvent, le tank l'unité avec le plus d'objets défensifs. Toute autre unité dont l'objet le plus courant est sur elle dans 20 % ou plus des parties montre aussi son équipement dans les lignes de liste.",
     "missing": "Ce que l'API ne donne pas",
-    "missingText": "Aucun taux de choix ni résultat pour les Sceaux (l'onglet Sceaux est un catalogue). Pas de board pour les compos sous 50 boards : le site montre alors où chaque unité se place d'habitude dans les compos qui en ont un. Les nouvelles unités des règles v{rules} que le fichier de données du jeu (v{data}) ne décrit pas encore prennent leur coût et leur type dans les notes de version du jeu, avec le sprite standard. Si l'API cesse de répondre, le site sert sa dernière copie et le dit.",
+    "missingText": "Aucun taux de choix ni résultat pour les Sceaux (l'onglet Sceaux est un catalogue). Pas de board pour les compos sous 50 boards : le site montre alors où chaque unité se place d'habitude dans les compos qui en ont un. Les nouvelles unités des règles v{rules} que le fichier de données du jeu (v{data}) ne décrit pas encore prennent leur coût et leur type dans les notes de version du jeu, avec le sprite standard. Si l'API cesse de répondre, le site garde sa dernière version et le dit.",
     "disclaimer": "Page de fans non officielle, sans lien avec Nintendo, Creatures ou GAME FREAK. Jeu, données, sprites et icônes appartiennent à Kanto Tactics par Einoow."
   },
   "notFound": {

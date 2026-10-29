@@ -29,22 +29,23 @@ Tier lists and comp guides for [Kanto Tactics](https://einoow.com/kanto-tactics)
 Next.js 16 (App Router, Cache Components, Partial Prefetching), React 19, TypeScript, Tailwind CSS v4, Vitest, pnpm.
 Styling is Tailwind utilities only: the game's palette, faces, shadows and keyframes live in `@theme` in `globals.css`,
 recurring class strings in `src/components/ui/styles.ts`; there are no CSS modules.
-No database: the API is the source of truth, read on the server and cached for an hour.
+No database and nothing fetched at request time: the site is built from a committed copy of the API (`data/snapshot`),
+refreshed by a daily GitHub Action whose commit triggers the build. Every page is a static file; a data refresh is a deploy.
 
 | Route | Rendering | Why |
 | --- | --- | --- |
 | `/` Pokémon tier list | Static shell + request-time list (`searchParams`) → client takes over | The first paint matches the shared URL; sorting and filtering 70 rows is instant in the browser and mirrored to the URL. |
-| `/pokemon/[line]`, `/items/[id]`, `/types/[slug]` | SSG via `generateStaticParams`, refreshed with the Meta (ISR) | Fully known sets; prerendered pages with `generateMetadata` and OG images. |
+| `/pokemon/[line]`, `/items/[id]`, `/types/[slug]` | SSG via `generateStaticParams`, in every language | Fully known sets; prerendered pages with `generateMetadata` and OG images. |
 | `@modal/(.)pokemon/[line]` and friends | Intercepting + parallel route | The same Server Component as the page, shown as a `<dialog>` on client navigation; shareable URL, Back closes it. |
-| `/comps` | Static shell + request-time list from `searchParams` | Filters are plain links, no client JS; 833 comps are too many to ship to the browser. |
-| `/comps/[slug]` | SSG for reliable comps, on demand for the rest | The only request-time part is the **Save** button (cookie), streamed under `<Suspense>`. |
+| `/comps` | Static shell + request-time list from `searchParams` | Filters are plain links, no client JS; 833 comps are too many to ship to the browser. The list is a filter and a sort over the in-memory model, not a cache entry per combination. |
+| `/comps/[slug]` | SSG for reliable comps, on demand for the rest (then kept until the next deploy) | The Save button reads its cookie in the browser, so the page is fully static. |
 | `/favorites` | Request-time (cookie) inside the static shell | Per-visitor. |
-| `/api/revalidate` | Route Handler | Drops the Meta cache; called by the Vercel cron after the API's daily refresh. |
 | `sitemap.xml`, `robots.txt`, `manifest.webmanifest`, `opengraph-image` | Metadata routes | SEO and social cards. |
 
-- `src/server/api.ts` fetches the two API files under `"use cache"` with `cacheLife` (1 h) and the `meta` tag.
-- `src/server/meta.ts` builds the normalised model once per revalidation (tiers, carry roles, slugs, typical placement) and exposes `React.cache`d selectors so `generateMetadata` and the page share one read.
-- `src/server/actions.ts` holds the Server Actions (`toggleFavorite`, `clearFavorites`, `refreshMeta`).
+- `src/server/api.ts` reads the committed API files (`data/snapshot/{meta,data,lang.<locale>}.json`).
+- `src/server/meta.ts` builds the normalised model once per language per process (tiers, carry roles, slugs, typical placement) and exposes `React.cache`d selectors so `generateMetadata` and the page share one read.
+- `src/server/actions.ts` holds the Server Actions (`toggleFavorite`, `clearFavorites`).
+- `src/app/[locale]/layout.tsx` is the document only: Next ships the root layout a second time in every page's payload (around the 404 fallback), so the lobby chrome lives in `(lobby)/layout.tsx`.
 - `src/lib` is pure logic (tiers, carry, placement geometry) covered by Vitest.
 
 ## Develop
@@ -56,17 +57,19 @@ pnpm test         # vitest
 pnpm lint && pnpm typecheck
 pnpm build && pnpm start
 pnpm sprites      # download missing sprites into public/ after a game update
+pnpm snapshot     # refresh data/snapshot from the API (what the daily workflow does)
 ```
 
-Copy `.env.example` to `.env.local`. `CRON_SECRET` protects `/api/revalidate`; `NEXT_PUBLIC_SITE_URL` sets the
-canonical origin outside Vercel.
+Copy `.env.example` to `.env.local`: `NEXT_PUBLIC_SITE_URL` sets the canonical origin outside Vercel.
 
-## If the API goes down
+## Data refresh, and if the API goes down
 
-`data/snapshot/meta.json` and `data.json` are a committed copy of the two API files. When a live read fails
-(network error, non-200, timeout), the server serves the snapshot instead, shows a yellow banner with its date,
-and retries the API every few minutes. A GitHub Action (`.github/workflows/snapshot.yml`) refreshes the snapshot
-daily after the API's 03:40 UTC regeneration; run `pnpm snapshot` to do it by hand.
+`data/snapshot/` is a committed copy of the API files (`meta.json`, `data.json`, `lang.en.json`, `lang.fr.json`).
+A GitHub Action (`.github/workflows/snapshot.yml`) refreshes it daily after the API's 03:40 UTC regeneration and
+commits when it changed; that commit is what deploys the day's site. Run `pnpm snapshot` to do it by hand. When
+the API stops answering, nothing is committed, the site keeps its last build, and a yellow banner says since when
+once the data is more than 36 hours old. Pages are static files on the CDN: no ISR reads or writes, no function
+runs for a page view (only `/comps` with filters, `/favorites`, the Save action and the OG images run at request time).
 
 ## How the numbers are read
 

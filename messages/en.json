@@ -25,8 +25,6 @@
   },
   "layout": {
     "description": "Tier lists and comp guides for Kanto Tactics Ranked, from the game's public Meta API. Pokémon, comps, items, types and seals, updated daily.",
-    "snapshot": "The game's API is not answering right now. Showing the last snapshot; the live data comes back on its own.",
-    "snapshotFrom": "The game's API is not answering right now. Showing the last snapshot from {date}; the live data comes back on its own.",
     "rulesTitle": "Game rules version in this window",
     "rules": "Rules v{v}",
     "ranked": "Ranked",
@@ -40,7 +38,8 @@
     "changelog": "Changelog",
     "source": "Source",
     "language": "Language",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "stale": "The game's API has not published new data since {date}: these are its last numbers."
   },
   "panels": {
     "leftLabel": "Tiers and rules",
@@ -379,14 +378,14 @@
     "title": "About the data",
     "description": "Where the numbers come from, how tiers are computed, and what the Kanto Tactics Meta API does and does not publish.",
     "source": "Source",
-    "sourceText": "Everything comes from the game's public <api>Meta API</api>: Ranked games, humans only, over the last 7 days across every rules version in the window ({from} to {to}). The API regenerates daily at 03:40 UTC; this site re-reads it once an hour at most, as the API asks, so a refresh lands within the hour.",
+    "sourceText": "Everything comes from the game's public <api>Meta API</api>: Ranked games, humans only, over the last 7 days across every rules version in the window ({from} to {to}). The API regenerates daily at 03:40 UTC and this site is rebuilt from that run every morning, so every page is a static copy of the day's data.",
     "tiers": "Tiers",
     "tiersText1": "Pokémon, items and types use the game's own tiers: average place against the week's reference place ({ref}), S ≤ {s}, A ≤ {a}, B ≤ {b}. The API stops at C; D is this site's split, mirroring S: average place at or above {d}. A Pokémon's tier counts every board it ends on, in any comp, so a unit can be B on its own and still sit in most tier S comps; its page says in how many.",
     "tiersText2": "Comps are graded stricter, on the pessimistic average (avg + 95 % CI): S ≤ {s}, A ≤ {a}, B ≤ {b}, C ≤ {c}, D above. The “Best” sort uses the same number, so a comp with 11 games and a ± 0.9 interval cannot sit above a steady one. Comps under {minNe} effective games only have their 4 core units in the API (no stars, shares or board) and are hidden unless you include them.",
     "roles": "Carry, sub, tank",
     "rolesText": "Items are split by the stat they give: offensive (Attack, Sp. Atk, attack speed, crit, Energy, drain) or defensive (HP, Defense, Sp. Def, shields). The carry is the unit that collects the most offensive item share, the sub the second one when it is geared at least 40 % as often, the tank the unit with the most defensive items. Any other unit whose most common item sits on it in 20 %+ of games shows its gear in the list rows too.",
     "missing": "What the API does not give",
-    "missingText": "No pick rate or result for Seals (the Seals tab is a catalogue). No board for comps under 50 boards: the site then shows where each unit usually stands in the comps that do have one. New units of rules v{rules} that the game data file (v{data}) does not describe yet get their cost and type from the game changelog and the standard sprite. If the API stops answering, the site serves its last committed snapshot and says so.",
+    "missingText": "No pick rate or result for Seals (the Seals tab is a catalogue). No board for comps under 50 boards: the site then shows where each unit usually stands in the comps that do have one. New units of rules v{rules} that the game data file (v{data}) does not describe yet get their cost and type from the game changelog and the standard sprite. If the API stops answering, the site keeps its last build and says so.",
     "disclaimer": "Unofficial fan page, not affiliated with Nintendo, Creatures or GAME FREAK. Game, data, sprites and icons belong to Kanto Tactics by Einoow."
   },
   "notFound": {

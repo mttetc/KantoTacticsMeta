@@ -243,9 +243,8 @@ export interface Seal {
 export interface Meta {
   /** The language of every name and text below. */
   locale: string;
-  /** "api" when the live API answered, "snapshot" when the committed copy was served instead. */
-  source: "api" | "snapshot";
-  snapshotAt: string | null;
+  /** True when the API run this build comes from is more than 36 h old: the API has stopped publishing. */
+  stale: boolean;
   generated: string;
   rules: number;
   dataRules: number;
