@@ -82,8 +82,8 @@ export function CompDetail({ meta, comp: c }: { meta: Meta; comp: Comp }) {
       {c.apiTier !== c.tier && <p className={`${ui.note} m-0`}>{t("tierNote", { api: c.apiTier, tier: c.tier, score: fmt2(c.score), ref: fmt2(meta.ref) })}</p>}
       {c.ne < MIN_NE && <p className={`${ui.note} m-0`}>{t("fewGames", { n: int(c.ne) })}</p>}
       {c.keyItems.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-[.84em] text-dim" title={t("itemsToBuildTitle")}>
+        <div className="flex flex-col items-start gap-1.5">
+          <span className="text-[.84em] text-dim" title={t("itemsToBuildTitle")}>
             {t("itemsToBuild")}
           </span>
           {c.keyItems.map((k, i) => {
