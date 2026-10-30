@@ -23,6 +23,7 @@ const cardDelay = (k: number) => ({ animationDelay: `${(0.15 + Math.min(k, 30) *
 export function PokemonTierList({ units, types }: { units: UnitRow[]; types: { id: string; name: string }[] }) {
   const t = useTranslations("home");
   const tc = useTranslations("common");
+  const tv = useTranslations("home.variant");
   const [f, update] = useUrlState(DEFAULT_UNIT_FILTERS, toParams, unitFiltersFromParams);
   const words = searchWords(useDeferredValue(f.q));
 
@@ -61,7 +62,10 @@ export function PokemonTierList({ units, types }: { units: UnitRow[]; types: { i
               <IntentLink key={u.line} className={`${ui.unit} animate-card-in`} href={`/pokemon/${u.line}`} title={`${u.name} · ${tc("avg")} ${fmt2(u.avg)}`} style={cardDelay(k)}>
                 <Sprite dex={u.dex} name={u.name} cost={u.cost} size={70} className="max-sm:h-[56px]! max-sm:w-[56px]!" />
                 <span className="mt-[3px] text-[.86em] leading-none font-bold">{fmt2(u.avg)}</span>
-                <small>{u.name}</small>
+                <small>
+                  {u.name}
+                  {u.variant && <span className="block text-[.85em] text-dim">{tv(u.variant)}</span>}
+                </small>
               </IntentLink>
             ))
         }

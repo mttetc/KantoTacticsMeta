@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { compPath } from "./path";
 import type { Comp, Line } from "./types";
 
-const line = (id: string, cost: number): Line => ({ id, cost, types: [], range: null, names: [id], dex: [], move: null, passive: null, fromChangelog: false });
+const line = (id: string, cost: number): Line => ({ id, cost, types: [], range: null, names: [id], dex: [], move: null, passive: null, variant: null, fromChangelog: false });
 const lines = Object.fromEntries([line("abra", 2), line("voltorb", 2), line("electabuzz", 3), line("staryu", 4), line("mewtwo", 5), line("dratini", 4)].map((l) => [l.id, l]));
 const u = (l: string, share: number, star = 1) => ({ line: l, star, share });
 const comp = {

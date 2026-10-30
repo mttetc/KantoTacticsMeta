@@ -146,6 +146,8 @@ export interface Line {
   /** `category` from the move's scaling: Attack = physical, Sp. Atk = special, both = mixed, neither = utility. */
   move: { name: string; type: string; text: string; category: MoveCategory } | null;
   passive: string | null;
+  /** `oddish-a1`: the line anchored in form 1 (Gloom) at every star; `pikachu-partner`: the Partner Seal's Pikachu. Null for the line itself. */
+  variant: { kind: "anchored" | "partner"; base: string; form: number } | null;
   /** True when the unit is newer than the game data file (rules 35 additions). */
   fromChangelog: boolean;
 }

@@ -92,7 +92,11 @@
     "type": "Type",
     "anyType": "Any type",
     "searchPlaceholder": "Search a Pokémon or a type…",
-    "note": "Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by {sort} inside each tier. Click a Pokémon for its items and best comps."
+    "note": "Number under the sprite = average place (1 to 8, lower is better). Border colour = cost. Sorted by {sort} inside each tier. Click a Pokémon for its items and best comps.",
+    "variant": {
+      "anchored": "anchored",
+      "partner": "Partner"
+    }
   },
   "comps": {
     "title": "Comps",
@@ -319,7 +323,11 @@
     "onlyRules": "Only rules v{v} counted for this one.",
     "itemsOn": "Items players put on it",
     "itemsOnSub": "share of its item slots in reliable comps",
-    "bestComps": "Best comps with it"
+    "bestComps": "Best comps with it",
+    "variant": {
+      "anchored": "Anchored: this {name} is kept in this form instead of evolving, at every ★. The {line} line, evolved as usual, is listed separately.",
+      "partner": "The Partner Seal's {name}: it never evolves and gains +15% to everything per ★. Listed apart from the regular {line} line."
+    }
   },
   "seals": {
     "title": "Seals",

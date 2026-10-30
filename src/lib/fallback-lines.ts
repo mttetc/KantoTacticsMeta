@@ -12,7 +12,7 @@ const F = (
   cost: number | null,
   types: string[],
   passive: string | null,
-): Line => ({ id, names, dex, cost, types, range: null, move: null, passive, fromChangelog: true });
+): Line => ({ id, names, dex, cost, types, range: null, move: null, passive, variant: null, fromChangelog: true });
 
 export const FALLBACK_LINES: Record<string, Line> = Object.fromEntries(
   [
@@ -24,6 +24,5 @@ export const FALLBACK_LINES: Record<string, Line> = Object.fromEntries(
     F("primeape", ["Primeape"], [57], 4, ["fighting"], "An anti-tank specialist."),
     F("nidoqueen", ["Nidoqueen"], [31], 4, ["poison", "ground"], "Tank."),
     F("kabutops", ["Kabutops"], [141], 4, ["rock", "water"], "Leaps at the backmost enemy and slashes it."),
-    F("pikachu-partner", ["Partner Pikachu"], [25], null, ["electric"], "Hero Pikachu from the Partner Seal."),
   ].map((l) => [l.id, l]),
 );

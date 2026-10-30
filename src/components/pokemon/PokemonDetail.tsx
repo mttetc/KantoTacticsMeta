@@ -50,6 +50,7 @@ export function PokemonDetail({ meta, unit, line }: { meta: Meta; unit: Unit; li
               <b>{line.fromChangelog ? t("rulesV", { v: meta.rules }) : t("passive")}</b> · {line.passive}
             </p>
           )}
+          {line.variant && <p className={ui.note}>{t(`variant.${line.variant.kind}`, { name: lineName(meta, unit.line), line: lineName(meta, line.variant.base) })}</p>}
           {line.fromChangelog && <p className={ui.note}>{t("newNote", { rules: meta.rules, data: meta.dataRules })}</p>}
           <StatsRow s={unit} maxUse={maxUse} />
           <p className={ui.note}>

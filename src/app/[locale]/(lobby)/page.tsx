@@ -44,6 +44,7 @@ async function TierList() {
       cost: l?.cost ?? null,
       types: l?.types ?? [],
       typeNames: (l?.types ?? []).map((t) => typeName(meta, t)),
+      variant: l?.variant?.kind ?? null,
       tier: u.tier,
       avg: u.avg,
       use: u.use,

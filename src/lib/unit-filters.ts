@@ -11,6 +11,8 @@ export interface UnitRow {
   cost: number | null;
   types: string[];
   typeNames: string[];
+  /** "anchored" (kept in an earlier form) or "partner" (the Partner Seal's Pikachu), shown after the name */
+  variant: "anchored" | "partner" | null;
   tier: Tier;
   avg: number;
   use: number;

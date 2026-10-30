@@ -92,7 +92,11 @@
     "type": "Type",
     "anyType": "Tous les types",
     "searchPlaceholder": "Chercher un Pokémon ou un type…",
-    "note": "Nombre sous le sprite = place moyenne (de 1 à 8, plus bas est mieux). Couleur du cadre = coût. Tri par {sort} dans chaque tier. Cliquez sur un Pokémon pour ses objets et ses meilleures compos."
+    "note": "Nombre sous le sprite = place moyenne (de 1 à 8, plus bas est mieux). Couleur du cadre = coût. Tri par {sort} dans chaque tier. Cliquez sur un Pokémon pour ses objets et ses meilleures compos.",
+    "variant": {
+      "anchored": "ancré",
+      "partner": "Partenaire"
+    }
   },
   "comps": {
     "title": "Compos",
@@ -319,7 +323,11 @@
     "onlyRules": "Seules les règles v{v} comptent pour celui-ci.",
     "itemsOn": "Objets que les joueurs lui donnent",
     "itemsOnSub": "part de ses emplacements d'objet dans les compos fiables",
-    "bestComps": "Meilleures compos avec"
+    "bestComps": "Meilleures compos avec",
+    "variant": {
+      "anchored": "Ancré : {name} est gardé sous cette forme au lieu d'évoluer, à toutes les ★. La lignée {line}, évoluée normalement, est classée à part.",
+      "partner": "{name} du Sceau Partenaire : il n'évolue jamais et gagne +15 % à tout par ★. Classé à part de la lignée {line} habituelle."
+    }
   },
   "seals": {
     "title": "Sceaux",
